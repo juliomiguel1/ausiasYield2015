@@ -67,7 +67,7 @@ public class ComentarioBean {
     )
     private Integer id_documento = 0;
     
-        @Expose(deserialize = false)
+    @Expose(deserialize = false)
     @MethodMetaInformation(
             UltraShortName = "R. doc.",
             ShortName = "Ref. de docum.",
