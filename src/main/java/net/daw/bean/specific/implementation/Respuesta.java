@@ -28,28 +28,24 @@
 package net.daw.bean.specific.implementation;
 
 import com.google.gson.annotations.Expose;
+import java.util.Date;
 import net.daw.bean.generic.implementation.BeanGenImpl;
+import net.daw.bean.group.GroupBeanImpl;
 import net.daw.bean.publicinterface.BeanInterface;
 import net.daw.helper.annotations.MethodMetaInformation;
-import net.daw.helper.annotations.TableSourceMetaInformation;
 import net.daw.helper.statics.MetaEnum;
 
 /**
  *
  * @author juliomiguel
  */
-
-@TableSourceMetaInformation(
-        TableName = "categoriaarticulo",
-        Description = "Categoria Articulo"
-)
-public class CategoriaArticulo extends BeanGenImpl implements BeanInterface{
+public class Respuesta extends BeanGenImpl implements BeanInterface{
     
-    public CategoriaArticulo() {
+     public Respuesta() {
         this.id = 0;
     }
 
-    public CategoriaArticulo(Integer id) {
+    public Respuesta(Integer id) {
         this.id = id;
     }
     
@@ -64,30 +60,58 @@ public class CategoriaArticulo extends BeanGenImpl implements BeanInterface{
     )
     private Integer id;
     
-    @Expose
+    @Expose(serialize = false)
     @MethodMetaInformation(
-            UltraShortName = "Nom.",
-            ShortName = "Nombre",
-            Description = "Nombre Categoria Articulo",
-            Type = MetaEnum.FieldType.String,
-            MinLength = 1,
-            MaxLength = 255,
-            DefaultValue = "Sin Categoria"//,
-         //   IsForeignKeyDescriptor = true
+            UltraShortName = "Opcion",
+            ShortName = "Iden. Opcion",
+            Description = "Identificador de Opcion",
+            IsIdForeignKey = true,
+            ReferencesTable = "opcion",
+            Type = MetaEnum.FieldType.Integer
     )
-    private String nombre = "";
+    private Integer id_opcion = 0; //important zero-initialize foreign keys
+
+    @Expose(deserialize = false)
+    @MethodMetaInformation(
+            UltraShortName = "Opcion",
+            ShortName = "Opcion",
+            Description = "Referencia de la Opcion",
+            IsObjForeignKey = true,
+            ReferencesTable = "opcion",
+            MyIdName = "id_opcion"
+    )
+    private GroupBeanImpl obj_opcion = null;
+    
+    @Expose(serialize = false)
+    @MethodMetaInformation(
+            UltraShortName = "Usuario",
+            ShortName = "Usuario",
+            Description = "Identificador de Usuario",
+            IsIdForeignKey = true,
+            ReferencesTable = "usuario",
+            Type = MetaEnum.FieldType.Integer
+    )
+    private Integer id_usuario = 0; //important zero-initialize foreign keys
+
+    @Expose(deserialize = false)
+    @MethodMetaInformation(
+            UltraShortName = "Usuario",
+            ShortName = "Usuario",
+            Description = "Referencia al usuario propietario",
+            IsObjForeignKey = true,
+            ReferencesTable = "usuario",
+            MyIdName = "id_usuario"
+    )
+    private GroupBeanImpl obj_usuario = null;
     
     @Expose
     @MethodMetaInformation(
-            UltraShortName = "Desc.",
-            ShortName = "Descripción",
-            Description = "Descripción Categoria Articulo ",
-            Type = MetaEnum.FieldType.String,
-            MinLength = 0,
-            MaxLength = 255,
-            DefaultValue = "Sin Descripcion",
+            UltraShortName = "F.alta",
+            ShortName = "Fecha de alta",
+            Description = "Fecha de envio opción",
+            Type = MetaEnum.FieldType.Date,
+            DefaultValue = "01/01/2000",
             IsForeignKeyDescriptor = true
     )
-    private String descripcion = "";
+    private Date fechaHoraAlta = new Date();
 }
-

@@ -29,6 +29,7 @@ package net.daw.bean.specific.implementation;
 
 import com.google.gson.annotations.Expose;
 import net.daw.bean.generic.implementation.BeanGenImpl;
+import net.daw.bean.group.GroupBeanImpl;
 import net.daw.bean.publicinterface.BeanInterface;
 import net.daw.helper.annotations.MethodMetaInformation;
 import net.daw.helper.annotations.TableSourceMetaInformation;
@@ -40,16 +41,17 @@ import net.daw.helper.statics.MetaEnum;
  */
 
 @TableSourceMetaInformation(
-        TableName = "categoriaarticulo",
-        Description = "Categoria Articulo"
+        TableName = "comentario",
+        Description = "Comentario"
 )
-public class CategoriaArticulo extends BeanGenImpl implements BeanInterface{
+public class Comentario extends BeanGenImpl implements BeanInterface{
     
-    public CategoriaArticulo() {
+     
+    public Comentario() {
         this.id = 0;
     }
 
-    public CategoriaArticulo(Integer id) {
+    public Comentario(Integer id) {
         this.id = id;
     }
     
@@ -66,28 +68,33 @@ public class CategoriaArticulo extends BeanGenImpl implements BeanInterface{
     
     @Expose
     @MethodMetaInformation(
-            UltraShortName = "Nom.",
-            ShortName = "Nombre",
-            Description = "Nombre Categoria Articulo",
+            UltraShortName = "Con.",
+            ShortName = "Contenido",
+            Description = "Contenido del Blog",
             Type = MetaEnum.FieldType.String,
-            MinLength = 1,
-            MaxLength = 255,
-            DefaultValue = "Sin Categoria"//,
+            DefaultValue = "Sin Contenido"//,
          //   IsForeignKeyDescriptor = true
     )
-    private String nombre = "";
+    private String contenido = "";
     
     @Expose
     @MethodMetaInformation(
-            UltraShortName = "Desc.",
-            ShortName = "Descripción",
-            Description = "Descripción Categoria Articulo ",
+            UltraShortName = "Nom.",
+            ShortName = "NomAutor.",
+            Description = "Nombre de Autor",
             Type = MetaEnum.FieldType.String,
-            MinLength = 0,
-            MaxLength = 255,
-            DefaultValue = "Sin Descripcion",
             IsForeignKeyDescriptor = true
     )
-    private String descripcion = "";
+    private String nombreautor = "";
+    
+    @Expose(deserialize = false)
+    @MethodMetaInformation(
+            UltraShortName = "Doc.",
+            ShortName = "Ident Documento",
+            Description = "Identificador de documento",
+            IsObjForeignKey = true,
+            ReferencesTable = "documento",
+            Type = MetaEnum.FieldType.Integer
+    )
+    private Integer id_documento = null;
 }
-

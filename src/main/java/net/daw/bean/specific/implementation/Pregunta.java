@@ -29,6 +29,7 @@ package net.daw.bean.specific.implementation;
 
 import com.google.gson.annotations.Expose;
 import net.daw.bean.generic.implementation.BeanGenImpl;
+import net.daw.bean.group.GroupBeanImpl;
 import net.daw.bean.publicinterface.BeanInterface;
 import net.daw.helper.annotations.MethodMetaInformation;
 import net.daw.helper.annotations.TableSourceMetaInformation;
@@ -40,16 +41,16 @@ import net.daw.helper.statics.MetaEnum;
  */
 
 @TableSourceMetaInformation(
-        TableName = "categoriaarticulo",
-        Description = "Categoria Articulo"
+        TableName = "pregunta",
+        Description = "Pregunta"
 )
-public class CategoriaArticulo extends BeanGenImpl implements BeanInterface{
+public class Pregunta extends BeanGenImpl implements BeanInterface{
     
-    public CategoriaArticulo() {
+     public Pregunta() {
         this.id = 0;
     }
 
-    public CategoriaArticulo(Integer id) {
+    public Pregunta(Integer id) {
         this.id = id;
     }
     
@@ -64,30 +65,36 @@ public class CategoriaArticulo extends BeanGenImpl implements BeanInterface{
     )
     private Integer id;
     
-    @Expose
+    @Expose(serialize = false)
     @MethodMetaInformation(
-            UltraShortName = "Nom.",
-            ShortName = "Nombre",
-            Description = "Nombre Categoria Articulo",
-            Type = MetaEnum.FieldType.String,
-            MinLength = 1,
-            MaxLength = 255,
-            DefaultValue = "Sin Categoria"//,
-         //   IsForeignKeyDescriptor = true
+            UltraShortName = "Iden. Doc",
+            ShortName = "Iden. de Documento",
+            Description = "Identificador de Documento",
+            IsIdForeignKey = true,
+            ReferencesTable = "documento",
+            Type = MetaEnum.FieldType.Integer
     )
-    private String nombre = "";
+    private Integer id_documento = 0;
+    
+    @Expose(deserialize = false)
+    @MethodMetaInformation(
+            UltraShortName = "Iden. Doc",
+            ShortName = "Iden. de Documento",
+            Description = "Identificador de Documento",
+            IsObjForeignKey = true,
+            ReferencesTable = "documento",
+            MyIdName = "id_documento"
+    )
+    private GroupBeanImpl obj_documento = null;
     
     @Expose
     @MethodMetaInformation(
             UltraShortName = "Desc.",
-            ShortName = "Descripción",
-            Description = "Descripción Categoria Articulo ",
+            ShortName = "Descripcion",
+            Description = "Descripcion de opcion",
             Type = MetaEnum.FieldType.String,
-            MinLength = 0,
-            MaxLength = 255,
-            DefaultValue = "Sin Descripcion",
-            IsForeignKeyDescriptor = true
+            DefaultValue = "Sin contenido"
     )
     private String descripcion = "";
+    
 }
-
