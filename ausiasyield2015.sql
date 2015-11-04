@@ -489,8 +489,7 @@ INSERT INTO `usuario` (`id`, `login`, `password`, `id_tipousuario`, `id_estado`,
 -- Indices de la tabla `comentario`
 --
 ALTER TABLE `comentario`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `id_documento` (`id_documento`);
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indices de la tabla `documento`
@@ -508,9 +507,7 @@ ALTER TABLE `estado`
 -- Indices de la tabla `opcion`
 --
 ALTER TABLE `opcion`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `idPregunta` (`id_pregunta`),
-  ADD KEY `id_pregunta` (`id_pregunta`);
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indices de la tabla `post`
@@ -522,18 +519,13 @@ ALTER TABLE `post`
 -- Indices de la tabla `pregunta`
 --
 ALTER TABLE `pregunta`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `idDocumento` (`id_documento`);
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indices de la tabla `respuesta`
 --
 ALTER TABLE `respuesta`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `idOpcion` (`id_opcion`),
-  ADD KEY `idUsuario` (`id_usuario`),
-  ADD KEY `idUsuario_2` (`id_usuario`),
-  ADD KEY `idOpcion_2` (`id_opcion`);
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indices de la tabla `tipodocumento`
@@ -606,24 +598,6 @@ ALTER TABLE `usuario`
 -- Restricciones para tablas volcadas
 --
 
---
--- Filtros para la tabla `opcion`
---
-ALTER TABLE `opcion`
-  ADD CONSTRAINT `opcion_ibfk_1` FOREIGN KEY (`id_pregunta`) REFERENCES `pregunta` (`id`);
-
---
--- Filtros para la tabla `pregunta`
---
-ALTER TABLE `pregunta`
-  ADD CONSTRAINT `pregunta_ibfk_1` FOREIGN KEY (`id_documento`) REFERENCES `documento` (`id`);
-
---
--- Filtros para la tabla `respuesta`
---
-ALTER TABLE `respuesta`
-  ADD CONSTRAINT `respuesta_ibfk_1` FOREIGN KEY (`id_opcion`) REFERENCES `opcion` (`id`),
-  ADD CONSTRAINT `respuesta_ibfk_2` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id`);
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
