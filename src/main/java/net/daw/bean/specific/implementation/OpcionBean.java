@@ -39,18 +39,18 @@ import net.daw.helper.statics.MetaEnum;
  *
  * @author juliomiguel
  */
-
 @TableSourceMetaInformation(
-        TableName = "pregunta",
-        Description = "Pregunta"
+        TableName = "opcion",
+        Description = "Opcion de pregunta"
 )
-public class Pregunta extends BeanGenImpl implements BeanInterface{
+
+public class OpcionBean extends BeanGenImpl implements BeanInterface{
     
-     public Pregunta() {
+    public OpcionBean() {
         this.id = 0;
     }
 
-    public Pregunta(Integer id) {
+    public OpcionBean(Integer id) {
         this.id = id;
     }
     
@@ -67,25 +67,26 @@ public class Pregunta extends BeanGenImpl implements BeanInterface{
     
     @Expose(serialize = false)
     @MethodMetaInformation(
-            UltraShortName = "Iden. Doc",
-            ShortName = "Iden. de Documento",
-            Description = "Identificador de Documento",
+            UltraShortName = "Iden. Preg",
+            ShortName = "Iden. de Pregunta",
+            Description = "Identificador de Pregunta",
             IsIdForeignKey = true,
-            ReferencesTable = "documento",
+            ReferencesTable = "pregunta",
             Type = MetaEnum.FieldType.Integer
     )
-    private Integer id_documento = 0;
+    private Integer id_pregunta = 0;
     
+     
     @Expose(deserialize = false)
     @MethodMetaInformation(
-            UltraShortName = "Iden. Doc",
-            ShortName = "Iden. de Documento",
-            Description = "Identificador de Documento",
+            UltraShortName = "Iden. Preg",
+            ShortName = "Iden. de Pregunta",
+            Description = "Identificador de Pregunta",
             IsObjForeignKey = true,
-            ReferencesTable = "documento",
-            MyIdName = "id_documento"
+            ReferencesTable = "pregunta",
+            MyIdName = "id_pregunta"
     )
-    private GroupBeanImpl obj_documento = null;
+    private GroupBeanImpl obj_pregunta = null;
     
     @Expose
     @MethodMetaInformation(
@@ -96,5 +97,61 @@ public class Pregunta extends BeanGenImpl implements BeanInterface{
             DefaultValue = "Sin contenido"
     )
     private String descripcion = "";
-    
+
+    /**
+     * @return the id
+     */
+    public Integer getId() {
+        return id;
+    }
+
+    /**
+     * @param id the id to set
+     */
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    /**
+     * @return the id_pregunta
+     */
+    public Integer getId_pregunta() {
+        return id_pregunta;
+    }
+
+    /**
+     * @param id_pregunta the id_pregunta to set
+     */
+    public void setId_pregunta(Integer id_pregunta) {
+        this.id_pregunta = id_pregunta;
+    }
+
+    /**
+     * @return the obj_pregunta
+     */
+    public GroupBeanImpl getObj_pregunta() {
+        return obj_pregunta;
+    }
+
+    /**
+     * @param obj_pregunta the obj_pregunta to set
+     */
+    public void setObj_pregunta(GroupBeanImpl obj_pregunta) {
+        this.obj_pregunta = obj_pregunta;
+    }
+
+    /**
+     * @return the descripcion
+     */
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    /**
+     * @param descripcion the descripcion to set
+     */
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
+   
 }

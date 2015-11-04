@@ -33,19 +33,25 @@ import net.daw.bean.generic.implementation.BeanGenImpl;
 import net.daw.bean.group.GroupBeanImpl;
 import net.daw.bean.publicinterface.BeanInterface;
 import net.daw.helper.annotations.MethodMetaInformation;
+import net.daw.helper.annotations.TableSourceMetaInformation;
 import net.daw.helper.statics.MetaEnum;
 
 /**
  *
  * @author juliomiguel
  */
-public class Respuesta extends BeanGenImpl implements BeanInterface{
+
+@TableSourceMetaInformation(
+        TableName = "respuesta",
+        Description = "Respuesta"
+)
+public class RespuestaBean extends BeanGenImpl implements BeanInterface{
     
-     public Respuesta() {
+     public RespuestaBean() {
         this.id = 0;
     }
 
-    public Respuesta(Integer id) {
+    public RespuestaBean(Integer id) {
         this.id = id;
     }
     
@@ -114,4 +120,88 @@ public class Respuesta extends BeanGenImpl implements BeanInterface{
             IsForeignKeyDescriptor = true
     )
     private Date fechaHoraAlta = new Date();
+
+    /**
+     * @return the id
+     */
+    public Integer getId() {
+        return id;
+    }
+
+    /**
+     * @param id the id to set
+     */
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    /**
+     * @return the id_opcion
+     */
+    public Integer getId_opcion() {
+        return id_opcion;
+    }
+
+    /**
+     * @param id_opcion the id_opcion to set
+     */
+    public void setId_opcion(Integer id_opcion) {
+        this.id_opcion = id_opcion;
+    }
+
+    /**
+     * @return the obj_opcion
+     */
+    public GroupBeanImpl getObj_opcion() {
+        return obj_opcion;
+    }
+
+    /**
+     * @param obj_opcion the obj_opcion to set
+     */
+    public void setObj_opcion(GroupBeanImpl obj_opcion) {
+        this.obj_opcion = obj_opcion;
+    }
+
+    /**
+     * @return the id_usuario
+     */
+    public Integer getId_usuario() {
+        return id_usuario;
+    }
+
+    /**
+     * @param id_usuario the id_usuario to set
+     */
+    public void setId_usuario(Integer id_usuario) {
+        this.id_usuario = id_usuario;
+    }
+
+    /**
+     * @return the obj_usuario
+     */
+    public GroupBeanImpl getObj_usuario() {
+        return obj_usuario;
+    }
+
+    /**
+     * @param obj_usuario the obj_usuario to set
+     */
+    public void setObj_usuario(GroupBeanImpl obj_usuario) {
+        this.obj_usuario = obj_usuario;
+    }
+
+    /**
+     * @return the fechaHoraAlta
+     */
+    public Date getFechaHoraAlta() {
+        return fechaHoraAlta;
+    }
+
+    /**
+     * @param fechaHoraAlta the fechaHoraAlta to set
+     */
+    public void setFechaHoraAlta(Date fechaHoraAlta) {
+        this.fechaHoraAlta = fechaHoraAlta;
+    }
 }
