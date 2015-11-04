@@ -29,6 +29,7 @@ package net.daw.bean.specific.implementation;
 
 import com.google.gson.annotations.Expose;
 import java.util.Date;
+import net.daw.bean.group.GroupBeanImpl;
 import net.daw.helper.annotations.MethodMetaInformation;
 import net.daw.helper.annotations.TableSourceMetaInformation;
 import net.daw.helper.statics.MetaEnum;
@@ -67,6 +68,17 @@ public class PostBean {
     )
     private Integer id_usuario = 0;
     
+        @Expose(deserialize = false)
+    @MethodMetaInformation(
+            UltraShortName = "R. Us.",
+            ShortName = "Ref. de usuario",
+            Description = "Referencia al usuario",
+            IsObjForeignKey = true,
+            ReferencesTable = "usuario",
+            MyIdName = "id_usuario"
+    )
+    private GroupBeanImpl obj_usuario = null;
+    
     @Expose(serialize = false)
     @MethodMetaInformation(
             UltraShortName = "Doc.",
@@ -78,7 +90,18 @@ public class PostBean {
     )
     private Integer id_documento = 0; 
     
-     @Expose
+    @Expose(deserialize = false)
+    @MethodMetaInformation(
+            UltraShortName = "R. Doc.",
+            ShortName = "Ref. de documento",
+            Description = "Referencia al documento",
+            IsObjForeignKey = true,
+            ReferencesTable = "documento",
+            MyIdName = "id_documento"
+    )
+    private GroupBeanImpl obj_documento = null;
+    
+    @Expose
     @MethodMetaInformation(
             UltraShortName = "Fe.",
             ShortName = "Fecha",

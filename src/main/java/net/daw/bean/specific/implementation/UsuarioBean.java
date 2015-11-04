@@ -127,7 +127,8 @@ public class UsuarioBean extends BeanGenImpl implements BeanInterface {
             UltraShortName = "Ciudad",
             ShortName = "Ciudad",
             Description = "Ciudad del usuario",
-            IsForeignKeyDescriptor = true)
+            IsForeignKeyDescriptor = true
+    )
     private String ciudad = "";
 
     @Expose

@@ -28,6 +28,7 @@
 package net.daw.bean.specific.implementation;
 
 import com.google.gson.annotations.Expose;
+import net.daw.bean.group.GroupBeanImpl;
 import net.daw.helper.annotations.MethodMetaInformation;
 import net.daw.helper.annotations.TableSourceMetaInformation;
 import net.daw.helper.statics.MetaEnum;
@@ -64,6 +65,17 @@ public class PreguntaBean {
             DefaultValue = "0"
     )
     private Integer id_documento = 0;
+    
+    @Expose(deserialize = false)
+    @MethodMetaInformation(
+            UltraShortName = "Ref. doc.",
+            ShortName = "Ref. de documento",
+            Description = "Referencia al documento",
+            IsObjForeignKey = true,
+            ReferencesTable = "documento",
+            MyIdName = "id_documento"
+    )
+    private GroupBeanImpl obj_documento = null;
     
     @Expose
     @MethodMetaInformation(
