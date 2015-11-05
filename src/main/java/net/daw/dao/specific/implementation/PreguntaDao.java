@@ -27,16 +27,20 @@
  */
 package net.daw.dao.specific.implementation;
 
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.HashMap;
 import net.daw.bean.group.GroupBeanImpl;
+import net.daw.bean.meta.MetaBeanGenImpl;
 import net.daw.bean.specific.implementation.DocumentoBean;
 import net.daw.bean.specific.implementation.PreguntaBean;
-import net.daw.bean.specific.implementation.UsuarioBean;
 import net.daw.dao.generic.implementation.TableDaoGenImpl;
 import net.daw.data.specific.implementation.MysqlDataSpImpl;
+import net.daw.helper.annotations.MethodMetaInformation;
+import net.daw.helper.statics.ExceptionBooster;
 import net.daw.helper.statics.FilterBeanHelper;
 import net.daw.helper.statics.SqlBuilder;
 
@@ -170,6 +174,18 @@ public class PreguntaDao extends TableDaoGenImpl<PreguntaBean> {
     public int getPages(int intRegsPerPag, ArrayList<FilterBeanHelper> alFilter) throws Exception {
         strSqlSelectDataOrigin += SqlBuilder.buildSqlWhere(alFilter);
         return oMysql.getPages(strSqlSelectDataOrigin, intRegsPerPag);
+    }
+    
+    @Override
+    public int remove(PreguntaBean oPreguntaBean) throws Exception {
+
+        int result = 0;
+        try {
+            result = oMysql.removeOne(oPreguntaBean.getId(), strTableOrigin);
+        } catch (Exception e) {
+            throw new Exception(this.getClass().getName() + ".remove: Error: " + e.getMessage());
+        }
+        return result;
     }
     
     @Override
