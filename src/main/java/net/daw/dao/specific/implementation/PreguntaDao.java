@@ -153,6 +153,12 @@ public class PreguntaDao extends TableDaoGenImpl<PreguntaBean> {
          
     
      }
+     
+     @Override
+    public int getPages(int intRegsPerPag, ArrayList<FilterBeanHelper> alFilter) throws Exception {
+        strSqlSelectDataOrigin += SqlBuilder.buildSqlWhere(alFilter);
+        return oMysql.getPages(strSqlSelectDataOrigin, intRegsPerPag);
+    }
     
     
 }
