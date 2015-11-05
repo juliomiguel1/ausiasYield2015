@@ -99,5 +99,62 @@ public class PreguntaService extends TableServiceGenImpl{
         return oGson.toJson(oPreguntaArray);
 
     }
+    
+    
+     @Override
+       public String getcount() throws Exception {
+
+        Connection oConnection = new BoneConnectionPoolImpl().newConnection();
+
+        PreguntaDao oProfesorDao = new PreguntaDao(oConnection);
+
+        PreguntaBean oProfesorBean = new PreguntaBean();
+         ArrayList<FilterBeanHelper> alFilterBeanHelper = ParameterCook.prepareFilter(oRequest);
+        //  ArrayList<FilterBeanHelper> alFilter = new ArrayList<FilterBeanHelper>();
+        int conta = oProfesorDao.getCount(alFilterBeanHelper/*alFilter*/);
+
+        String data = "{\"data\":\"" + Integer.toString(conta) + "\"}";
+
+        return data;
+    }
+    
+    @Override
+    public String set() throws Exception{
+        
+        Connection oConnection = new BoneConnectionPoolImpl().newConnection();
+        PreguntaDao oPreguntaDao = new PreguntaDao(oConnection);
+        PreguntaBean oPreguntaBean = new PreguntaBean();  
+        String json = ParameterCook.prepareJson(oRequest);
+        Gson gson = new GsonBuilder().setDateFormat("dd/MM/yyyy").excludeFieldsWithoutExposeAnnotation().create();
+        /*oProfesorBean.setId(2);
+        oProfesorBean.setNombre("julio");
+        oProfesorBean.setEstado("the best");*/
+        oPreguntaBean = gson.fromJson(json, PreguntaBean.class);
+        oPreguntaBean = oPreguntaDao.set(oPreguntaBean);
+        Map<String, String> data = new HashMap<>();
+        data.put("status", "200");
+        data.put("message", Integer.toString(oPreguntaBean.getId()));
+        String resultado = gson.toJson(data);
+        return resultado;
+    }
+
+    @Override
+    public String remove() throws Exception{
+        
+        Connection oConnection = new BoneConnectionPoolImpl().newConnection();
+        int id = ParameterCook.prepareId(oRequest);
+        PreguntaDao oProfesorDao = new PreguntaDao(oConnection);
+        
+        PreguntaBean oProfesorBean = new PreguntaBean();
+        oProfesorBean.setId(id);
+        oProfesorDao.remove(oProfesorBean);
+        
+        Map<String, String> data = new HashMap<>();
+        data.put("status", "200");
+        data.put("message", "se ha eliminado la pregunta con id= " + ((Integer)id).toString());
+        Gson gson = new Gson();
+        String resultado = gson.toJson(data);
+        return resultado;
+    }
      
 }
