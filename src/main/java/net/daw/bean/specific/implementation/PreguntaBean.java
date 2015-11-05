@@ -65,7 +65,7 @@ public class PreguntaBean extends BeanGenImpl implements BeanInterface{
     )
     private Integer id;
     
-    @Expose(serialize = false)
+    @Expose
     @MethodMetaInformation(
             UltraShortName = "Iden. Doc",
             ShortName = "Iden. de Documento",
