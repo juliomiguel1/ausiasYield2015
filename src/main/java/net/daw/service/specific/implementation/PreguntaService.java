@@ -167,7 +167,7 @@ public class PreguntaService extends TableServiceGenImpl{
         Connection oConnection = new BoneConnectionPoolImpl().newConnection();
         PreguntaDao oPreguntaDao = new PreguntaDao(oConnection);
         Gson oGson = new GsonBuilder().setDateFormat("dd/MM/yyyy").excludeFieldsWithoutExposeAnnotation().create();
-        return oGson.toJson(oPreguntaDao.getmetainformation());
+        return "{\"status\":200,\"message\":"+oGson.toJson(oPreguntaDao.getmetainformation()+"\"}";
 
     }
     
