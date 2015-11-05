@@ -154,7 +154,7 @@ public class PreguntaService extends TableServiceGenImpl{
 
         //Creamos el Json para mostrarlo en pantalla
         Gson oGson = new GsonBuilder().setDateFormat("dd/MM/yyyy").create();
-        return oGson.toJson(oPreguntaArray);
+        return "{\"status\":200,\"message\":" +oGson.toJson(oPreguntaArray) +"\"}";
 
     }
     
