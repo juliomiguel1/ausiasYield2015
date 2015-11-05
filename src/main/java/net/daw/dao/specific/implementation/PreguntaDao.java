@@ -148,11 +148,23 @@ public class PreguntaDao extends TableDaoGenImpl<PreguntaBean> {
         //Devolver el array de PreguntaBean
         return alPreguntaBean;
          
-         
-         
-         
-    
      }
+     
+    @Override
+    public int getCount(ArrayList<FilterBeanHelper> alFilter) throws Exception{
+        
+        MysqlDataSpImpl oMysql = new MysqlDataSpImpl(oConnection);
+         
+        strSqlSelectDataOrigin += SqlBuilder.buildSqlWhere(alFilter);
+        int cont = 0;
+           
+        try{
+             cont = oMysql.getCount(strSqlSelectDataOrigin);
+        }catch(Exception e){
+          throw new Exception(this.getClass().getName() + ".getCount: Error: " + e.getMessage());
+        }
+        return cont;
+    }
      
      @Override
     public int getPages(int intRegsPerPag, ArrayList<FilterBeanHelper> alFilter) throws Exception {
