@@ -50,6 +50,7 @@ public class PreguntaService extends TableServiceGenImpl{
         super(request);
     }
  
+   
     @Override
     public String getall() throws Exception {
 
@@ -64,42 +65,10 @@ public class PreguntaService extends TableServiceGenImpl{
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.setDateFormat("dd/MM/yyyy");
         Gson gson = gsonBuilder.create();
-        String data = gson.toJson(alPreguntaBean);
+        String data = "{\"status\":200,\"message\":"+gson.toJson(alPreguntaBean)+"\"}";
 
         return data;
     }
-    
-     @Override
-    public String getpage() throws Exception {
-
-        Connection oConnection = null;
-
-        oConnection = new BoneConnectionPoolImpl().newConnection();
-
-        PreguntaDao oPreguntaDao = new PreguntaDao(oConnection);
-
-        ArrayList<PreguntaBean> oPreguntaArray = new ArrayList<>();
-
-        //Obtenemos parámetros con el ParameterCook
-        int rpp = ParameterCook.prepareRpp(oRequest);
-
-        int page = ParameterCook.preparePage(oRequest);
-
-        //ArrayList para sacar los filtros
-        ArrayList<FilterBeanHelper> alFilterBeanHelper = ParameterCook.prepareFilter(oRequest);
-
-        //HashMap para sacar el orden
-        HashMap<String, String> hmOrder = ParameterCook.prepareOrder(oRequest);
-
-        //Asignamos getPage(con sus parámetros) al ArrayList oProfesorArray
-        oPreguntaArray = oPreguntaDao.getPage(rpp, page, alFilterBeanHelper, hmOrder);
-
-        //Creamos el Json para mostrarlo en pantalla
-        Gson oGson = new GsonBuilder().setDateFormat("dd/MM/yyyy").create();
-        return oGson.toJson(oPreguntaArray);
-
-    }
-    
     
      @Override
        public String getcount() throws Exception {
@@ -113,7 +82,7 @@ public class PreguntaService extends TableServiceGenImpl{
         //  ArrayList<FilterBeanHelper> alFilter = new ArrayList<FilterBeanHelper>();
         int conta = oProfesorDao.getCount(alFilterBeanHelper/*alFilter*/);
 
-        String data = "{\"data\":\"" + Integer.toString(conta) + "\"}";
+        String data = "{\"status\":200,\"message\":" + Integer.toString(conta) + "\"}";
 
         return data;
     }
@@ -156,6 +125,41 @@ public class PreguntaService extends TableServiceGenImpl{
         String resultado = gson.toJson(data);
         return resultado;
     }
+    
+    
+     @Override
+    public String getpage() throws Exception {
+
+        Connection oConnection = null;
+
+        oConnection = new BoneConnectionPoolImpl().newConnection();
+
+        PreguntaDao oPreguntaDao = new PreguntaDao(oConnection);
+
+        ArrayList<PreguntaBean> oPreguntaArray = new ArrayList<>();
+
+        //Obtenemos parámetros con el ParameterCook
+        int rpp = ParameterCook.prepareRpp(oRequest);
+
+        int page = ParameterCook.preparePage(oRequest);
+
+        //ArrayList para sacar los filtros
+        ArrayList<FilterBeanHelper> alFilterBeanHelper = ParameterCook.prepareFilter(oRequest);
+
+        //HashMap para sacar el orden
+        HashMap<String, String> hmOrder = ParameterCook.prepareOrder(oRequest);
+
+        //Asignamos getPage(con sus parámetros) al ArrayList oProfesorArray
+        oPreguntaArray = oPreguntaDao.getPage(rpp, page, alFilterBeanHelper, hmOrder);
+
+        //Creamos el Json para mostrarlo en pantalla
+        Gson oGson = new GsonBuilder().setDateFormat("dd/MM/yyyy").create();
+        return oGson.toJson(oPreguntaArray);
+
+    }
+    
+    
+    
     
         @Override
     public String getmetainformation() throws Exception {
