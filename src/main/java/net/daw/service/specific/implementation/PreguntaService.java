@@ -156,5 +156,15 @@ public class PreguntaService extends TableServiceGenImpl{
         String resultado = gson.toJson(data);
         return resultado;
     }
+    
+        @Override
+    public String getmetainformation() throws Exception {
+
+        Connection oConnection = new BoneConnectionPoolImpl().newConnection();
+        PreguntaDao oPreguntaDao = new PreguntaDao(oConnection);
+        Gson oGson = new GsonBuilder().setDateFormat("dd/MM/yyyy").excludeFieldsWithoutExposeAnnotation().create();
+        return oGson.toJson(oPreguntaDao.getmetainformation());
+
+    }
      
 }
