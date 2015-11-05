@@ -29,21 +29,31 @@ package net.daw.bean.specific.implementation;
 
 import com.google.gson.annotations.Expose;
 import java.util.Date;
+import net.daw.bean.generic.implementation.BeanGenImpl;
 import net.daw.bean.group.GroupBeanImpl;
+import net.daw.bean.publicinterface.BeanInterface;
 import net.daw.helper.annotations.MethodMetaInformation;
 import net.daw.helper.annotations.TableSourceMetaInformation;
 import net.daw.helper.statics.MetaEnum;
 
 /**
  *
- * @author a047087313b
+ * @author juliomiguel
  */
 
 @TableSourceMetaInformation(
         TableName = "respuesta",
-        Description = "Respuestas del cuestionario"
+        Description = "Respuesta"
 )
-public class RespuestaBean {
+public class RespuestaBean extends BeanGenImpl implements BeanInterface{
+    
+     public RespuestaBean() {
+        this.id = 0;
+    }
+
+    public RespuestaBean(Integer id) {
+        this.id = id;
+    }
     
     @Expose
     @MethodMetaInformation(
@@ -58,44 +68,42 @@ public class RespuestaBean {
     
     @Expose(serialize = false)
     @MethodMetaInformation(
+            UltraShortName = "Opcion",
+            ShortName = "Iden. Opcion",
+            Description = "Identificador de Opcion",
             IsIdForeignKey = true,
             ReferencesTable = "opcion",
-            UltraShortName = "Op.",
-            ShortName = "Opc.",
-            Description = "Opcion",
-            Type = MetaEnum.FieldType.Integer,
-            DefaultValue = "0"
+            Type = MetaEnum.FieldType.Integer
     )
-    private Integer id_opcion = 0;
-    
-        @Expose(deserialize = false)
+    private Integer id_opcion = 0; //important zero-initialize foreign keys
+
+    @Expose(deserialize = false)
     @MethodMetaInformation(
-            UltraShortName = "R. op.",
-            ShortName = "Ref. de opción",
-            Description = "Referencia a la opción",
+            UltraShortName = "Opcion",
+            ShortName = "Opcion",
+            Description = "Referencia de la Opcion",
             IsObjForeignKey = true,
             ReferencesTable = "opcion",
             MyIdName = "id_opcion"
     )
     private GroupBeanImpl obj_opcion = null;
-     
+    
     @Expose(serialize = false)
     @MethodMetaInformation(
+            UltraShortName = "Usuario",
+            ShortName = "Usuario",
+            Description = "Identificador de Usuario",
             IsIdForeignKey = true,
             ReferencesTable = "usuario",
-            UltraShortName = "Us.",
-            ShortName = "Usu.",
-            Description = "Usuario",
-            Type = MetaEnum.FieldType.Integer,
-            DefaultValue = "0"
+            Type = MetaEnum.FieldType.Integer
     )
-    private Integer id_usuario = 0;
-    
-        @Expose(deserialize = false)
+    private Integer id_usuario = 0; //important zero-initialize foreign keys
+
+    @Expose(deserialize = false)
     @MethodMetaInformation(
-            UltraShortName = "Ref. usu.",
-            ShortName = "Ref. al usuario",
-            Description = "Referencia al usuario",
+            UltraShortName = "Usuario",
+            ShortName = "Usuario",
+            Description = "Referencia al usuario propietario",
             IsObjForeignKey = true,
             ReferencesTable = "usuario",
             MyIdName = "id_usuario"
@@ -106,43 +114,94 @@ public class RespuestaBean {
     @MethodMetaInformation(
             UltraShortName = "F.alta",
             ShortName = "Fecha de alta",
-            Description = "Fecha de creación de la respuesta",
+            Description = "Fecha de envio opción",
             Type = MetaEnum.FieldType.Date,
-            DefaultValue = "01/01/2000"
+            DefaultValue = "01/01/2000",
+            IsForeignKeyDescriptor = true
     )
     private Date fechaHoraAlta = new Date();
 
+    /**
+     * @return the id
+     */
     public Integer getId() {
         return id;
     }
 
+    /**
+     * @param id the id to set
+     */
     public void setId(Integer id) {
         this.id = id;
     }
 
-    public Integer getIdOpcion() {
+    /**
+     * @return the id_opcion
+     */
+    public Integer getId_opcion() {
         return id_opcion;
     }
 
-    public void setIdOpcion(Integer idOpcion) {
-        this.id_opcion = idOpcion;
+    /**
+     * @param id_opcion the id_opcion to set
+     */
+    public void setId_opcion(Integer id_opcion) {
+        this.id_opcion = id_opcion;
     }
 
-    public Integer getIdUsuario() {
+    /**
+     * @return the obj_opcion
+     */
+    public GroupBeanImpl getObj_opcion() {
+        return obj_opcion;
+    }
+
+    /**
+     * @param obj_opcion the obj_opcion to set
+     */
+    public void setObj_opcion(GroupBeanImpl obj_opcion) {
+        this.obj_opcion = obj_opcion;
+    }
+
+    /**
+     * @return the id_usuario
+     */
+    public Integer getId_usuario() {
         return id_usuario;
     }
 
-    public void setIdUsuario(Integer idUsuario) {
-        this.id_usuario = idUsuario;
+    /**
+     * @param id_usuario the id_usuario to set
+     */
+    public void setId_usuario(Integer id_usuario) {
+        this.id_usuario = id_usuario;
     }
 
+    /**
+     * @return the obj_usuario
+     */
+    public GroupBeanImpl getObj_usuario() {
+        return obj_usuario;
+    }
+
+    /**
+     * @param obj_usuario the obj_usuario to set
+     */
+    public void setObj_usuario(GroupBeanImpl obj_usuario) {
+        this.obj_usuario = obj_usuario;
+    }
+
+    /**
+     * @return the fechaHoraAlta
+     */
     public Date getFechaHoraAlta() {
         return fechaHoraAlta;
     }
 
+    /**
+     * @param fechaHoraAlta the fechaHoraAlta to set
+     */
     public void setFechaHoraAlta(Date fechaHoraAlta) {
         this.fechaHoraAlta = fechaHoraAlta;
     }
-    
-    
 }

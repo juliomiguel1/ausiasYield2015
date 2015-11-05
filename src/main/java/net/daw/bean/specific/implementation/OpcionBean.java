@@ -28,22 +28,31 @@
 package net.daw.bean.specific.implementation;
 
 import com.google.gson.annotations.Expose;
+import net.daw.bean.generic.implementation.BeanGenImpl;
 import net.daw.bean.group.GroupBeanImpl;
+import net.daw.bean.publicinterface.BeanInterface;
 import net.daw.helper.annotations.MethodMetaInformation;
 import net.daw.helper.annotations.TableSourceMetaInformation;
 import net.daw.helper.statics.MetaEnum;
 
 /**
  *
- * @author a047087313b
+ * @author juliomiguel
  */
-
 @TableSourceMetaInformation(
         TableName = "opcion",
-        Description = "Opciones para respuestas del cuestionario"
+        Description = "Opcion de pregunta"
 )
-public class OpcionBean {
+
+public class OpcionBean extends BeanGenImpl implements BeanInterface{
     
+    public OpcionBean() {
+        this.id = 0;
+    }
+
+    public OpcionBean(Integer id) {
+        this.id = id;
+    }
     
     @Expose
     @MethodMetaInformation(
@@ -58,59 +67,91 @@ public class OpcionBean {
     
     @Expose(serialize = false)
     @MethodMetaInformation(
+            UltraShortName = "Iden. Preg",
+            ShortName = "Iden. de Pregunta",
+            Description = "Identificador de Pregunta",
             IsIdForeignKey = true,
             ReferencesTable = "pregunta",
-            UltraShortName = "Pre.",
-            ShortName = "Preg.",
-            Description = "Pregunta",
-            Type = MetaEnum.FieldType.Integer,
-            DefaultValue = "0"
+            Type = MetaEnum.FieldType.Integer
     )
     private Integer id_pregunta = 0;
     
+     
     @Expose(deserialize = false)
     @MethodMetaInformation(
-            UltraShortName = "R. usu.",
-            ShortName = "Ref. de usuario",
-            Description = "Referencia de usuario",
+            UltraShortName = "Iden. Preg",
+            ShortName = "Iden. de Pregunta",
+            Description = "Identificador de Pregunta",
             IsObjForeignKey = true,
-            ReferencesTable = "usuario",
-            MyIdName = "id_usuario"
+            ReferencesTable = "pregunta",
+            MyIdName = "id_pregunta"
     )
-    private GroupBeanImpl obj_usuario = null;
+    private GroupBeanImpl obj_pregunta = null;
     
     @Expose
     @MethodMetaInformation(
             UltraShortName = "Desc.",
-            ShortName = "Descrip.",
-            Description = "Descripción",
-            Type = MetaEnum.FieldType.Integer
+            ShortName = "Descripcion",
+            Description = "Descripcion de opcion",
+            Type = MetaEnum.FieldType.String,
+            DefaultValue = "Sin contenido"
     )
-    private String descripcion;
+    private String descripcion = "";
 
+    /**
+     * @return the id
+     */
     public Integer getId() {
         return id;
     }
 
+    /**
+     * @param id the id to set
+     */
     public void setId(Integer id) {
         this.id = id;
     }
 
-    public Integer getIdPregunta() {
+    /**
+     * @return the id_pregunta
+     */
+    public Integer getId_pregunta() {
         return id_pregunta;
     }
 
-    public void setIdPregunta(Integer idPregunta) {
-        this.id_pregunta = idPregunta;
+    /**
+     * @param id_pregunta the id_pregunta to set
+     */
+    public void setId_pregunta(Integer id_pregunta) {
+        this.id_pregunta = id_pregunta;
     }
 
+    /**
+     * @return the obj_pregunta
+     */
+    public GroupBeanImpl getObj_pregunta() {
+        return obj_pregunta;
+    }
+
+    /**
+     * @param obj_pregunta the obj_pregunta to set
+     */
+    public void setObj_pregunta(GroupBeanImpl obj_pregunta) {
+        this.obj_pregunta = obj_pregunta;
+    }
+
+    /**
+     * @return the descripcion
+     */
     public String getDescripcion() {
         return descripcion;
     }
 
+    /**
+     * @param descripcion the descripcion to set
+     */
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
     }
-    
-    
+   
 }

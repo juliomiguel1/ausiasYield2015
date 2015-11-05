@@ -31,8 +31,10 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.HashMap;
+import net.daw.bean.group.GroupBeanImpl;
 import net.daw.bean.specific.implementation.DocumentoBean;
 import net.daw.bean.specific.implementation.PreguntaBean;
+import net.daw.bean.specific.implementation.UsuarioBean;
 import net.daw.dao.generic.implementation.TableDaoGenImpl;
 import net.daw.data.specific.implementation.MysqlDataSpImpl;
 import net.daw.helper.statics.FilterBeanHelper;
@@ -40,33 +42,81 @@ import net.daw.helper.statics.SqlBuilder;
 
 /**
  *
- * @author a047087313b
+ * @author juliomiguel
  */
 public class PreguntaDao extends TableDaoGenImpl<PreguntaBean> {
     
-    public PreguntaDao(Connection pooledConnection) throws Exception {
+     public PreguntaDao(Connection pooledConnection) throws Exception {
         super(pooledConnection);
     }
-
+   
     @Override
     public PreguntaBean get(PreguntaBean oPreguntaBean, Integer expand) throws Exception {
         MysqlDataSpImpl oMysql = new MysqlDataSpImpl(oConnection);
         if (oPreguntaBean.getId() > 0) {
-
             if (oMysql.existsOne(strSqlSelectDataOrigin, oPreguntaBean.getId())) {
                 oPreguntaBean.setDescripcion(oMysql.getOne(strSqlSelectDataOrigin, "descripcion", oPreguntaBean.getId()));
-                
-                String strIdDoc = oMysql.getOne(strSqlSelectDataOrigin, "id_documento",oPreguntaBean.getId());
-                oPreguntaBean.setIdDocumento(Integer.parseInt(strIdDoc));
-                
-         }
+                String strIdDoc = oMysql.getOne(strSqlSelectDataOrigin, "id_documento", oPreguntaBean.getId());
+                oPreguntaBean.setId_documento(Integer.parseInt(strIdDoc));
+            }
         }
         try {
             return oPreguntaBean;
         } catch (Exception e) {
             throw new Exception(this.getClass().getName() + ":get ERROR: " + e.getMessage());
         }
-    }
+    }  
+     
+     
+   @Override
+    public ArrayList<PreguntaBean> getAll(ArrayList<FilterBeanHelper> alFilter, HashMap<String, String> hmOrder) throws Exception {
 
+        MysqlDataSpImpl oMysql = new MysqlDataSpImpl(oConnection);
+
+        ArrayList<PreguntaBean> alPreguntaBean = new ArrayList<>();
+        strSqlSelectDataOrigin += SqlBuilder.buildSqlWhere(alFilter);
+        strSqlSelectDataOrigin += SqlBuilder.buildSqlOrder(hmOrder);
+        try {
+            ResultSet result = oMysql.getAllSql(strSqlSelectDataOrigin);
+            if (result != null) {
+                while (result.next()) {
+                    PreguntaBean oPreguntaBean = new PreguntaBean();
+                    oPreguntaBean.setId(result.getInt("id"));
+                    oPreguntaBean.setId_documento(result.getInt("id_documento"));
+                    
+                    
+                    //crear un dao de documento
+                    DocumentoDao oDocumentoDao = new DocumentoDao(oConnection);
+                    //un pojo de documento con elid de documento
+                    DocumentoBean oDocumentoBean = new DocumentoBean();
+                    oDocumentoBean.setId(result.getInt("id_documento"));
+                   
+                    oDocumentoBean=oDocumentoDao.get(oDocumentoBean, 2);
+                    //rellenar el pojo de documento con el dao
+                    //meter el pojo relleno a la pregunta
+                    GroupBeanImpl oGroupBeanImpl = new GroupBeanImpl();
+                    oGroupBeanImpl.setBean(oDocumentoBean);
+                    oGroupBeanImpl.setMeta(oDocumentoDao.getmetainformation());
+                    oPreguntaBean.setObj_documento(oGroupBeanImpl);
+                    
+                    //sacar del dao de documento los metadatos de documento
+                    //meterlos en el pojo de la pregunta tambien
+                    
+                    
+                    
+                    oPreguntaBean.setDescripcion(result.getString("descripcion"));
+                    alPreguntaBean.add(oPreguntaBean);
+                }
+            }
+            
+
+       } catch (Exception ex) {
+            throw new Exception(this.getClass().getName() + ":get ERROR: " + ex.getMessage());
+        }
+
+        return alPreguntaBean;
+    }
+   
+    
     
 }
