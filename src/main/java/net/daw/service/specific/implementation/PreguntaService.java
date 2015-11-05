@@ -166,5 +166,35 @@ public class PreguntaService extends TableServiceGenImpl{
         return oGson.toJson(oPreguntaDao.getmetainformation());
 
     }
+    
+    @Override
+    public String getpages() throws Exception {
+        if (this.checkpermission("getpages")) {
+            Connection oConnection = null;
+            ConnectionInterface oDataConnectionSource = null;
+            String strResult = null;
+            try {
+                oDataConnectionSource = getSourceConnection();
+                oConnection = oDataConnectionSource.newConnection();
+                PreguntaDao oPreguntaDao = new PreguntaDao(oConnection);
+                int intRpp = ParameterCook.prepareRpp(oRequest);
+                ArrayList<FilterBeanHelper> alFilterBeanHelper = ParameterCook.prepareFilter(oRequest);
+                strResult = ((Integer) oPreguntaDao.getPages(intRpp, alFilterBeanHelper)).toString();
+            } catch (Exception ex) {
+                oConnection.rollback();
+                ExceptionBooster.boost(new Exception(this.getClass().getName() + ":remove ERROR: " + ex.getMessage()));
+            } finally {
+                if (oConnection != null) {
+                    oConnection.close();
+                }
+                if (oDataConnectionSource != null) {
+                    oDataConnectionSource.disposeConnection();
+                }
+            }
+            return JsonMessage.getJsonMsg("200",strResult);
+        } else {
+            return JsonMessage.getJsonMsg("401", "Unauthorized");
+        }
+    }
      
 }
