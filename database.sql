@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: localhost:3306
--- Tiempo de generación: 04-11-2015 a las 01:16:47
+-- Tiempo de generación: 04-11-2015 a las 01:39:45
 -- Versión del servidor: 5.6.26
 -- Versión de PHP: 5.5.29
 
@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS `categoriaarticulo` (
   `id` int(11) NOT NULL COMMENT 'id',
   `nombre` varchar(255) DEFAULT NULL COMMENT 'nombre',
   `descripcion` varchar(255) DEFAULT NULL COMMENT 'descripcion'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8;
 
 --
 -- Volcado de datos para la tabla `categoriaarticulo`
@@ -294,7 +294,7 @@ CREATE TABLE IF NOT EXISTS `post` (
   `id_documento` int(11) DEFAULT NULL COMMENT 'Documento',
   `fecha` datetime DEFAULT NULL COMMENT 'Publicacion',
   `mensaje` text COLLATE utf8_unicode_ci
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Volcado de datos para la tabla `post`
@@ -486,6 +486,12 @@ INSERT INTO `usuario` (`id`, `login`, `password`, `id_tipousuario`, `id_estado`,
 --
 
 --
+-- Indices de la tabla `categoriaarticulo`
+--
+ALTER TABLE `categoriaarticulo`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indices de la tabla `comentario`
 --
 ALTER TABLE `comentario`
@@ -495,6 +501,12 @@ ALTER TABLE `comentario`
 -- Indices de la tabla `documento`
 --
 ALTER TABLE `documento`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indices de la tabla `documentocategoriaarticulo`
+--
+ALTER TABLE `documentocategoriaarticulo`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -550,6 +562,11 @@ ALTER TABLE `usuario`
 --
 
 --
+-- AUTO_INCREMENT de la tabla `categoriaarticulo`
+--
+ALTER TABLE `categoriaarticulo`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id',AUTO_INCREMENT=17;
+--
 -- AUTO_INCREMENT de la tabla `comentario`
 --
 ALTER TABLE `comentario`
@@ -560,6 +577,11 @@ ALTER TABLE `comentario`
 ALTER TABLE `documento`
   MODIFY `id` int(6) NOT NULL AUTO_INCREMENT COMMENT 'Num.',AUTO_INCREMENT=91;
 --
+-- AUTO_INCREMENT de la tabla `documentocategoriaarticulo`
+--
+ALTER TABLE `documentocategoriaarticulo`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id';
+--
 -- AUTO_INCREMENT de la tabla `estado`
 --
 ALTER TABLE `estado`
@@ -569,6 +591,11 @@ ALTER TABLE `estado`
 --
 ALTER TABLE `opcion`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=46;
+--
+-- AUTO_INCREMENT de la tabla `post`
+--
+ALTER TABLE `post`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Num.',AUTO_INCREMENT=16;
 --
 -- AUTO_INCREMENT de la tabla `pregunta`
 --
@@ -594,9 +621,6 @@ ALTER TABLE `tipousuario`
 --
 ALTER TABLE `usuario`
   MODIFY `id` int(6) NOT NULL AUTO_INCREMENT COMMENT 'Identificador',AUTO_INCREMENT=31;
---
--- Restricciones para tablas volcadas
---
 
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
