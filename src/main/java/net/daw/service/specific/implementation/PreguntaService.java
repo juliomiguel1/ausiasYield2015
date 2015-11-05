@@ -32,11 +32,16 @@ import com.google.gson.GsonBuilder;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import net.daw.bean.specific.implementation.PreguntaBean;
 import net.daw.connection.implementation.BoneConnectionPoolImpl;
+import net.daw.connection.publicinterface.ConnectionInterface;
 import net.daw.dao.specific.implementation.PreguntaDao;
+import static net.daw.helper.statics.AppConfigurationHelper.getSourceConnection;
+import net.daw.helper.statics.ExceptionBooster;
 import net.daw.helper.statics.FilterBeanHelper;
+import net.daw.helper.statics.JsonMessage;
 import net.daw.helper.statics.ParameterCook;
 import net.daw.service.generic.implementation.TableServiceGenImpl;
 
@@ -161,13 +166,13 @@ public class PreguntaService extends TableServiceGenImpl{
     
     
     
-        @Override
+    @Override
     public String getmetainformation() throws Exception {
 
         Connection oConnection = new BoneConnectionPoolImpl().newConnection();
         PreguntaDao oPreguntaDao = new PreguntaDao(oConnection);
         Gson oGson = new GsonBuilder().setDateFormat("dd/MM/yyyy").excludeFieldsWithoutExposeAnnotation().create();
-        return "{\"status\":200,\"message\":"+oGson.toJson(oPreguntaDao.getmetainformation()+"\"}";
+        return "{\"status\":200,\"message\":"+oGson.toJson(oPreguntaDao.getmetainformation())+"\"}";
 
     }
     

@@ -69,15 +69,13 @@ public class PreguntaDao extends TableDaoGenImpl<PreguntaBean> {
                     PreguntaBean oPreguntaBean = new PreguntaBean();
                     oPreguntaBean.setId(result.getInt("id"));
                     oPreguntaBean.setId_documento(result.getInt("id_documento"));
-                    
-                    
                     //crear un dao de documento
                     DocumentoDao oDocumentoDao = new DocumentoDao(oConnection);
                     //un pojo de documento con elid de documento
                     DocumentoBean oDocumentoBean = new DocumentoBean();
-                    oDocumentoBean.setId(result.getInt("id_documento"));
-                   
+                    oDocumentoBean.setId(result.getInt("id_documento"));                   
                     oDocumentoBean=oDocumentoDao.get(oDocumentoBean, 2);
+                    
                     //rellenar el pojo de documento con el dao
                     //meter el pojo relleno a la pregunta
                     GroupBeanImpl oGroupBeanImpl = new GroupBeanImpl();
@@ -87,9 +85,6 @@ public class PreguntaDao extends TableDaoGenImpl<PreguntaBean> {
                     
                     //sacar del dao de documento los metadatos de documento
                     //meterlos en el pojo de la pregunta tambien
-                    
-                    
-                    
                     oPreguntaBean.setDescripcion(result.getString("descripcion"));
                     alPreguntaBean.add(oPreguntaBean);
                 }
@@ -174,6 +169,24 @@ public class PreguntaDao extends TableDaoGenImpl<PreguntaBean> {
     public int getPages(int intRegsPerPag, ArrayList<FilterBeanHelper> alFilter) throws Exception {
         strSqlSelectDataOrigin += SqlBuilder.buildSqlWhere(alFilter);
         return oMysql.getPages(strSqlSelectDataOrigin, intRegsPerPag);
+    }
+    
+    @Override
+    public PreguntaBean set(PreguntaBean oPreguntaBean) throws Exception {
+
+        MysqlDataSpImpl oMysql = new MysqlDataSpImpl(oConnection);
+        
+        try {
+            if (oPreguntaBean.getId() == 0) {
+                oPreguntaBean.setId(oMysql.insertOne(strTableOrigin));
+            } 
+                oMysql.updateOne(oPreguntaBean.getId(), strTableOrigin, "descripcion", oPreguntaBean.getDescripcion());
+                oMysql.updateOne(oPreguntaBean.getId(), strTableOrigin, "id_documento", oPreguntaBean.getId_documento().toString());
+            
+        } catch (Exception e) {
+            throw new Exception(this.getClass().getName() + ".set: Error: " + e.getMessage());
+        }
+        return oPreguntaBean;
     }
     
     @Override
