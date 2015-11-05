@@ -49,12 +49,44 @@ import net.daw.helper.statics.SqlBuilder;
  * @author juliomiguel
  */
 public class PreguntaDao extends TableDaoGenImpl<PreguntaBean> {
-    
-     public PreguntaDao(Connection pooledConnection) throws Exception {
+
+    public PreguntaDao(Connection pooledConnection) throws Exception {
         super(pooledConnection);
     }
-     
-   @Override
+
+    @Override
+    public PreguntaBean get(PreguntaBean oPreguntaBean, Integer expand) throws Exception {
+        MysqlDataSpImpl oMysql = new MysqlDataSpImpl(oConnection);
+        if (oPreguntaBean.getId() > 0) {
+
+            if (oMysql.existsOne(strSqlSelectDataOrigin, oPreguntaBean.getId())) {
+                oPreguntaBean.setDescripcion(oMysql.getOne(strSqlSelectDataOrigin, "descripcion", oPreguntaBean.getId()));
+                String strIdDoc = oMysql.getOne(strSqlSelectDataOrigin, "id_documento", oPreguntaBean.getId());
+                oPreguntaBean.setId_documento(Integer.parseInt(strIdDoc));
+                
+                DocumentoDao oDocumentoDao = new DocumentoDao(oConnection);
+                    //un pojo de documento con elid de documento
+                    DocumentoBean oDocumentoBean = new DocumentoBean();
+                    oDocumentoBean.setId(oPreguntaBean.getId_documento());
+                    oDocumentoBean = oDocumentoDao.get(oDocumentoBean, 1);
+
+                    //rellenar el pojo de documento con el dao
+                    //meter el pojo relleno a la pregunta
+                    GroupBeanImpl oGroupBeanImpl = new GroupBeanImpl();
+                    oGroupBeanImpl.setBean(oDocumentoBean);
+                    oGroupBeanImpl.setMeta(oDocumentoDao.getmetainformation());
+                    oPreguntaBean.setObj_documento(oGroupBeanImpl);
+            }
+        }
+        try {
+
+            return oPreguntaBean;
+        } catch (Exception e) {
+            throw new Exception(this.getClass().getName() + ":get ERROR: " + e.getMessage());
+        }
+    }
+
+    @Override
     public ArrayList<PreguntaBean> getAll(ArrayList<FilterBeanHelper> alFilter, HashMap<String, String> hmOrder) throws Exception {
 
         MysqlDataSpImpl oMysql = new MysqlDataSpImpl(oConnection);
@@ -73,35 +105,34 @@ public class PreguntaDao extends TableDaoGenImpl<PreguntaBean> {
                     DocumentoDao oDocumentoDao = new DocumentoDao(oConnection);
                     //un pojo de documento con elid de documento
                     DocumentoBean oDocumentoBean = new DocumentoBean();
-                    oDocumentoBean.setId(result.getInt("id_documento"));                   
-                    oDocumentoBean=oDocumentoDao.get(oDocumentoBean, 2);
-                    
+                    oDocumentoBean.setId(result.getInt("id_documento"));
+                    oDocumentoBean = oDocumentoDao.get(oDocumentoBean, 1);
+
                     //rellenar el pojo de documento con el dao
                     //meter el pojo relleno a la pregunta
                     GroupBeanImpl oGroupBeanImpl = new GroupBeanImpl();
                     oGroupBeanImpl.setBean(oDocumentoBean);
                     oGroupBeanImpl.setMeta(oDocumentoDao.getmetainformation());
                     oPreguntaBean.setObj_documento(oGroupBeanImpl);
-                    
+
                     //sacar del dao de documento los metadatos de documento
                     //meterlos en el pojo de la pregunta tambien
                     oPreguntaBean.setDescripcion(result.getString("descripcion"));
                     alPreguntaBean.add(oPreguntaBean);
                 }
             }
-            
 
-       } catch (Exception ex) {
+        } catch (Exception ex) {
             throw new Exception(this.getClass().getName() + ":get ERROR: " + ex.getMessage());
         }
 
         return alPreguntaBean;
     }
-    
-     @Override
-     public ArrayList<PreguntaBean> getPage(int intRegsPerPag, int intPage, ArrayList<FilterBeanHelper> alFilter, HashMap<String, String> hmOrder) throws Exception {
-     
-         //Crear la conexión SQL
+
+    @Override
+    public ArrayList<PreguntaBean> getPage(int intRegsPerPag, int intPage, ArrayList<FilterBeanHelper> alFilter, HashMap<String, String> hmOrder) throws Exception {
+
+        //Crear la conexión SQL
         MysqlDataSpImpl oMySQL = new MysqlDataSpImpl(oConnection);
 
         strSqlSelectDataOrigin += SqlBuilder.buildSqlWhere(alFilter);
@@ -120,75 +151,71 @@ public class PreguntaDao extends TableDaoGenImpl<PreguntaBean> {
 
             oPreguntaBean.setId(result.getInt("id"));
             oPreguntaBean.setId_documento(result.getInt("id_documento"));
-            
-            //crear un dao de documento
-                    DocumentoDao oDocumentoDao = new DocumentoDao(oConnection);
-                    //un pojo de documento con elid de documento
-                    DocumentoBean oDocumentoBean = new DocumentoBean();
-                    oDocumentoBean.setId(result.getInt("id_documento"));
-                   
-                    oDocumentoBean=oDocumentoDao.get(oDocumentoBean, 2);
-                    //rellenar el pojo de documento con el dao
-                    //meter el pojo relleno a la pregunta
-                    GroupBeanImpl oGroupBeanImpl = new GroupBeanImpl();
-                    oGroupBeanImpl.setBean(oDocumentoBean);
-                    oGroupBeanImpl.setMeta(oDocumentoDao.getmetainformation());
-                    oPreguntaBean.setObj_documento(oGroupBeanImpl);
-                    
-                    
-                    oPreguntaBean.setDescripcion(result.getString("descripcion"));
-                    alPreguntaBean.add(oPreguntaBean);
-            
-         
-            //Asignar los datos de la variable local al array de PreguntaBean
-   
 
+            //crear un dao de documento
+            DocumentoDao oDocumentoDao = new DocumentoDao(oConnection);
+            //un pojo de documento con elid de documento
+            DocumentoBean oDocumentoBean = new DocumentoBean();
+            oDocumentoBean.setId(result.getInt("id_documento"));
+
+            oDocumentoBean = oDocumentoDao.get(oDocumentoBean, 2);
+                    //rellenar el pojo de documento con el dao
+            //meter el pojo relleno a la pregunta
+            GroupBeanImpl oGroupBeanImpl = new GroupBeanImpl();
+            oGroupBeanImpl.setBean(oDocumentoBean);
+            oGroupBeanImpl.setMeta(oDocumentoDao.getmetainformation());
+            oPreguntaBean.setObj_documento(oGroupBeanImpl);
+
+            oPreguntaBean.setDescripcion(result.getString("descripcion"));
+            alPreguntaBean.add(oPreguntaBean);
+
+            //Asignar los datos de la variable local al array de PreguntaBean
         }
         //Devolver el array de PreguntaBean
         return alPreguntaBean;
-         
-     }
-     
+
+    }
+
     @Override
-    public int getCount(ArrayList<FilterBeanHelper> alFilter) throws Exception{
-        
+    public int getCount(ArrayList<FilterBeanHelper> alFilter) throws Exception {
+
         MysqlDataSpImpl oMysql = new MysqlDataSpImpl(oConnection);
-         
+
         strSqlSelectDataOrigin += SqlBuilder.buildSqlWhere(alFilter);
         int cont = 0;
-           
-        try{
-             cont = oMysql.getCount(strSqlSelectDataOrigin);
-        }catch(Exception e){
-          throw new Exception(this.getClass().getName() + ".getCount: Error: " + e.getMessage());
+
+        try {
+            cont = oMysql.getCount(strSqlSelectDataOrigin);
+        } catch (Exception e) {
+            throw new Exception(this.getClass().getName() + ".getCount: Error: " + e.getMessage());
         }
         return cont;
     }
-     
-     @Override
+
+    @Override
     public int getPages(int intRegsPerPag, ArrayList<FilterBeanHelper> alFilter) throws Exception {
         strSqlSelectDataOrigin += SqlBuilder.buildSqlWhere(alFilter);
         return oMysql.getPages(strSqlSelectDataOrigin, intRegsPerPag);
     }
-    
+
     @Override
     public PreguntaBean set(PreguntaBean oPreguntaBean) throws Exception {
 
         MysqlDataSpImpl oMysql = new MysqlDataSpImpl(oConnection);
-        
+
         try {
             if (oPreguntaBean.getId() == 0) {
                 oPreguntaBean.setId(oMysql.insertOne(strTableOrigin));
-            } 
-                oMysql.updateOne(oPreguntaBean.getId(), strTableOrigin, "descripcion", oPreguntaBean.getDescripcion());
-                oMysql.updateOne(oPreguntaBean.getId(), strTableOrigin, "id_documento", oPreguntaBean.getId_documento().toString());
-            
+            }
+            oMysql.updateOne(oPreguntaBean.getId(), strTableOrigin, "descripcion", oPreguntaBean.getDescripcion());
+            oMysql.updateOne(oPreguntaBean.getId(), strTableOrigin, "id_documento", oPreguntaBean.getId_documento().toString());
+
         } catch (Exception e) {
             throw new Exception(this.getClass().getName() + ".set: Error: " + e.getMessage());
         }
         return oPreguntaBean;
     }
-    
+
     @Override
     public int remove(PreguntaBean oPreguntaBean) throws Exception {
 
@@ -200,7 +227,7 @@ public class PreguntaDao extends TableDaoGenImpl<PreguntaBean> {
         }
         return result;
     }
-    
+
     @Override
     public ArrayList<MetaBeanGenImpl> getmetainformation() throws Exception {
         ArrayList<MetaBeanGenImpl> alVector = null;
@@ -237,5 +264,5 @@ public class PreguntaDao extends TableDaoGenImpl<PreguntaBean> {
         }
         return alVector;
     }
-    
+
 }

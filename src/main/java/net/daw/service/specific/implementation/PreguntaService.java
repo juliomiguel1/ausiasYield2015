@@ -55,6 +55,27 @@ public class PreguntaService extends TableServiceGenImpl{
         super(request);
     }
  
+     
+     @Override
+    public String get() throws Exception {
+
+        int id = ParameterCook.prepareId(oRequest);
+
+        Connection oConnection = new BoneConnectionPoolImpl().newConnection();
+
+        PreguntaDao oPreguntaDao = new PreguntaDao(oConnection);
+
+        PreguntaBean oPreguntaBean = new PreguntaBean();
+        oPreguntaBean.setId(id);
+
+        oPreguntaBean = oPreguntaDao.get(oPreguntaBean, 1);
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.setDateFormat("dd/MM/yyyy");
+        Gson gson = gsonBuilder.create();
+        String data = gson.toJson(oPreguntaBean);
+
+        return "{\"status\":200,\"message\":"+data+"}";
+    }
    
     @Override
     public String getall() throws Exception {
@@ -70,7 +91,7 @@ public class PreguntaService extends TableServiceGenImpl{
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.setDateFormat("dd/MM/yyyy");
         Gson gson = gsonBuilder.create();
-        String data = "{\"status\":200,\"message\":"+gson.toJson(alPreguntaBean)+"\"}";
+        String data = "{\"status\":200,\"message\":"+gson.toJson(alPreguntaBean)+"}";
 
         return data;
     }
@@ -87,7 +108,7 @@ public class PreguntaService extends TableServiceGenImpl{
         //  ArrayList<FilterBeanHelper> alFilter = new ArrayList<FilterBeanHelper>();
         int conta = oProfesorDao.getCount(alFilterBeanHelper/*alFilter*/);
 
-        String data = "{\"status\":200,\"message\":" + Integer.toString(conta) + "\"}";
+        String data = "{\"status\":200,\"message\":" + Integer.toString(conta) + "}";
 
         return data;
     }
@@ -159,7 +180,7 @@ public class PreguntaService extends TableServiceGenImpl{
 
         //Creamos el Json para mostrarlo en pantalla
         Gson oGson = new GsonBuilder().setDateFormat("dd/MM/yyyy").create();
-        return "{\"status\":200,\"message\":" +oGson.toJson(oPreguntaArray) +"\"}";
+        return "{\"status\":200,\"message\":" +oGson.toJson(oPreguntaArray) +"}";
 
     }
     
@@ -172,7 +193,7 @@ public class PreguntaService extends TableServiceGenImpl{
         Connection oConnection = new BoneConnectionPoolImpl().newConnection();
         PreguntaDao oPreguntaDao = new PreguntaDao(oConnection);
         Gson oGson = new GsonBuilder().setDateFormat("dd/MM/yyyy").excludeFieldsWithoutExposeAnnotation().create();
-        return "{\"status\":200,\"message\":"+oGson.toJson(oPreguntaDao.getmetainformation())+"\"}";
+        return "{\"status\":200,\"message\":"+oGson.toJson(oPreguntaDao.getmetainformation())+"}";
 
     }
     
