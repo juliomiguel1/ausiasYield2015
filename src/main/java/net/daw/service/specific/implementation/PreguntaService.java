@@ -68,5 +68,36 @@ public class PreguntaService extends TableServiceGenImpl{
 
         return data;
     }
+    
+     @Override
+    public String getpage() throws Exception {
+
+        Connection oConnection = null;
+
+        oConnection = new BoneConnectionPoolImpl().newConnection();
+
+        PreguntaDao oPreguntaDao = new PreguntaDao(oConnection);
+
+        ArrayList<PreguntaBean> oPreguntaArray = new ArrayList<>();
+
+        //Obtenemos parámetros con el ParameterCook
+        int rpp = ParameterCook.prepareRpp(oRequest);
+
+        int page = ParameterCook.preparePage(oRequest);
+
+        //ArrayList para sacar los filtros
+        ArrayList<FilterBeanHelper> alFilterBeanHelper = ParameterCook.prepareFilter(oRequest);
+
+        //HashMap para sacar el orden
+        HashMap<String, String> hmOrder = ParameterCook.prepareOrder(oRequest);
+
+        //Asignamos getPage(con sus parámetros) al ArrayList oProfesorArray
+        oPreguntaArray = oPreguntaDao.getPage(rpp, page, alFilterBeanHelper, hmOrder);
+
+        //Creamos el Json para mostrarlo en pantalla
+        Gson oGson = new GsonBuilder().setDateFormat("dd/MM/yyyy").create();
+        return oGson.toJson(oPreguntaArray);
+
+    }
      
 }
