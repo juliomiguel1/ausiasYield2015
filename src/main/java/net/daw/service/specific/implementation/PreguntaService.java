@@ -49,7 +49,28 @@ public class PreguntaService extends TableServiceGenImpl{
      public PreguntaService(HttpServletRequest request) {
         super(request);
     }
- 
+    
+    @Override
+    public String get() throws Exception {
+
+        int id = ParameterCook.prepareId(oRequest);
+
+        Connection oConnection = new BoneConnectionPoolImpl().newConnection();
+
+        PreguntaDao oPreguntaDao = new PreguntaDao(oConnection);
+
+        PreguntaBean oPreguntaBean = new PreguntaBean();
+        oPreguntaBean.setId(id);
+
+        oPreguntaBean = oPreguntaDao.get(oPreguntaBean, 1);
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.setDateFormat("dd/MM/yyyy");
+        Gson gson = gsonBuilder.create();
+        String data = gson.toJson(oPreguntaBean);
+
+        return data;
+    }
+     
     @Override
     public String getall() throws Exception {
 
