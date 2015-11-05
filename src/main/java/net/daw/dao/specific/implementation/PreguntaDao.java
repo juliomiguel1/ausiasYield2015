@@ -99,5 +99,60 @@ public class PreguntaDao extends TableDaoGenImpl<PreguntaBean> {
         return alPreguntaBean;
     }
     
+     @Override
+     public ArrayList<PreguntaBean> getPage(int intRegsPerPag, int intPage, ArrayList<FilterBeanHelper> alFilter, HashMap<String, String> hmOrder) throws Exception {
+     
+         //Crear la conexión SQL
+        MysqlDataSpImpl oMySQL = new MysqlDataSpImpl(oConnection);
+
+        strSqlSelectDataOrigin += SqlBuilder.buildSqlWhere(alFilter);
+        strSqlSelectDataOrigin += SqlBuilder.buildSqlOrder(hmOrder);
+
+        //Crear una variable result que provenga de oMySQL
+        ResultSet result = oMySQL.getPage(strSqlSelectDataOrigin, intRegsPerPag, intPage);
+
+        //Crear un arraylist de ProfesorBean
+        ArrayList<PreguntaBean> alPreguntaBean = new ArrayList<>();
+
+        //Recorrer los elementos de result
+        while (result.next()) {
+            //Crear variable local para asignar los sets de result
+            PreguntaBean oPreguntaBean = new PreguntaBean();
+
+            oPreguntaBean.setId(result.getInt("id"));
+            oPreguntaBean.setId_documento(result.getInt("id_documento"));
+            
+            //crear un dao de documento
+                    DocumentoDao oDocumentoDao = new DocumentoDao(oConnection);
+                    //un pojo de documento con elid de documento
+                    DocumentoBean oDocumentoBean = new DocumentoBean();
+                    oDocumentoBean.setId(result.getInt("id_documento"));
+                   
+                    oDocumentoBean=oDocumentoDao.get(oDocumentoBean, 2);
+                    //rellenar el pojo de documento con el dao
+                    //meter el pojo relleno a la pregunta
+                    GroupBeanImpl oGroupBeanImpl = new GroupBeanImpl();
+                    oGroupBeanImpl.setBean(oDocumentoBean);
+                    oGroupBeanImpl.setMeta(oDocumentoDao.getmetainformation());
+                    oPreguntaBean.setObj_documento(oGroupBeanImpl);
+                    
+                    
+                    oPreguntaBean.setDescripcion(result.getString("descripcion"));
+                    alPreguntaBean.add(oPreguntaBean);
+            
+         
+            //Asignar los datos de la variable local al array de PreguntaBean
+   
+
+        }
+        //Devolver el array de PreguntaBean
+        return alPreguntaBean;
+         
+         
+         
+         
+    
+     }
+    
     
 }
