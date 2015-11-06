@@ -27,16 +27,109 @@
  */
 package net.daw.service.specific.implementation;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import java.sql.Connection;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
+import net.daw.bean.specific.implementation.PreguntaBean;
+import net.daw.bean.specific.implementation.RespuestaBean;
+import net.daw.connection.implementation.BoneConnectionPoolImpl;
+import net.daw.connection.publicinterface.ConnectionInterface;
+import net.daw.dao.specific.implementation.PreguntaDao;
+import net.daw.dao.specific.implementation.RespuestaDao;
+import static net.daw.helper.statics.AppConfigurationHelper.getSourceConnection;
+import net.daw.helper.statics.ExceptionBooster;
+import net.daw.helper.statics.FilterBeanHelper;
+import net.daw.helper.statics.JsonMessage;
+import net.daw.helper.statics.ParameterCook;
 import net.daw.service.generic.implementation.TableServiceGenImpl;
 
 /**
  *
  * @author juliomiguel
  */
-public class RespuestaService extends TableServiceGenImpl{
- 
-     public RespuestaService(HttpServletRequest request) {
+public class RespuestaService extends TableServiceGenImpl {
+
+    public RespuestaService(HttpServletRequest request) {
         super(request);
+    }
+
+    @Override
+    public String getpages() throws Exception {
+        if (this.checkpermission("getpages")) {
+            Connection oConnection = null;
+            ConnectionInterface oDataConnectionSource = null;
+            String strResult = null;
+            try {
+                oDataConnectionSource = getSourceConnection();
+                oConnection = oDataConnectionSource.newConnection();
+                RespuestaDao oRespuestaDao = new RespuestaDao(oConnection);
+                int intRpp = ParameterCook.prepareRpp(oRequest);
+                ArrayList<FilterBeanHelper> alFilterBeanHelper = ParameterCook.prepareFilter(oRequest);
+                strResult = ((Integer) oRespuestaDao.getPages(intRpp, alFilterBeanHelper)).toString();
+            } catch (Exception ex) {
+                oConnection.rollback();
+                ExceptionBooster.boost(new Exception(this.getClass().getName() + ":remove ERROR: " + ex.getMessage()));
+            } finally {
+                if (oConnection != null) {
+                    oConnection.close();
+                }
+                if (oDataConnectionSource != null) {
+                    oDataConnectionSource.disposeConnection();
+                }
+            }
+            return JsonMessage.getJsonMsg("200",strResult);
+        } else {
+            return JsonMessage.getJsonMsg("401", "Unauthorized");
+        }
+    }
+    
+    @Override
+    public String set() throws Exception {
+
+        Connection oConnection = new BoneConnectionPoolImpl().newConnection();
+        RespuestaDao oRespuestaDao = new RespuestaDao(oConnection);
+        RespuestaBean oRespuestaBean = new RespuestaBean();
+        String json = ParameterCook.prepareJson(oRequest);
+        Gson gson = new GsonBuilder().setDateFormat("dd/MM/yyyy").excludeFieldsWithoutExposeAnnotation().create();        
+        oRespuestaBean = gson.fromJson(json, RespuestaBean.class);
+        oRespuestaBean = oRespuestaDao.set(oRespuestaBean);
+        Map<String, String> data = new HashMap<>();
+        data.put("status", "200");
+        data.put("message", Integer.toString(oRespuestaBean.getId()));
+        String resultado = gson.toJson(data);
+        return resultado;
+    }
+    
+    @Override
+    public String remove() throws Exception{
+        
+        Connection oConnection = new BoneConnectionPoolImpl().newConnection();
+        int id = ParameterCook.prepareId(oRequest);
+        RespuestaDao oRespuestaDao = new RespuestaDao(oConnection);
+        
+        RespuestaBean oRespuestaBean = new RespuestaBean();
+        oRespuestaBean.setId(id);
+        oRespuestaDao.remove(oRespuestaBean);
+        
+        Map<String, String> data = new HashMap<>();
+        data.put("status", "200");
+        data.put("message", "se ha eliminado la pregunta con id= " + ((Integer)id).toString());
+        Gson gson = new Gson();
+        String resultado = gson.toJson(data);
+        return resultado;
+    }
+    
+    @Override
+    public String getmetainformation() throws Exception {
+
+        Connection oConnection = new BoneConnectionPoolImpl().newConnection();
+        RespuestaDao oRespuestaDao = new RespuestaDao(oConnection);
+        Gson oGson = new GsonBuilder().setDateFormat("dd/MM/yyyy").excludeFieldsWithoutExposeAnnotation().create();
+        return "{\"status\":200,\"message\":"+oGson.toJson(oRespuestaDao.getmetainformation())+"}";
+
     }
 }

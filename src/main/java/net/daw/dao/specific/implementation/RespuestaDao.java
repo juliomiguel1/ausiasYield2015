@@ -27,17 +27,100 @@
  */
 package net.daw.dao.specific.implementation;
 
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
 import java.sql.Connection;
+import java.util.ArrayList;
+import net.daw.bean.meta.MetaBeanGenImpl;
+import net.daw.bean.specific.implementation.PreguntaBean;
 import net.daw.bean.specific.implementation.RespuestaBean;
 import net.daw.dao.generic.implementation.TableDaoGenImpl;
+import net.daw.data.specific.implementation.MysqlDataSpImpl;
+import net.daw.helper.annotations.MethodMetaInformation;
+import net.daw.helper.statics.ExceptionBooster;
+import net.daw.helper.statics.FilterBeanHelper;
+import net.daw.helper.statics.SqlBuilder;
 
 /**
  *
  * @author juliomiguel
  */
 public class RespuestaDao extends TableDaoGenImpl<RespuestaBean> {
-    
-     public RespuestaDao(Connection pooledConnection) throws Exception {
+
+    public RespuestaDao(Connection pooledConnection) throws Exception {
         super(pooledConnection);
+    }
+  
+    @Override
+    public int getPages(int intRegsPerPag, ArrayList<FilterBeanHelper> alFilter) throws Exception {
+        strSqlSelectDataOrigin += SqlBuilder.buildSqlWhere(alFilter);
+        return oMysql.getPages(strSqlSelectDataOrigin, intRegsPerPag);
+    }
+    
+    @Override
+    public RespuestaBean set(RespuestaBean oRespuestaBean) throws Exception {
+
+        MysqlDataSpImpl oMysql = new MysqlDataSpImpl(oConnection);
+
+        try {
+            if (oRespuestaBean.getId() == 0) {
+                oRespuestaBean.setId(oMysql.insertOne(strTableOrigin));
+            }
+            oMysql.updateOne(oRespuestaBean.getId(), strTableOrigin, "id_opcion", oRespuestaBean.getId_opcion().toString());
+            oMysql.updateOne(oRespuestaBean.getId(), strTableOrigin, "id_usuario", oRespuestaBean.getId_usuario().toString());
+            oMysql.updateOne(oRespuestaBean.getId(), strTableOrigin, "fechaHoraAlta", oRespuestaBean.getFechaHoraAlta().toString());
+        } catch (Exception e) {
+            throw new Exception(this.getClass().getName() + ".set: Error: " + e.getMessage());
+        }
+        return oRespuestaBean;
+    }
+    
+    @Override
+    public int remove(RespuestaBean oRespuestaBean) throws Exception {
+
+        int result = 0;
+        try {
+            result = oMysql.removeOne(oRespuestaBean.getId(), strTableOrigin);
+        } catch (Exception e) {
+            throw new Exception(this.getClass().getName() + ".remove: Error: " + e.getMessage());
+        }
+        return result;
+    }
+    
+    @Override
+    public ArrayList<MetaBeanGenImpl> getmetainformation() throws Exception {
+        ArrayList<MetaBeanGenImpl> alVector = null;
+        try {
+            Class oRespuestaBeanClass = RespuestaBean.class;
+            alVector = new ArrayList<>();
+            for (Field field : oRespuestaBeanClass.getDeclaredFields()) {
+                Annotation[] fieldAnnotations = field.getDeclaredAnnotations();
+                for (Integer i = 0; i < fieldAnnotations.length; i++) {
+                    if (fieldAnnotations[i].annotationType().equals(MethodMetaInformation.class)) {
+                        MethodMetaInformation fieldAnnotation = (MethodMetaInformation) fieldAnnotations[i];
+                        MetaBeanGenImpl oMeta = new MetaBeanGenImpl();
+                        oMeta.setName(field.getName());
+                        oMeta.setDefaultValue(fieldAnnotation.DefaultValue());
+                        oMeta.setDescription(fieldAnnotation.Description());
+                        oMeta.setIsId(fieldAnnotation.IsId());
+                        oMeta.setIsObjForeignKey(fieldAnnotation.IsObjForeignKey());
+                        oMeta.setMaxDecimal(fieldAnnotation.MaxDecimal());
+                        oMeta.setMaxInteger(fieldAnnotation.MaxInteger());
+                        oMeta.setMaxLength(fieldAnnotation.MaxLength());
+                        oMeta.setMinLength(fieldAnnotation.MinLength());
+                        oMeta.setMyIdName(fieldAnnotation.MyIdName());
+                        oMeta.setReferencesTable(fieldAnnotation.ReferencesTable());
+                        oMeta.setIsForeignKeyDescriptor(fieldAnnotation.IsForeignKeyDescriptor());
+                        oMeta.setShortName(fieldAnnotation.ShortName());
+                        oMeta.setType(fieldAnnotation.Type());
+                        oMeta.setUltraShortName(fieldAnnotation.UltraShortName());
+                        alVector.add(oMeta);
+                    }
+                }
+            }
+        } catch (Exception ex) {
+            ExceptionBooster.boost(new Exception(this.getClass().getName() + ":getmetainformation ERROR: " + ex.getMessage()));
+        }
+        return alVector;
     }
 }

@@ -27,16 +27,40 @@
  */
 package net.daw.service.specific.implementation;
 
+import java.sql.Connection;
+import java.util.ArrayList;
 import javax.servlet.http.HttpServletRequest;
+import net.daw.bean.specific.implementation.PreguntaBean;
+import net.daw.connection.implementation.BoneConnectionPoolImpl;
+import net.daw.dao.specific.implementation.PreguntaDao;
+import net.daw.dao.specific.implementation.RespuestaDao;
+import net.daw.helper.statics.FilterBeanHelper;
+import net.daw.helper.statics.ParameterCook;
 import net.daw.service.generic.implementation.TableServiceGenImpl;
 
 /**
  *
  * @author juliomiguel
  */
-public class OpcionService extends TableServiceGenImpl{
- 
-     public OpcionService(HttpServletRequest request) {
+public class OpcionService extends TableServiceGenImpl {
+
+    public OpcionService(HttpServletRequest request) {
         super(request);
+    }
+
+    @Override
+    public String getcount() throws Exception {
+
+        Connection oConnection = new BoneConnectionPoolImpl().newConnection();
+
+        RespuestaDao oRespuestaDao = new RespuestaDao(oConnection);
+
+        PreguntaBean oProfesorBean = new PreguntaBean();
+        ArrayList<FilterBeanHelper> alFilterBeanHelper = ParameterCook.prepareFilter(oRequest);
+        int counter = oRespuestaDao.getCount(alFilterBeanHelper/*alFilter*/);
+
+        String data = "{\"status\":200,\"message\":" + Integer.toString(counter) + "}";
+
+        return data;
     }
 }

@@ -28,9 +28,13 @@
 package net.daw.dao.specific.implementation;
 
 import java.sql.Connection;
+import java.util.ArrayList;
 import net.daw.bean.specific.implementation.OpcionBean;
 import net.daw.bean.specific.implementation.PreguntaBean;
 import net.daw.dao.generic.implementation.TableDaoGenImpl;
+import net.daw.data.specific.implementation.MysqlDataSpImpl;
+import net.daw.helper.statics.FilterBeanHelper;
+import net.daw.helper.statics.SqlBuilder;
 
 /**
  *
@@ -40,5 +44,21 @@ public class OpcionDao extends TableDaoGenImpl<OpcionBean> {
     
      public OpcionDao(Connection pooledConnection) throws Exception {
         super(pooledConnection);
+    }
+     
+     @Override
+    public int getCount(ArrayList<FilterBeanHelper> alFilter) throws Exception {
+
+        MysqlDataSpImpl oMysql = new MysqlDataSpImpl(oConnection);
+
+        strSqlSelectDataOrigin += SqlBuilder.buildSqlWhere(alFilter);
+        int counter = 0;
+
+        try {
+            counter = oMysql.getCount(strSqlSelectDataOrigin);
+        } catch (Exception e) {
+            throw new Exception(this.getClass().getName() + ".getCount: Error: " + e.getMessage());
+        }
+        return counter;
     }
 }

@@ -182,14 +182,14 @@ public class PreguntaDao extends TableDaoGenImpl<PreguntaBean> {
         MysqlDataSpImpl oMysql = new MysqlDataSpImpl(oConnection);
 
         strSqlSelectDataOrigin += SqlBuilder.buildSqlWhere(alFilter);
-        int cont = 0;
+        int counter = 0;
 
         try {
-            cont = oMysql.getCount(strSqlSelectDataOrigin);
+            counter = oMysql.getCount(strSqlSelectDataOrigin);
         } catch (Exception e) {
             throw new Exception(this.getClass().getName() + ".getCount: Error: " + e.getMessage());
         }
-        return cont;
+        return counter;
     }
 
     @Override
