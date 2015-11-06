@@ -158,7 +158,7 @@ public class PreguntaDao extends TableDaoGenImpl<PreguntaBean> {
             DocumentoBean oDocumentoBean = new DocumentoBean();
             oDocumentoBean.setId(result.getInt("id_documento"));
 
-            oDocumentoBean = oDocumentoDao.get(oDocumentoBean, 2);
+            oDocumentoBean = oDocumentoDao.get(oDocumentoBean, 1);
                     //rellenar el pojo de documento con el dao
             //meter el pojo relleno a la pregunta
             GroupBeanImpl oGroupBeanImpl = new GroupBeanImpl();

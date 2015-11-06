@@ -32,13 +32,16 @@ import com.google.gson.GsonBuilder;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import net.daw.bean.specific.implementation.OpcionBean;
-import net.daw.bean.specific.implementation.PreguntaBean;
 import net.daw.connection.implementation.BoneConnectionPoolImpl;
+import net.daw.connection.publicinterface.ConnectionInterface;
 import net.daw.dao.specific.implementation.OpcionDao;
-import net.daw.dao.specific.implementation.RespuestaDao;
+import static net.daw.helper.statics.AppConfigurationHelper.getSourceConnection;
+import net.daw.helper.statics.ExceptionBooster;
 import net.daw.helper.statics.FilterBeanHelper;
+import net.daw.helper.statics.JsonMessage;
 import net.daw.helper.statics.ParameterCook;
 import net.daw.service.generic.implementation.TableServiceGenImpl;
 
@@ -99,7 +102,6 @@ public class OpcionService extends TableServiceGenImpl {
 
         OpcionDao oOpcionDao = new OpcionDao(oConnection);
 
-        OpcionBean oOpcionBean = new OpcionBean();
         ArrayList<FilterBeanHelper> alFilterBeanHelper = ParameterCook.prepareFilter(oRequest);
         int counter = oOpcionDao.getCount(alFilterBeanHelper/*alFilter*/);
 

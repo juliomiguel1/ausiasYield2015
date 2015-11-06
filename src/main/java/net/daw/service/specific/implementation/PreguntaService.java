@@ -102,13 +102,11 @@ public class PreguntaService extends TableServiceGenImpl{
         Connection oConnection = new BoneConnectionPoolImpl().newConnection();
 
         PreguntaDao oProfesorDao = new PreguntaDao(oConnection);
-
-        PreguntaBean oProfesorBean = new PreguntaBean();
+        
          ArrayList<FilterBeanHelper> alFilterBeanHelper = ParameterCook.prepareFilter(oRequest);
-        //  ArrayList<FilterBeanHelper> alFilter = new ArrayList<FilterBeanHelper>();
-        int conta = oProfesorDao.getCount(alFilterBeanHelper/*alFilter*/);
+        int counter = oProfesorDao.getCount(alFilterBeanHelper/*alFilter*/);
 
-        String data = "{\"status\":200,\"message\":" + Integer.toString(conta) + "}";
+        String data = "{\"status\":200,\"message\":" + Integer.toString(counter) + "}";
 
         return data;
     }

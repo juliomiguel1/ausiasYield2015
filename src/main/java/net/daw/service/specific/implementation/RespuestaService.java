@@ -98,6 +98,21 @@ public class RespuestaService extends TableServiceGenImpl {
     }
     
     @Override
+       public String getcount() throws Exception {
+
+        Connection oConnection = new BoneConnectionPoolImpl().newConnection();
+
+        RespuestaDao oRespuestaDao = new RespuestaDao(oConnection);
+        
+         ArrayList<FilterBeanHelper> alFilterBeanHelper = ParameterCook.prepareFilter(oRequest);
+        int counter = oRespuestaDao.getCount(alFilterBeanHelper/*alFilter*/);
+
+        String data = "{\"status\":200,\"message\":" + Integer.toString(counter) + "}";
+
+        return data;
+    }
+    
+    @Override
     public String getpage() throws Exception {
 
         Connection oConnection = null;
