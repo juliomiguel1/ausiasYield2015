@@ -106,5 +106,105 @@ public class OpcionService extends TableServiceGenImpl {
         String data = "{\"status\":200,\"message\":" + Integer.toString(counter) + "}";
         return data;
     }
+    
+    @Override
+    public String getpage() throws Exception {
+
+        Connection oConnection = null;
+
+        oConnection = new BoneConnectionPoolImpl().newConnection();
+
+        OpcionDao oOpcionDao = new OpcionDao(oConnection);
+
+        ArrayList<OpcionBean> oOpcionArray = new ArrayList<>();
+
+        //Obtenemos parámetros con el ParameterCook
+        int rpp = ParameterCook.prepareRpp(oRequest);
+
+        int page = ParameterCook.preparePage(oRequest);
+
+        //ArrayList para sacar los filtros
+        ArrayList<FilterBeanHelper> alFilterBeanHelper = ParameterCook.prepareFilter(oRequest);
+
+        //HashMap para sacar el orden
+        HashMap<String, String> hmOrder = ParameterCook.prepareOrder(oRequest);
+
+        //Asignamos getPage(con sus parámetros) al ArrayList oProfesorArray
+        oOpcionArray = oOpcionDao.getPage(rpp, page, alFilterBeanHelper, hmOrder);
+
+        //Creamos el Json para mostrarlo en pantalla
+        Gson oGson = new GsonBuilder().setDateFormat("dd/MM/yyyy HH:MM:ss").create();
+        return "{\"status\":200,\"message\":" + oGson.toJson(oOpcionArray) + "}";
+
+    }
+    
+    
+    @Override
+    public String getpages() throws Exception {
+        if (this.checkpermission("getpages")) {
+            Connection oConnection = null;
+            ConnectionInterface oDataConnectionSource = null;
+            String strResult = null;
+            try {
+                oDataConnectionSource = getSourceConnection();
+                oConnection = oDataConnectionSource.newConnection();
+                OpcionDao oOpcionDao = new OpcionDao(oConnection);
+                int intRpp = ParameterCook.prepareRpp(oRequest);
+                ArrayList<FilterBeanHelper> alFilterBeanHelper = ParameterCook.prepareFilter(oRequest);
+                strResult = ((Integer) oOpcionDao.getPages(intRpp, alFilterBeanHelper)).toString();
+            } catch (Exception ex) {
+                oConnection.rollback();
+                ExceptionBooster.boost(new Exception(this.getClass().getName() + ":remove ERROR: " + ex.getMessage()));
+            } finally {
+                if (oConnection != null) {
+                    oConnection.close();
+                }
+                if (oDataConnectionSource != null) {
+                    oDataConnectionSource.disposeConnection();
+                }
+            }
+            return JsonMessage.getJsonMsg("200",strResult);
+        } else {
+            return JsonMessage.getJsonMsg("401", "Unauthorized");
+        }
+    }
+    
+    @Override
+    public String set() throws Exception{
+        
+        Connection oConnection = new BoneConnectionPoolImpl().newConnection();
+        OpcionDao oOpcionDao = new OpcionDao(oConnection);
+        OpcionBean oOpcionBean = new OpcionBean();  
+        String json = ParameterCook.prepareJson(oRequest);
+        Gson gson = new GsonBuilder().setDateFormat("dd/MM/yyyy").excludeFieldsWithoutExposeAnnotation().create();
+
+        oOpcionBean = gson.fromJson(json, OpcionBean.class);
+        oOpcionBean = oOpcionDao.set(oOpcionBean);
+        Map<String, String> data = new HashMap<>();
+        data.put("status", "200");
+        data.put("message", Integer.toString(oOpcionBean.getId()));
+        String resultado = gson.toJson(data);
+        return resultado;
+    }
+    
+    @Override
+    public String remove() throws Exception{
+        
+        Connection oConnection = new BoneConnectionPoolImpl().newConnection();
+        int id = ParameterCook.prepareId(oRequest);
+        OpcionDao oOpcionDao = new OpcionDao(oConnection);
+        
+        OpcionBean oOpcionBean = new OpcionBean();
+        oOpcionBean.setId(id);
+        oOpcionDao.remove(oOpcionBean);
+        
+        Map<String, String> data = new HashMap<>();
+        data.put("status", "200");
+        data.put("message", "se ha eliminado la respuesta con id= " + ((Integer)id).toString());
+        Gson gson = new Gson();
+        String resultado = gson.toJson(data);
+        return resultado;
+    }
+    
 
 }
