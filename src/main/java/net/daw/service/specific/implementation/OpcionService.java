@@ -39,4 +39,44 @@ public class OpcionService extends TableServiceGenImpl{
      public OpcionService(HttpServletRequest request) {
         super(request);
     }
+    
+     @Override
+    public String get() throws Exception {
+
+        int id = ParameterCook.prepareId(oRequest);
+
+        Connection oConnection = new BoneConnectionPoolImpl().newConnection();
+
+        OpcionDao oOpcionDao = new OpcionDao(oConnection);
+
+        OpcionBean oOpcionBean = new OpcionBean();
+        oOpcionBean.setId(id);
+
+        oOpcionBean = oOpcionDao.get(oOpcionBean, 1);
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.setDateFormat("dd/MM/yyyy HH:mm:ss");
+        Gson gson = gsonBuilder.create();
+        String data = gson.toJson(oOpcionBean);
+
+        return "{\"status\":200,\"message\":" + data + "}";
+    }
+    
+      @Override
+    public String getall() throws Exception {
+
+        Connection oConnection = new BoneConnectionPoolImpl().newConnection();
+
+        OpcionDao oOpcionDao = new OpcionDao(oConnection);
+        ArrayList<OpcionBean> alOpcionBean = new ArrayList<OpcionBean>();
+        ArrayList<FilterBeanHelper> alFilterBeanHelper = ParameterCook.prepareFilter(oRequest);
+        HashMap<String, String> hmOrder = ParameterCook.prepareOrder(oRequest);
+        
+        alOpcionBean = oOpcionDao.getAll(alFilterBeanHelper, hmOrder);
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.setDateFormat("dd/MM/yyyy");
+        Gson gson = gsonBuilder.create();
+        String data = "{\"status\":200,\"message\":"+gson.toJson(alOpcionBean)+"}";
+
+        return data;
+    }
 }
