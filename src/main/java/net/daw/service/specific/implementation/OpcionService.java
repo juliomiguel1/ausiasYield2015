@@ -97,11 +97,11 @@ public class OpcionService extends TableServiceGenImpl {
 
         Connection oConnection = new BoneConnectionPoolImpl().newConnection();
 
-        RespuestaDao oRespuestaDao = new RespuestaDao(oConnection);
+        OpcionDao oOpcionDao = new OpcionDao(oConnection);
 
-        PreguntaBean oProfesorBean = new PreguntaBean();
+        OpcionBean oOpcionBean = new OpcionBean();
         ArrayList<FilterBeanHelper> alFilterBeanHelper = ParameterCook.prepareFilter(oRequest);
-        int counter = oRespuestaDao.getCount(alFilterBeanHelper/*alFilter*/);
+        int counter = oOpcionDao.getCount(alFilterBeanHelper/*alFilter*/);
 
         String data = "{\"status\":200,\"message\":" + Integer.toString(counter) + "}";
         return data;
