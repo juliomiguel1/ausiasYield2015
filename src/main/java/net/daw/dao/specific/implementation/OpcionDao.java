@@ -224,5 +224,42 @@ public class OpcionDao extends TableDaoGenImpl<OpcionBean> {
         }
         return result;
     }
+    
+     @Override
+    public ArrayList<MetaBeanGenImpl> getmetainformation() throws Exception {
+        ArrayList<MetaBeanGenImpl> alVector = null;
+        try {
+            Class oOpcionBeanClass = OpcionBean.class;
+            alVector = new ArrayList<>();
+            for (Field field : oOpcionBeanClass.getDeclaredFields()) {
+                Annotation[] fieldAnnotations = field.getDeclaredAnnotations();
+                for (Integer i = 0; i < fieldAnnotations.length; i++) {
+                    if (fieldAnnotations[i].annotationType().equals(MethodMetaInformation.class)) {
+                        MethodMetaInformation fieldAnnotation = (MethodMetaInformation) fieldAnnotations[i];
+                        MetaBeanGenImpl oMeta = new MetaBeanGenImpl();
+                        oMeta.setName(field.getName());
+                        oMeta.setDefaultValue(fieldAnnotation.DefaultValue());
+                        oMeta.setDescription(fieldAnnotation.Description());
+                        oMeta.setIsId(fieldAnnotation.IsId());
+                        oMeta.setIsObjForeignKey(fieldAnnotation.IsObjForeignKey());
+                        oMeta.setMaxDecimal(fieldAnnotation.MaxDecimal());
+                        oMeta.setMaxInteger(fieldAnnotation.MaxInteger());
+                        oMeta.setMaxLength(fieldAnnotation.MaxLength());
+                        oMeta.setMinLength(fieldAnnotation.MinLength());
+                        oMeta.setMyIdName(fieldAnnotation.MyIdName());
+                        oMeta.setReferencesTable(fieldAnnotation.ReferencesTable());
+                        oMeta.setIsForeignKeyDescriptor(fieldAnnotation.IsForeignKeyDescriptor());
+                        oMeta.setShortName(fieldAnnotation.ShortName());
+                        oMeta.setType(fieldAnnotation.Type());
+                        oMeta.setUltraShortName(fieldAnnotation.UltraShortName());
+                        alVector.add(oMeta);
+                    }
+                }
+            }
+        } catch (Exception ex) {
+            ExceptionBooster.boost(new Exception(this.getClass().getName() + ":getmetainformation ERROR: " + ex.getMessage()));
+        }
+        return alVector;
+    }
 
 }
