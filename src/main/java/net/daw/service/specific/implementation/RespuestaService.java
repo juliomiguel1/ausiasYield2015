@@ -58,6 +58,46 @@ public class RespuestaService extends TableServiceGenImpl {
     }
 
     @Override
+    public String get() throws Exception {
+
+        int id = ParameterCook.prepareId(oRequest);
+
+        Connection oConnection = new BoneConnectionPoolImpl().newConnection();
+
+        RespuestaDao oRespuestaDao = new RespuestaDao(oConnection);
+
+        RespuestaBean oRespuestaBean = new RespuestaBean();
+        oRespuestaBean.setId(id);
+
+        oRespuestaBean = oRespuestaDao.get(oRespuestaBean, 1);
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.setDateFormat("dd/MM/yyyy HH:mm:ss");
+        Gson gson = gsonBuilder.create();
+        String data = gson.toJson(oRespuestaBean);
+
+        return "{\"status\":200,\"message\":" + data + "}";
+    }
+
+    @Override
+    public String getall() throws Exception {
+
+        Connection oConnection = new BoneConnectionPoolImpl().newConnection();
+
+        RespuestaDao oRespuestaDao = new RespuestaDao(oConnection);
+        ArrayList<RespuestaBean> alRespuestaBean = new ArrayList<RespuestaBean>();
+        ArrayList<FilterBeanHelper> alFilterBeanHelper = ParameterCook.prepareFilter(oRequest);
+        HashMap<String, String> hmOrder = ParameterCook.prepareOrder(oRequest);
+
+        alRespuestaBean = oRespuestaDao.getAll(alFilterBeanHelper, hmOrder);
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.setDateFormat("dd/MM/yyyy HH:mm:ss");
+        Gson gson = gsonBuilder.create();
+        String data = "{\"status\":200,\"message\":" + gson.toJson(alRespuestaBean) + "}";
+
+        return data;
+    }
+    
+    @Override
     public String getpages() throws Exception {
         if (this.checkpermission("getpages")) {
             Connection oConnection = null;
@@ -81,12 +121,12 @@ public class RespuestaService extends TableServiceGenImpl {
                     oDataConnectionSource.disposeConnection();
                 }
             }
-            return JsonMessage.getJsonMsg("200",strResult);
+            return JsonMessage.getJsonMsg("200", strResult);
         } else {
             return JsonMessage.getJsonMsg("401", "Unauthorized");
         }
     }
-    
+
     @Override
     public String set() throws Exception {
 
@@ -94,7 +134,7 @@ public class RespuestaService extends TableServiceGenImpl {
         RespuestaDao oRespuestaDao = new RespuestaDao(oConnection);
         RespuestaBean oRespuestaBean = new RespuestaBean();
         String json = ParameterCook.prepareJson(oRequest);
-        Gson gson = new GsonBuilder().setDateFormat("dd/MM/yyyy").excludeFieldsWithoutExposeAnnotation().create();        
+        Gson gson = new GsonBuilder().setDateFormat("dd/MM/yyyy").excludeFieldsWithoutExposeAnnotation().create();
         oRespuestaBean = gson.fromJson(json, RespuestaBean.class);
         oRespuestaBean = oRespuestaDao.set(oRespuestaBean);
         Map<String, String> data = new HashMap<>();
@@ -103,72 +143,34 @@ public class RespuestaService extends TableServiceGenImpl {
         String resultado = gson.toJson(data);
         return resultado;
     }
-    
+
     @Override
-    public String remove() throws Exception{
-        
+    public String remove() throws Exception {
+
         Connection oConnection = new BoneConnectionPoolImpl().newConnection();
         int id = ParameterCook.prepareId(oRequest);
         RespuestaDao oRespuestaDao = new RespuestaDao(oConnection);
-        
+
         RespuestaBean oRespuestaBean = new RespuestaBean();
         oRespuestaBean.setId(id);
         oRespuestaDao.remove(oRespuestaBean);
-        
+
         Map<String, String> data = new HashMap<>();
         data.put("status", "200");
-        data.put("message", "se ha eliminado la pregunta con id= " + ((Integer)id).toString());
+        data.put("message", "se ha eliminado la pregunta con id= " + ((Integer) id).toString());
         Gson gson = new Gson();
         String resultado = gson.toJson(data);
         return resultado;
     }
-    
+
     @Override
     public String getmetainformation() throws Exception {
 
         Connection oConnection = new BoneConnectionPoolImpl().newConnection();
         RespuestaDao oRespuestaDao = new RespuestaDao(oConnection);
         Gson oGson = new GsonBuilder().setDateFormat("dd/MM/yyyy").excludeFieldsWithoutExposeAnnotation().create();
-        return "{\"status\":200,\"message\":"+oGson.toJson(oRespuestaDao.getmetainformation())+"}";
+        return "{\"status\":200,\"message\":" + oGson.toJson(oRespuestaDao.getmetainformation()) + "}";
+    }
 
     
-      @Override
-    public String get() throws Exception {
-
-        int id = ParameterCook.prepareId(oRequest);
-
-        Connection oConnection = new BoneConnectionPoolImpl().newConnection();
-
-        RespuestaDao oRespuestaDao = new RespuestaDao(oConnection);
-
-        RespuestaBean oRespuestaBean = new RespuestaBean();
-        oRespuestaBean.setId(id);
-
-        oRespuestaBean = oRespuestaDao.get(oRespuestaBean, 1);
-        GsonBuilder gsonBuilder = new GsonBuilder();
-        gsonBuilder.setDateFormat("dd/MM/yyyy HH:mm:ss");
-        Gson gson = gsonBuilder.create();
-        String data = gson.toJson(oRespuestaBean);
-
-        return "{\"status\":200,\"message\":"+data+"}";
-    }
-    
-    @Override
-    public String getall() throws Exception {
-
-        Connection oConnection = new BoneConnectionPoolImpl().newConnection();
-
-        RespuestaDao oRespuestaDao = new RespuestaDao(oConnection);
-        ArrayList<RespuestaBean> alRespuestaBean = new ArrayList<RespuestaBean>();
-        ArrayList<FilterBeanHelper> alFilterBeanHelper = ParameterCook.prepareFilter(oRequest);
-        HashMap<String, String> hmOrder = ParameterCook.prepareOrder(oRequest);
-        
-        alRespuestaBean = oRespuestaDao.getAll(alFilterBeanHelper, hmOrder);
-        GsonBuilder gsonBuilder = new GsonBuilder();
-        gsonBuilder.setDateFormat("dd/MM/yyyy HH:mm:ss");
-        Gson gson = gsonBuilder.create();
-        String data = "{\"status\":200,\"message\":"+gson.toJson(alRespuestaBean)+"}";
-
-        return data;
-    }
 }

@@ -30,10 +30,16 @@ package net.daw.dao.specific.implementation;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.sql.Connection;
+import java.sql.ResultSet;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import net.daw.bean.group.GroupBeanImpl;
 import net.daw.bean.meta.MetaBeanGenImpl;
-import net.daw.bean.specific.implementation.PreguntaBean;
+import net.daw.bean.specific.implementation.OpcionBean;
 import net.daw.bean.specific.implementation.RespuestaBean;
+import net.daw.bean.specific.implementation.UsuarioBean;
 import net.daw.dao.generic.implementation.TableDaoGenImpl;
 import net.daw.data.specific.implementation.MysqlDataSpImpl;
 import net.daw.helper.annotations.MethodMetaInformation;
@@ -50,13 +56,126 @@ public class RespuestaDao extends TableDaoGenImpl<RespuestaBean> {
     public RespuestaDao(Connection pooledConnection) throws Exception {
         super(pooledConnection);
     }
-  
+
+    @Override
+    public RespuestaBean get(RespuestaBean oRespuestaBean, Integer expand) throws Exception {
+        MysqlDataSpImpl oMysql = new MysqlDataSpImpl(oConnection);
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        if (oRespuestaBean.getId() > 0) {
+
+            if (oMysql.existsOne(strSqlSelectDataOrigin, oRespuestaBean.getId())) {
+                String strIdDoc = oMysql.getOne(strSqlSelectDataOrigin, "id_opcion", oRespuestaBean.getId());
+                oRespuestaBean.setId_opcion(Integer.parseInt(strIdDoc));
+
+                OpcionDao oOpcionDao = new OpcionDao(oConnection);
+
+                OpcionBean oOpcionBean = new OpcionBean();
+                oOpcionBean.setId(oRespuestaBean.getId_opcion());
+                oOpcionBean = oOpcionDao.get(oOpcionBean, 1);
+
+                GroupBeanImpl oGroupBeanImpl = new GroupBeanImpl();
+                oGroupBeanImpl.setBean(oOpcionBean);
+                oGroupBeanImpl.setMeta(oOpcionDao.getmetainformation());
+                oRespuestaBean.setObj_opcion(oGroupBeanImpl);
+
+                //Usuario
+                String strIdUsu = oMysql.getOne(strSqlSelectDataOrigin, "id_usuario", oRespuestaBean.getId());
+                oRespuestaBean.setId_usuario(Integer.parseInt(strIdUsu));
+
+                UsuarioDao oUsuarioDao = new UsuarioDao(oConnection);
+
+                UsuarioBean oUsuarioBean = new UsuarioBean();
+                oUsuarioBean.setId(oRespuestaBean.getId());
+                oUsuarioBean = oUsuarioDao.get(oUsuarioBean, 1);
+
+                GroupBeanImpl oGroupBeanImplUsu = new GroupBeanImpl();
+                oGroupBeanImplUsu.setBean(oUsuarioBean);
+                oGroupBeanImplUsu.setMeta(oUsuarioDao.getmetainformation());
+                oRespuestaBean.setObj_usuario(oGroupBeanImplUsu);
+
+                //hora
+                String strHora = oMysql.getOne(strSqlSelectDataOrigin, "fechaHoraAlta", oRespuestaBean.getId());
+                Date date = formatter.parse(strHora);
+                oRespuestaBean.setFechaHoraAlta(date);
+            }
+        }
+        try {
+
+            return oRespuestaBean;
+        } catch (Exception e) {
+            throw new Exception(this.getClass().getName() + ":get ERROR: " + e.getMessage());
+        }
+    }
+
+    @Override
+    public ArrayList<RespuestaBean> getAll(ArrayList<FilterBeanHelper> alFilter, HashMap<String, String> hmOrder) throws Exception {
+
+        MysqlDataSpImpl oMysql = new MysqlDataSpImpl(oConnection);
+
+        ArrayList<RespuestaBean> alRespuestaBean = new ArrayList<>();
+        strSqlSelectDataOrigin += SqlBuilder.buildSqlWhere(alFilter);
+        strSqlSelectDataOrigin += SqlBuilder.buildSqlOrder(hmOrder);
+
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        try {
+            ResultSet result = oMysql.getAllSql(strSqlSelectDataOrigin);
+            if (result != null) {
+                while (result.next()) {
+                    RespuestaBean oRespuestaBean = new RespuestaBean();
+                    oRespuestaBean.setId(result.getInt("id"));
+                    oRespuestaBean.setId_opcion(result.getInt("id_opcion"));
+                    oRespuestaBean.setId_usuario(result.getInt("id_usuario"));
+
+                    OpcionDao oOpcionDao = new OpcionDao(oConnection);
+
+                    OpcionBean oOpcionBean = new OpcionBean();
+                    oOpcionBean.setId(oRespuestaBean.getId_opcion());
+                    oOpcionBean = oOpcionDao.get(oOpcionBean, 1);
+
+                    GroupBeanImpl oGroupBeanImpl = new GroupBeanImpl();
+                    oGroupBeanImpl.setBean(oOpcionBean);
+                    oGroupBeanImpl.setMeta(oOpcionDao.getmetainformation());
+                    oRespuestaBean.setObj_opcion(oGroupBeanImpl);
+
+                    //Usuario
+                    UsuarioDao oUsuarioDao = new UsuarioDao(oConnection);
+
+                    UsuarioBean oUsuarioBean = new UsuarioBean();
+                    oUsuarioBean.setId(oRespuestaBean.getId());
+                    oUsuarioBean = oUsuarioDao.get(oUsuarioBean, 1);
+
+                    GroupBeanImpl oGroupBeanImplUsu = new GroupBeanImpl();
+                    oGroupBeanImplUsu.setBean(oUsuarioBean);
+                    oGroupBeanImplUsu.setMeta(oUsuarioDao.getmetainformation());
+                    oRespuestaBean.setObj_usuario(oGroupBeanImplUsu);
+
+                    //hora
+                    String strHora = oMysql.getOne(strSqlSelectDataOrigin, "fechaHoraAlta", oRespuestaBean.getId());
+                    if (strHora != null) {
+                        Date date = formatter.parse(strHora);
+                        oRespuestaBean.setFechaHoraAlta(date);
+                    } else if (strHora == null) {
+                        Date date = new Date();
+                        oRespuestaBean.setFechaHoraAlta(date);
+                    }
+
+                    alRespuestaBean.add(oRespuestaBean);
+                }
+            }
+
+        } catch (Exception ex) {
+            throw new Exception(this.getClass().getName() + ":get ERROR: " + ex.getMessage());
+        }
+
+        return alRespuestaBean;
+    }
+
     @Override
     public int getPages(int intRegsPerPag, ArrayList<FilterBeanHelper> alFilter) throws Exception {
         strSqlSelectDataOrigin += SqlBuilder.buildSqlWhere(alFilter);
         return oMysql.getPages(strSqlSelectDataOrigin, intRegsPerPag);
     }
-    
+
     @Override
     public RespuestaBean set(RespuestaBean oRespuestaBean) throws Exception {
 
@@ -74,7 +193,7 @@ public class RespuestaDao extends TableDaoGenImpl<RespuestaBean> {
         }
         return oRespuestaBean;
     }
-    
+
     @Override
     public int remove(RespuestaBean oRespuestaBean) throws Exception {
 
@@ -86,7 +205,7 @@ public class RespuestaDao extends TableDaoGenImpl<RespuestaBean> {
         }
         return result;
     }
-    
+
     @Override
     public ArrayList<MetaBeanGenImpl> getmetainformation() throws Exception {
         ArrayList<MetaBeanGenImpl> alVector = null;
@@ -122,121 +241,6 @@ public class RespuestaDao extends TableDaoGenImpl<RespuestaBean> {
             ExceptionBooster.boost(new Exception(this.getClass().getName() + ":getmetainformation ERROR: " + ex.getMessage()));
         }
         return alVector;
-    
-    @Override
-    public RespuestaBean get(RespuestaBean oRespuestaBean, Integer expand) throws Exception {
-        MysqlDataSpImpl oMysql = new MysqlDataSpImpl(oConnection);
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        if (oRespuestaBean.getId() > 0) {
-
-            if (oMysql.existsOne(strSqlSelectDataOrigin, oRespuestaBean.getId())) {
-                String strIdDoc = oMysql.getOne(strSqlSelectDataOrigin, "id_opcion", oRespuestaBean.getId());
-                oRespuestaBean.setId_opcion(Integer.parseInt(strIdDoc));
-                
-                    OpcionDao oOpcionDao = new OpcionDao(oConnection);
-                    
-                    OpcionBean oOpcionBean = new OpcionBean();
-                    oOpcionBean.setId(oRespuestaBean.getId_opcion());
-                    oOpcionBean = oOpcionDao.get(oOpcionBean, 1);
-                    
-                    GroupBeanImpl oGroupBeanImpl = new GroupBeanImpl();
-                    oGroupBeanImpl.setBean(oOpcionBean);
-                    oGroupBeanImpl.setMeta(oOpcionDao.getmetainformation());
-                    oRespuestaBean.setObj_opcion(oGroupBeanImpl);
-                  
-                //Usuario
-                    
-                    String strIdUsu = oMysql.getOne(strSqlSelectDataOrigin, "id_usuario", oRespuestaBean.getId());
-                    oRespuestaBean.setId_usuario(Integer.parseInt(strIdUsu));
-                
-                    UsuarioDao oUsuarioDao = new UsuarioDao(oConnection);
-                    
-                    UsuarioBean oUsuarioBean = new UsuarioBean();
-                    oUsuarioBean.setId(oRespuestaBean.getId());
-                    oUsuarioBean = oUsuarioDao.get(oUsuarioBean, 1);
-                    
-                    GroupBeanImpl oGroupBeanImplUsu = new GroupBeanImpl();
-                    oGroupBeanImplUsu.setBean(oUsuarioBean);
-                    oGroupBeanImplUsu.setMeta(oUsuarioDao.getmetainformation());
-                    oRespuestaBean.setObj_usuario(oGroupBeanImplUsu);
-                  
-                //hora
-                    String strHora = oMysql.getOne(strSqlSelectDataOrigin, "fechaHoraAlta", oRespuestaBean.getId());
-                    Date date = formatter.parse(strHora);
-                    oRespuestaBean.setFechaHoraAlta(date);
-            }
-        }
-        try {
-
-            return oRespuestaBean;
-        } catch (Exception e) {
-            throw new Exception(this.getClass().getName() + ":get ERROR: " + e.getMessage());
-        }
     }
-    
-    @Override
-    public ArrayList<RespuestaBean> getAll(ArrayList<FilterBeanHelper> alFilter, HashMap<String, String> hmOrder) throws Exception {
 
-        MysqlDataSpImpl oMysql = new MysqlDataSpImpl(oConnection);
-
-        ArrayList<RespuestaBean> alRespuestaBean = new ArrayList<>();
-        strSqlSelectDataOrigin += SqlBuilder.buildSqlWhere(alFilter);
-        strSqlSelectDataOrigin += SqlBuilder.buildSqlOrder(hmOrder);
-        
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        try {
-            ResultSet result = oMysql.getAllSql(strSqlSelectDataOrigin);
-            if (result != null) {
-                while (result.next()) {
-                    RespuestaBean oRespuestaBean = new RespuestaBean();
-                    oRespuestaBean.setId(result.getInt("id"));
-                    oRespuestaBean.setId_opcion(result.getInt("id_opcion"));
-                    oRespuestaBean.setId_usuario(result.getInt("id_usuario"));
-                    
-                    OpcionDao oOpcionDao = new OpcionDao(oConnection);
-                    
-                    OpcionBean oOpcionBean = new OpcionBean();
-                    oOpcionBean.setId(oRespuestaBean.getId_opcion());
-                    oOpcionBean = oOpcionDao.get(oOpcionBean, 1);
-                    
-                    GroupBeanImpl oGroupBeanImpl = new GroupBeanImpl();
-                    oGroupBeanImpl.setBean(oOpcionBean);
-                    oGroupBeanImpl.setMeta(oOpcionDao.getmetainformation());
-                    oRespuestaBean.setObj_opcion(oGroupBeanImpl);
-                    
-                    //Usuario
-                
-                    UsuarioDao oUsuarioDao = new UsuarioDao(oConnection);
-                    
-                    UsuarioBean oUsuarioBean = new UsuarioBean();
-                    oUsuarioBean.setId(oRespuestaBean.getId());
-                    oUsuarioBean = oUsuarioDao.get(oUsuarioBean, 1);
-                    
-                    GroupBeanImpl oGroupBeanImplUsu = new GroupBeanImpl();
-                    oGroupBeanImplUsu.setBean(oUsuarioBean);
-                    oGroupBeanImplUsu.setMeta(oUsuarioDao.getmetainformation());
-                    oRespuestaBean.setObj_usuario(oGroupBeanImplUsu);
-                    
-                    //hora
-                    
-                    String strHora = oMysql.getOne(strSqlSelectDataOrigin, "fechaHoraAlta", oRespuestaBean.getId());
-                    if(strHora!=null){
-                    Date date = formatter.parse(strHora);
-                    oRespuestaBean.setFechaHoraAlta(date);
-                    }else if(strHora==null){
-                    Date date = new Date();
-                    oRespuestaBean.setFechaHoraAlta(date);
-                    }
-                    
-                    
-                    alRespuestaBean.add(oRespuestaBean);
-                }
-            }
-
-        } catch (Exception ex) {
-            throw new Exception(this.getClass().getName() + ":get ERROR: " + ex.getMessage());
-        }
-
-        return alRespuestaBean;
-    }
 }

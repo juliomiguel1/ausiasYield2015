@@ -28,7 +28,10 @@
 package net.daw.dao.specific.implementation;
 
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.HashMap;
+import net.daw.bean.group.GroupBeanImpl;
 import net.daw.bean.specific.implementation.OpcionBean;
 import net.daw.bean.specific.implementation.PreguntaBean;
 import net.daw.dao.generic.implementation.TableDaoGenImpl;
@@ -41,27 +44,11 @@ import net.daw.helper.statics.SqlBuilder;
  * @author juliomiguel
  */
 public class OpcionDao extends TableDaoGenImpl<OpcionBean> {
-    
-     public OpcionDao(Connection pooledConnection) throws Exception {
+
+    public OpcionDao(Connection pooledConnection) throws Exception {
         super(pooledConnection);
     }
-     
-     @Override
-    public int getCount(ArrayList<FilterBeanHelper> alFilter) throws Exception {
 
-        MysqlDataSpImpl oMysql = new MysqlDataSpImpl(oConnection);
-
-        strSqlSelectDataOrigin += SqlBuilder.buildSqlWhere(alFilter);
-        int counter = 0;
-
-        try {
-            counter = oMysql.getCount(strSqlSelectDataOrigin);
-        } catch (Exception e) {
-            throw new Exception(this.getClass().getName() + ".getCount: Error: " + e.getMessage());
-        }
-        return counter;
-    
-     
     @Override
     public OpcionBean get(OpcionBean oOpcionBean, Integer expand) throws Exception {
         MysqlDataSpImpl oMysql = new MysqlDataSpImpl(oConnection);
@@ -71,20 +58,19 @@ public class OpcionDao extends TableDaoGenImpl<OpcionBean> {
                 String strIdDoc = oMysql.getOne(strSqlSelectDataOrigin, "id_pregunta", oOpcionBean.getId());
                 oOpcionBean.setId_pregunta(Integer.parseInt(strIdDoc));
                 oOpcionBean.setDescripcion(oMysql.getOne(strSqlSelectDataOrigin, "descripcion", oOpcionBean.getId()));
-                
-                
-                PreguntaDao oPreguntaDao = new PreguntaDao(oConnection);
-                    //un pojo de documento con elid de documento
-                    PreguntaBean oPreguntaBean = new PreguntaBean();
-                    oPreguntaBean.setId(oOpcionBean.getId_pregunta());
-                    oPreguntaBean = oPreguntaDao.get(oPreguntaBean, 1);
 
-                    //rellenar el pojo de documento con el dao
-                    //meter el pojo relleno a la pregunta
-                    GroupBeanImpl oGroupBeanImpl = new GroupBeanImpl();
-                    oGroupBeanImpl.setBean(oPreguntaBean);
-                    oGroupBeanImpl.setMeta(oPreguntaDao.getmetainformation());
-                    oOpcionBean.setObj_pregunta(oGroupBeanImpl);
+                PreguntaDao oPreguntaDao = new PreguntaDao(oConnection);
+                //un pojo de documento con elid de documento
+                PreguntaBean oPreguntaBean = new PreguntaBean();
+                oPreguntaBean.setId(oOpcionBean.getId_pregunta());
+                oPreguntaBean = oPreguntaDao.get(oPreguntaBean, 1);
+
+                //rellenar el pojo de documento con el dao
+                //meter el pojo relleno a la pregunta
+                GroupBeanImpl oGroupBeanImpl = new GroupBeanImpl();
+                oGroupBeanImpl.setBean(oPreguntaBean);
+                oGroupBeanImpl.setMeta(oPreguntaDao.getmetainformation());
+                oOpcionBean.setObj_pregunta(oGroupBeanImpl);
             }
         }
         try {
@@ -94,8 +80,8 @@ public class OpcionDao extends TableDaoGenImpl<OpcionBean> {
             throw new Exception(this.getClass().getName() + ":get ERROR: " + e.getMessage());
         }
     }
-    
-     @Override
+
+    @Override
     public ArrayList<OpcionBean> getAll(ArrayList<FilterBeanHelper> alFilter, HashMap<String, String> hmOrder) throws Exception {
 
         MysqlDataSpImpl oMysql = new MysqlDataSpImpl(oConnection);
@@ -137,4 +123,21 @@ public class OpcionDao extends TableDaoGenImpl<OpcionBean> {
 
         return alOpcionBean;
     }
+
+    @Override
+    public int getCount(ArrayList<FilterBeanHelper> alFilter) throws Exception {
+
+        MysqlDataSpImpl oMysql = new MysqlDataSpImpl(oConnection);
+
+        strSqlSelectDataOrigin += SqlBuilder.buildSqlWhere(alFilter);
+        int counter = 0;
+
+        try {
+            counter = oMysql.getCount(strSqlSelectDataOrigin);
+        } catch (Exception e) {
+            throw new Exception(this.getClass().getName() + ".getCount: Error: " + e.getMessage());
+        }
+        return counter;
+    }
+
 }

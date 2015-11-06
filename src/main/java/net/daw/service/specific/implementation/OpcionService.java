@@ -27,12 +27,16 @@
  */
 package net.daw.service.specific.implementation;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import java.sql.Connection;
 import java.util.ArrayList;
+import java.util.HashMap;
 import javax.servlet.http.HttpServletRequest;
+import net.daw.bean.specific.implementation.OpcionBean;
 import net.daw.bean.specific.implementation.PreguntaBean;
 import net.daw.connection.implementation.BoneConnectionPoolImpl;
-import net.daw.dao.specific.implementation.PreguntaDao;
+import net.daw.dao.specific.implementation.OpcionDao;
 import net.daw.dao.specific.implementation.RespuestaDao;
 import net.daw.helper.statics.FilterBeanHelper;
 import net.daw.helper.statics.ParameterCook;
@@ -49,19 +53,6 @@ public class OpcionService extends TableServiceGenImpl {
     }
 
     @Override
-    public String getcount() throws Exception {
-
-        Connection oConnection = new BoneConnectionPoolImpl().newConnection();
-
-        RespuestaDao oRespuestaDao = new RespuestaDao(oConnection);
-
-        PreguntaBean oProfesorBean = new PreguntaBean();
-        ArrayList<FilterBeanHelper> alFilterBeanHelper = ParameterCook.prepareFilter(oRequest);
-        int counter = oRespuestaDao.getCount(alFilterBeanHelper/*alFilter*/);
-
-        String data = "{\"status\":200,\"message\":" + Integer.toString(counter) + "}";
-    
-     @Override
     public String get() throws Exception {
 
         int id = ParameterCook.prepareId(oRequest);
@@ -81,8 +72,8 @@ public class OpcionService extends TableServiceGenImpl {
 
         return "{\"status\":200,\"message\":" + data + "}";
     }
-    
-      @Override
+
+    @Override
     public String getall() throws Exception {
 
         Connection oConnection = new BoneConnectionPoolImpl().newConnection();
@@ -91,13 +82,29 @@ public class OpcionService extends TableServiceGenImpl {
         ArrayList<OpcionBean> alOpcionBean = new ArrayList<OpcionBean>();
         ArrayList<FilterBeanHelper> alFilterBeanHelper = ParameterCook.prepareFilter(oRequest);
         HashMap<String, String> hmOrder = ParameterCook.prepareOrder(oRequest);
-        
+
         alOpcionBean = oOpcionDao.getAll(alFilterBeanHelper, hmOrder);
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.setDateFormat("dd/MM/yyyy");
         Gson gson = gsonBuilder.create();
-        String data = "{\"status\":200,\"message\":"+gson.toJson(alOpcionBean)+"}";
+        String data = "{\"status\":200,\"message\":" + gson.toJson(alOpcionBean) + "}";
 
         return data;
     }
+
+    @Override
+    public String getcount() throws Exception {
+
+        Connection oConnection = new BoneConnectionPoolImpl().newConnection();
+
+        RespuestaDao oRespuestaDao = new RespuestaDao(oConnection);
+
+        PreguntaBean oProfesorBean = new PreguntaBean();
+        ArrayList<FilterBeanHelper> alFilterBeanHelper = ParameterCook.prepareFilter(oRequest);
+        int counter = oRespuestaDao.getCount(alFilterBeanHelper/*alFilter*/);
+
+        String data = "{\"status\":200,\"message\":" + Integer.toString(counter) + "}";
+        return data;
+    }
+
 }
