@@ -139,5 +139,90 @@ public class OpcionDao extends TableDaoGenImpl<OpcionBean> {
         }
         return counter;
     }
+    
+    
+    @Override
+    public ArrayList<OpcionBean> getPage(int intRegsPerPag, int intPage, ArrayList<FilterBeanHelper> alFilter, HashMap<String, String> hmOrder) throws Exception {
+
+        //Crear la conexión SQL
+        MysqlDataSpImpl oMySQL = new MysqlDataSpImpl(oConnection);
+
+        strSqlSelectDataOrigin += SqlBuilder.buildSqlWhere(alFilter);
+        strSqlSelectDataOrigin += SqlBuilder.buildSqlOrder(hmOrder);
+
+        //Crear una variable result que provenga de oMySQL
+        ResultSet result = oMySQL.getPage(strSqlSelectDataOrigin, intRegsPerPag, intPage);
+
+
+        ArrayList<OpcionBean> alOpcionBean = new ArrayList<>();
+
+        //Recorrer los elementos de result
+        while (result.next()) {
+
+            OpcionBean oOpcionBean = new OpcionBean();
+
+            oOpcionBean.setId(result.getInt("id"));
+            oOpcionBean.setDescripcion(result.getString("descripcion"));
+            oOpcionBean.setId_pregunta(result.getInt("id_pregunta"));
+            
+
+
+            PreguntaDao oPreguntaDao = new PreguntaDao(oConnection);
+
+            PreguntaBean oPreguntaBean = new PreguntaBean();
+            oPreguntaBean.setId(result.getInt("id_pregunta"));
+
+            oPreguntaBean = oPreguntaDao.get(oPreguntaBean, 1);
+
+            GroupBeanImpl oGroupBeanImplOpcion = new GroupBeanImpl();
+            oGroupBeanImplOpcion.setBean(oPreguntaBean);
+            oGroupBeanImplOpcion.setMeta(oPreguntaDao.getmetainformation());
+            oOpcionBean.setObj_pregunta(oGroupBeanImplOpcion);
+
+            
+            alOpcionBean.add(oOpcionBean);
+
+
+        }
+
+        return alOpcionBean;
+
+    }
+    
+    @Override
+    public int getPages(int intRegsPerPag, ArrayList<FilterBeanHelper> alFilter) throws Exception {
+        strSqlSelectDataOrigin += SqlBuilder.buildSqlWhere(alFilter);
+        return oMysql.getPages(strSqlSelectDataOrigin, intRegsPerPag);
+    }
+    
+    @Override
+    public OpcionBean set(OpcionBean oOpcionBean) throws Exception {
+
+        MysqlDataSpImpl oMysql = new MysqlDataSpImpl(oConnection);
+
+        try {
+            if (oOpcionBean.getId() == 0) {
+                oOpcionBean.setId(oMysql.insertOne(strTableOrigin));
+            }
+            oMysql.updateOne(oOpcionBean.getId(), strTableOrigin, "id_pregunta", oOpcionBean.getId_pregunta().toString());
+            oMysql.updateOne(oOpcionBean.getId(), strTableOrigin, "descripcion", oOpcionBean.getDescripcion());
+
+        } catch (Exception e) {
+            throw new Exception(this.getClass().getName() + ".set: Error: " + e.getMessage());
+        }
+        return oOpcionBean;
+    }
+    
+    @Override
+    public int remove(OpcionBean oOBean) throws Exception {
+
+        int result = 0;
+        try {
+            result = oMysql.removeOne(oOBean.getId(), strTableOrigin);
+        } catch (Exception e) {
+            throw new Exception(this.getClass().getName() + ".remove: Error: " + e.getMessage());
+        }
+        return result;
+    }
 
 }
