@@ -208,5 +208,15 @@ public class OpcionService extends TableServiceGenImpl {
         return resultado;
     }
     
+        @Override
+    public String getmetainformation() throws Exception {
+
+        Connection oConnection = new BoneConnectionPoolImpl().newConnection();
+        OpcionDao oOpcionDao = new OpcionDao(oConnection);
+        Gson oGson = new GsonBuilder().setDateFormat("dd/MM/yyyy").excludeFieldsWithoutExposeAnnotation().create();
+        return "{\"status\":200,\"message\":" + oGson.toJson(oOpcionDao.getmetainformation()) + "}";
+
+    }
+    
 
 }
