@@ -98,6 +98,37 @@ public class RespuestaService extends TableServiceGenImpl {
     }
     
     @Override
+    public String getpage() throws Exception {
+
+        Connection oConnection = null;
+
+        oConnection = new BoneConnectionPoolImpl().newConnection();
+
+        RespuestaDao oRespuestaDao = new RespuestaDao(oConnection);
+
+        ArrayList<RespuestaBean> oRespuestaArray = new ArrayList<>();
+
+        //Obtenemos parámetros con el ParameterCook
+        int rpp = ParameterCook.prepareRpp(oRequest);
+
+        int page = ParameterCook.preparePage(oRequest);
+
+        //ArrayList para sacar los filtros
+        ArrayList<FilterBeanHelper> alFilterBeanHelper = ParameterCook.prepareFilter(oRequest);
+
+        //HashMap para sacar el orden
+        HashMap<String, String> hmOrder = ParameterCook.prepareOrder(oRequest);
+
+        //Asignamos getPage(con sus parámetros) al ArrayList oRespuestaArray
+        oRespuestaArray = oRespuestaDao.getPage(rpp, page, alFilterBeanHelper, hmOrder);
+
+        //Creamos el Json para mostrarlo en pantalla
+        Gson oGson = new GsonBuilder().setDateFormat("dd/MM/yyyy").create();
+        return "{\"status\":200,\"message\":" +oGson.toJson(oRespuestaArray) +"}";
+
+    }
+    
+    @Override
     public String getpages() throws Exception {
         if (this.checkpermission("getpages")) {
             Connection oConnection = null;

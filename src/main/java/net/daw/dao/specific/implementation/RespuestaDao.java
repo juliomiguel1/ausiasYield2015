@@ -37,7 +37,9 @@ import java.util.Date;
 import java.util.HashMap;
 import net.daw.bean.group.GroupBeanImpl;
 import net.daw.bean.meta.MetaBeanGenImpl;
+import net.daw.bean.specific.implementation.DocumentoBean;
 import net.daw.bean.specific.implementation.OpcionBean;
+import net.daw.bean.specific.implementation.PreguntaBean;
 import net.daw.bean.specific.implementation.RespuestaBean;
 import net.daw.bean.specific.implementation.UsuarioBean;
 import net.daw.dao.generic.implementation.TableDaoGenImpl;
@@ -168,6 +170,64 @@ public class RespuestaDao extends TableDaoGenImpl<RespuestaBean> {
         }
 
         return alRespuestaBean;
+    }
+
+    @Override
+    public ArrayList<RespuestaBean> getPage(int intRegsPerPag, int intPage, ArrayList<FilterBeanHelper> alFilter, HashMap<String, String> hmOrder) throws Exception {
+
+        //Crear la conexión SQL
+        MysqlDataSpImpl oMySQL = new MysqlDataSpImpl(oConnection);
+
+        strSqlSelectDataOrigin += SqlBuilder.buildSqlWhere(alFilter);
+        strSqlSelectDataOrigin += SqlBuilder.buildSqlOrder(hmOrder);
+
+        //Crear una variable result que provenga de oMySQL
+        ResultSet result = oMySQL.getPage(strSqlSelectDataOrigin, intRegsPerPag, intPage);
+
+        //Crear un arraylist de RespuestaBean
+        ArrayList<RespuestaBean> alRespuestaBean = new ArrayList<>();
+
+        //Recorrer los elementos de result
+        while (result.next()) {
+            //Crear variable local para asignar los sets de result
+            RespuestaBean oRespuestaBean = new RespuestaBean();
+
+            oRespuestaBean.setId(result.getInt("id"));
+            oRespuestaBean.setId_opcion(result.getInt("id_opcion"));
+            oRespuestaBean.setId_usuario(result.getInt("id_usuario"));
+                      
+            //crear un dao de opcion y de usuario
+            OpcionDao oOpcionDao = new OpcionDao(oConnection);
+            UsuarioDao oUsuarioDao = new UsuarioDao(oConnection);
+            
+            //un pojo de documento con elid de documento
+            OpcionBean oOpcionBean = new OpcionBean();
+            oOpcionBean.setId(result.getInt("id_opcion"));
+            UsuarioBean oUsuarioBean = new UsuarioBean();
+            oUsuarioBean.setId(result.getInt("id_usuario"));
+
+            oOpcionBean = oOpcionDao.get(oOpcionBean, 1);
+            oUsuarioBean = oUsuarioDao.get(oUsuarioBean, 1);
+            //rellenar el pojo de documento con el dao
+            //meter el pojo relleno a la pregunta
+            GroupBeanImpl oGroupBeanImpl = new GroupBeanImpl();
+            oGroupBeanImpl.setBean(oOpcionBean);
+            oGroupBeanImpl.setBean(oUsuarioBean);
+            
+            oGroupBeanImpl.setMeta(oOpcionDao.getmetainformation());
+            oRespuestaBean.setObj_opcion(oGroupBeanImpl);
+            
+            oGroupBeanImpl.setMeta(oUsuarioDao.getmetainformation());
+            oRespuestaBean.setObj_usuario(oGroupBeanImpl);
+
+            oRespuestaBean.setFechaHoraAlta(result.getDate("fechaHoraAlta"));
+            alRespuestaBean.add(oRespuestaBean);
+
+            //Asignar los datos de la variable local al array de PreguntaBean
+        }
+        //Devolver el array de PreguntaBean
+        return alRespuestaBean;
+
     }
 
     @Override
