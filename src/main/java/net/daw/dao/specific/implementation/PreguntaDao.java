@@ -85,6 +85,51 @@ public class PreguntaDao extends TableDaoGenImpl<PreguntaBean> {
             throw new Exception(this.getClass().getName() + ":get ERROR: " + e.getMessage());
         }
     }
+    
+    
+    public ArrayList<OpcionBean> getOpciones(OpcionBean oOpcionBean, Integer expand) throws Exception {
+        MysqlDataSpImpl oMysql = new MysqlDataSpImpl(oConnection);
+        ArrayList<OpcionBean> alOpcionBean = new ArrayList<>();
+        if (oOpcionBean.getId_pregunta() > 0) {
+
+            if (oMysql.existsOne("select * from opcion", oOpcionBean.getId_pregunta())) {
+                ResultSet result = oMysql.getAllSql("select * from opcion");
+                if (result != null) {
+                    while (result.next()) {
+                        if (result.getInt("id_pregunta") == oOpcionBean.getId_pregunta()) {
+                            OpcionBean oOpcionBeanFinal = new OpcionBean();
+                            oOpcionBeanFinal.setId(result.getInt("id"));
+                            oOpcionBeanFinal.setDescripcion(result.getString("descripcion"));
+                            oOpcionBeanFinal.setId_pregunta(result.getInt("id_pregunta"));
+
+                            PreguntaDao oPreguntaDao = new PreguntaDao(oConnection);
+                            PreguntaBean oPreguntaBean = new PreguntaBean();
+                            oPreguntaBean.setId(result.getInt("id_pregunta"));
+                            oPreguntaBean = oPreguntaDao.get(oPreguntaBean, 1);
+
+                            GroupBeanImpl oGroupBeanImpl = new GroupBeanImpl();
+                            oGroupBeanImpl.setBean(oPreguntaBean);
+                            oGroupBeanImpl.setMeta(oPreguntaDao.getmetainformation());
+                            oOpcionBeanFinal.setObj_pregunta(oGroupBeanImpl);
+
+                            alOpcionBean.add(oOpcionBeanFinal);
+
+                        }
+
+                    }
+                }
+
+            }
+        }
+        try {
+
+            return alOpcionBean;
+        } catch (Exception e) {
+            throw new Exception(this.getClass().getName() + ":get ERROR: " + e.getMessage());
+        }
+    }
+    
+    
 
     @Override
     public ArrayList<PreguntaBean> getAll(ArrayList<FilterBeanHelper> alFilter, HashMap<String, String> hmOrder) throws Exception {
