@@ -193,6 +193,10 @@
         <script src="js/specific/tipousuario/routes.js" type="text/javascript"></script>
         <!-- Estado --> 
         <script src="js/specific/estado/routes.js" type="text/javascript"></script>
+        <!-- Pregunta --> 
+        <script src="js/specific/pregunta/routes.js" type="text/javascript"></script>
+        <script src="js/specific/opcion/routes.js" type="text/javascript"></script>
+        <script src="js/specific/respuesta/routes.js" type="text/javascript"></script>
         <!-- --------------------------------------------------------------- -->
         <script type="text/javascript">
             function loadRoutes() {                
@@ -201,6 +205,9 @@
                 fDocumentoRoutes();
                 fEstadoRoutes();
                 fTipousuarioRoutes();
+                fPreguntaRoutes();
+                fOpcionRoutes();
+                fRespuestaRoutes();
             }
             $(document).ready(function () {
                 configuration.pathConfig();

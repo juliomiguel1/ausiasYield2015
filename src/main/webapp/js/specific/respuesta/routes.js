@@ -27,3 +27,91 @@
  */
 
 
+function fRespuestaRoutes() {
+    var icon = '<i class="fa fa-file-text-o fa-5x"></i>';
+    var fillRespuestaPageHeader = _.partial(html.getPageHeader, icon, 'respuesta', _);
+    var strClass = 'respuesta';
+    var header=$('#broth_panel_heading');
+    var content = $('#broth_content');
+    //--------------------------------------------------------------------------
+    Path.map("#/" + strClass + "/remove/:id").to(function () {
+        header.empty().append(fillRespuestaPageHeader('Remove'));
+        var strParam = parameter.getUrlObjectFromUrlString(this.params['url']);
+        ausiasFLOW.reset();
+        ausiasFLOW.initialize(removeModule, content, strClass, 'remove', strParam);
+        return false;
+    });
+    //--------------------------------------------------------------------------
+    Path.map("#/" + strClass + "/new(/:url)").to(function () {
+        header.empty().append(fillRespuestaPageHeader('New'));
+        var strParam = parameter.getUrlObjectFromUrlString(this.params['url']);
+        ausiasFLOW.reset();
+        ausiasFLOW.initialize(documentoNew, content, strClass, 'new', strParam);
+        return false;
+    });
+    //--------------------------------------------------------------------------    
+    Path.map("#/" + strClass + "/edit/:url").to(function () {
+        header.empty().append(fillRespuestaPageHeader('Edit'));
+        var strParam = parameter.getUrlObjectFromUrlString(this.params['url']);
+        ausiasFLOW.reset();
+        ausiasFLOW.initialize(documentoEdit, content, strClass, 'edit', strParam);
+        return false;
+    });
+    //--------------------------------------------------------------------------
+    Path.map("#/" + strClass + "/view/:id").to(function () {
+        header.empty().append(fillRespuestaPageHeader('View'));
+        var strParam = parameter.getUrlObjectFromUrlString(this.params['url']);
+        ausiasFLOW.reset();
+        ausiasFLOW.initialize(viewModule, content, strClass, 'view', strParam);
+        return false;
+    });
+    //--------------------------------------------------------------------------    
+    Path.map("#/" + strClass + "/list(/:url)").to(function () {
+        header.empty().append(fillRespuestaPageHeader('List'));
+        var strParam = parameter.defaultizeUrlObjectParametersForLists(parameter.getUrlObjectFromUrlString(this.params['url']));
+        ausiasFLOW.reset();
+        ausiasFLOW.initialize(listModule, content, strClass, 'list', strParam);
+        return false;
+    });
+    //--------------------------------------------------------------------------
+    Path.map("#/" + strClass + "/plist(/:url)").to(function () {
+        header.empty().append(fillRespuestaPageHeader('Paginated List'));
+        var strParam = parameter.getUrlObjectFromUrlString(this.params['url']);
+        ausiasFLOW.reset();
+        ausiasFLOW.initialize(pListModule, content, strClass, 'plist', strParam);
+        return false;
+    });
+    //--------------------------------------------------------------------------
+    Path.map("#/" + strClass + "/plist_labels_authors_x_ndocs(/:url)").to(function () {
+        header.empty().append(fillRespuestaPageHeader('Paginated List'));
+        var strParam = parameter.getUrlObjectFromUrlString(this.params['url']);
+        ausiasFLOW.reset();
+        ausiasFLOW.initialize(pListModule, content, strClass, 'plist_labels_authors_x_ndocs', strParam);
+        return false;
+    });
+//    //--------------------------------------------------------------------------
+//    Path.map("#/" + strClass + "/abc(/:url)").to(function () {
+//        var strParam = parameter.getUrlObjectFromUrlString(this.params['url']);
+//        if (strParam) {
+//            strParam.vf = 4;
+//        } else {
+//            strParam = {'vf': 4};
+//        }
+//        header.empty().append(fillRespuestaPageHeader('Composed operation'));
+//        content.empty().append('<div class="col-md-8" id="c1"></div><div class="col-md-4" id="c2"></div>')
+//        ausiasFLOW.reset();
+//        ausiasFLOW.initialize(documentoPaginatedList, $('#c1'), strClass, 'abc', strParam);
+//        ausiasFLOW.initialize(viewModule, $('#c2'), strClass, 'view', strParam);
+//        return false;
+//    });
+//    //--------------------------------------------------------------------------
+//    Path.map("#/" + strClass + "/documentosautor").to(function () {
+//        header.empty().append(fillRespuestaPageHeader('Documentos de cada autor'));
+//        var strParam = parameter.getUrlObjectFromUrlString(this.params['url']);
+//        ausiasFLOW.reset();
+//        ausiasFLOW.initialize(documentosautorList, content, 'documentosautor', 'list', strParam);
+//        return false;
+//   });
+
+
+}
