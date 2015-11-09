@@ -144,8 +144,7 @@ public class OpcionDao extends TableDaoGenImpl<OpcionBean> {
         }
         return counter;
     }
-    
-    
+
     @Override
     public ArrayList<OpcionBean> getPage(int intRegsPerPag, int intPage, ArrayList<FilterBeanHelper> alFilter, HashMap<String, String> hmOrder) throws Exception {
 
@@ -158,7 +157,6 @@ public class OpcionDao extends TableDaoGenImpl<OpcionBean> {
         //Crear una variable result que provenga de oMySQL
         ResultSet result = oMySQL.getPage(strSqlSelectDataOrigin, intRegsPerPag, intPage);
 
-
         ArrayList<OpcionBean> alOpcionBean = new ArrayList<>();
 
         //Recorrer los elementos de result
@@ -169,8 +167,6 @@ public class OpcionDao extends TableDaoGenImpl<OpcionBean> {
             oOpcionBean.setId(result.getInt("id"));
             oOpcionBean.setDescripcion(result.getString("descripcion"));
             oOpcionBean.setId_pregunta(result.getInt("id_pregunta"));
-            
-
 
             PreguntaDao oPreguntaDao = new PreguntaDao(oConnection);
 
@@ -184,22 +180,20 @@ public class OpcionDao extends TableDaoGenImpl<OpcionBean> {
             oGroupBeanImplOpcion.setMeta(oPreguntaDao.getmetainformation());
             oOpcionBean.setObj_pregunta(oGroupBeanImplOpcion);
 
-            
             alOpcionBean.add(oOpcionBean);
-
 
         }
 
         return alOpcionBean;
 
     }
-    
+
     @Override
     public int getPages(int intRegsPerPag, ArrayList<FilterBeanHelper> alFilter) throws Exception {
         strSqlSelectDataOrigin += SqlBuilder.buildSqlWhere(alFilter);
         return oMysql.getPages(strSqlSelectDataOrigin, intRegsPerPag);
     }
-    
+
     @Override
     public OpcionBean set(OpcionBean oOpcionBean) throws Exception {
 
@@ -217,7 +211,7 @@ public class OpcionDao extends TableDaoGenImpl<OpcionBean> {
         }
         return oOpcionBean;
     }
-    
+
     @Override
     public int remove(OpcionBean oOBean) throws Exception {
 
@@ -229,8 +223,8 @@ public class OpcionDao extends TableDaoGenImpl<OpcionBean> {
         }
         return result;
     }
-    
-     @Override
+
+    @Override
     public ArrayList<MetaBeanGenImpl> getmetainformation() throws Exception {
         ArrayList<MetaBeanGenImpl> alVector = null;
         try {
@@ -241,23 +235,25 @@ public class OpcionDao extends TableDaoGenImpl<OpcionBean> {
                 for (Integer i = 0; i < fieldAnnotations.length; i++) {
                     if (fieldAnnotations[i].annotationType().equals(MethodMetaInformation.class)) {
                         MethodMetaInformation fieldAnnotation = (MethodMetaInformation) fieldAnnotations[i];
-                        MetaBeanGenImpl oMeta = new MetaBeanGenImpl();
-                        oMeta.setName(field.getName());
-                        oMeta.setDefaultValue(fieldAnnotation.DefaultValue());
-                        oMeta.setDescription(fieldAnnotation.Description());
-                        oMeta.setIsId(fieldAnnotation.IsId());
-                        oMeta.setIsObjForeignKey(fieldAnnotation.IsObjForeignKey());
-                        oMeta.setMaxDecimal(fieldAnnotation.MaxDecimal());
-                        oMeta.setMaxInteger(fieldAnnotation.MaxInteger());
-                        oMeta.setMaxLength(fieldAnnotation.MaxLength());
-                        oMeta.setMinLength(fieldAnnotation.MinLength());
-                        oMeta.setMyIdName(fieldAnnotation.MyIdName());
-                        oMeta.setReferencesTable(fieldAnnotation.ReferencesTable());
-                        oMeta.setIsForeignKeyDescriptor(fieldAnnotation.IsForeignKeyDescriptor());
-                        oMeta.setShortName(fieldAnnotation.ShortName());
-                        oMeta.setType(fieldAnnotation.Type());
-                        oMeta.setUltraShortName(fieldAnnotation.UltraShortName());
-                        alVector.add(oMeta);
+                        if (!fieldAnnotation.IsIdForeignKey()) {
+                            MetaBeanGenImpl oMeta = new MetaBeanGenImpl();
+                            oMeta.setName(field.getName());
+                            oMeta.setDefaultValue(fieldAnnotation.DefaultValue());
+                            oMeta.setDescription(fieldAnnotation.Description());
+                            oMeta.setIsId(fieldAnnotation.IsId());
+                            oMeta.setIsObjForeignKey(fieldAnnotation.IsObjForeignKey());
+                            oMeta.setMaxDecimal(fieldAnnotation.MaxDecimal());
+                            oMeta.setMaxInteger(fieldAnnotation.MaxInteger());
+                            oMeta.setMaxLength(fieldAnnotation.MaxLength());
+                            oMeta.setMinLength(fieldAnnotation.MinLength());
+                            oMeta.setMyIdName(fieldAnnotation.MyIdName());
+                            oMeta.setReferencesTable(fieldAnnotation.ReferencesTable());
+                            oMeta.setIsForeignKeyDescriptor(fieldAnnotation.IsForeignKeyDescriptor());
+                            oMeta.setShortName(fieldAnnotation.ShortName());
+                            oMeta.setType(fieldAnnotation.Type());
+                            oMeta.setUltraShortName(fieldAnnotation.UltraShortName());
+                            alVector.add(oMeta);
+                        }
                     }
                 }
             }

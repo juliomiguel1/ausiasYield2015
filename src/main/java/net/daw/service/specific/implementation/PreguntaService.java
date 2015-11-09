@@ -38,6 +38,7 @@ import net.daw.bean.specific.implementation.PreguntaBean;
 import net.daw.connection.implementation.BoneConnectionPoolImpl;
 import net.daw.connection.publicinterface.ConnectionInterface;
 import net.daw.dao.specific.implementation.PreguntaDao;
+import net.daw.helper.statics.AppConfigurationHelper;
 import static net.daw.helper.statics.AppConfigurationHelper.getSourceConnection;
 import net.daw.helper.statics.ExceptionBooster;
 import net.daw.helper.statics.FilterBeanHelper;
@@ -49,14 +50,13 @@ import net.daw.service.generic.implementation.TableServiceGenImpl;
  *
  * @author juliomiguel
  */
-public class PreguntaService extends TableServiceGenImpl{
- 
-     public PreguntaService(HttpServletRequest request) {
+public class PreguntaService extends TableServiceGenImpl {
+
+    public PreguntaService(HttpServletRequest request) {
         super(request);
     }
- 
-     
-     @Override
+
+    @Override
     public String get() throws Exception {
 
         int id = ParameterCook.prepareId(oRequest);
@@ -69,14 +69,13 @@ public class PreguntaService extends TableServiceGenImpl{
         oPreguntaBean.setId(id);
 
         oPreguntaBean = oPreguntaDao.get(oPreguntaBean, 1);
-        GsonBuilder gsonBuilder = new GsonBuilder();
-        gsonBuilder.setDateFormat("dd/MM/yyyy");
-        Gson gson = gsonBuilder.create();
+
+        Gson gson = AppConfigurationHelper.getGson();
         String data = gson.toJson(oPreguntaBean);
 
-        return "{\"status\":200,\"message\":"+data+"}";
+        return "{\"status\":200,\"message\":" + data + "}";
     }
-   
+
     @Override
     public String getall() throws Exception {
 
@@ -86,42 +85,42 @@ public class PreguntaService extends TableServiceGenImpl{
         ArrayList<PreguntaBean> alPreguntaBean = new ArrayList<PreguntaBean>();
         ArrayList<FilterBeanHelper> alFilterBeanHelper = ParameterCook.prepareFilter(oRequest);
         HashMap<String, String> hmOrder = ParameterCook.prepareOrder(oRequest);
-        
+
         alPreguntaBean = oPreguntaDao.getAll(alFilterBeanHelper, hmOrder);
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.setDateFormat("dd/MM/yyyy");
         Gson gson = gsonBuilder.create();
-        String data = "{\"status\":200,\"message\":"+gson.toJson(alPreguntaBean)+"}";
+        String data = "{\"status\":200,\"message\":" + gson.toJson(alPreguntaBean) + "}";
 
         return data;
     }
-    
-     @Override
-       public String getcount() throws Exception {
+
+    @Override
+    public String getcount() throws Exception {
 
         Connection oConnection = new BoneConnectionPoolImpl().newConnection();
 
         PreguntaDao oProfesorDao = new PreguntaDao(oConnection);
-        
-         ArrayList<FilterBeanHelper> alFilterBeanHelper = ParameterCook.prepareFilter(oRequest);
+
+        ArrayList<FilterBeanHelper> alFilterBeanHelper = ParameterCook.prepareFilter(oRequest);
         int counter = oProfesorDao.getCount(alFilterBeanHelper/*alFilter*/);
 
         String data = "{\"status\":200,\"message\":" + Integer.toString(counter) + "}";
 
         return data;
     }
-    
+
     @Override
-    public String set() throws Exception{
-        
+    public String set() throws Exception {
+
         Connection oConnection = new BoneConnectionPoolImpl().newConnection();
         PreguntaDao oPreguntaDao = new PreguntaDao(oConnection);
-        PreguntaBean oPreguntaBean = new PreguntaBean();  
+        PreguntaBean oPreguntaBean = new PreguntaBean();
         String json = ParameterCook.prepareJson(oRequest);
         Gson gson = new GsonBuilder().setDateFormat("dd/MM/yyyy").excludeFieldsWithoutExposeAnnotation().create();
         /*oProfesorBean.setId(2);
-        oProfesorBean.setNombre("julio");
-        oProfesorBean.setEstado("the best");*/
+         oProfesorBean.setNombre("julio");
+         oProfesorBean.setEstado("the best");*/
         oPreguntaBean = gson.fromJson(json, PreguntaBean.class);
         oPreguntaBean = oPreguntaDao.set(oPreguntaBean);
         Map<String, String> data = new HashMap<>();
@@ -132,26 +131,25 @@ public class PreguntaService extends TableServiceGenImpl{
     }
 
     @Override
-    public String remove() throws Exception{
-        
+    public String remove() throws Exception {
+
         Connection oConnection = new BoneConnectionPoolImpl().newConnection();
         int id = ParameterCook.prepareId(oRequest);
         PreguntaDao oProfesorDao = new PreguntaDao(oConnection);
-        
+
         PreguntaBean oProfesorBean = new PreguntaBean();
         oProfesorBean.setId(id);
         oProfesorDao.remove(oProfesorBean);
-        
+
         Map<String, String> data = new HashMap<>();
         data.put("status", "200");
-        data.put("message", "se ha eliminado la pregunta con id= " + ((Integer)id).toString());
+        data.put("message", "se ha eliminado la pregunta con id= " + ((Integer) id).toString());
         Gson gson = new Gson();
         String resultado = gson.toJson(data);
         return resultado;
     }
-    
-    
-     @Override
+
+    @Override
     public String getpage() throws Exception {
 
         Connection oConnection = null;
@@ -178,23 +176,20 @@ public class PreguntaService extends TableServiceGenImpl{
 
         //Creamos el Json para mostrarlo en pantalla
         Gson oGson = new GsonBuilder().setDateFormat("dd/MM/yyyy").create();
-        return "{\"status\":200,\"message\":" +oGson.toJson(oPreguntaArray) +"}";
+        return "{\"status\":200,\"message\":" + oGson.toJson(oPreguntaArray) + "}";
 
     }
-    
-    
-    
-    
+
     @Override
     public String getmetainformation() throws Exception {
 
         Connection oConnection = new BoneConnectionPoolImpl().newConnection();
         PreguntaDao oPreguntaDao = new PreguntaDao(oConnection);
         Gson oGson = new GsonBuilder().setDateFormat("dd/MM/yyyy").excludeFieldsWithoutExposeAnnotation().create();
-        return "{\"status\":200,\"message\":"+oGson.toJson(oPreguntaDao.getmetainformation())+"}";
+        return "{\"status\":200,\"message\":" + oGson.toJson(oPreguntaDao.getmetainformation()) + "}";
 
     }
-    
+
     @Override
     public String getpages() throws Exception {
         if (this.checkpermission("getpages")) {
@@ -219,10 +214,81 @@ public class PreguntaService extends TableServiceGenImpl{
                     oDataConnectionSource.disposeConnection();
                 }
             }
-            return JsonMessage.getJsonMsg("200",strResult);
+            return JsonMessage.getJsonMsg("200", strResult);
         } else {
             return JsonMessage.getJsonMsg("401", "Unauthorized");
         }
     }
-     
+
+    @Override
+    public String getaggregateviewone() throws Exception {
+
+        if (this.checkpermission("getaggregateviewone")) {
+            String data = null;
+            try {
+                String meta = this.getmetainformation();
+                String one = this.get();
+                data = "{"
+                        + "\"meta\":" + meta
+                        + ",\"bean\":" + one
+                        + "}";
+                data = JsonMessage.getJson("200", data);
+                return data;
+            } catch (Exception ex) {
+                ExceptionBooster.boost(new Exception(this.getClass().getName() + ":getAggregateViewOne ERROR: " + ex.getMessage()));
+            }
+            return data;
+        } else {
+            return JsonMessage.getJsonMsg("401", "Unauthorized");
+        }
+    }
+
+    @Override
+    public String getaggregateviewsome() throws Exception {
+        if (this.checkpermission("getaggregateviewsome")) {
+            String data = null;
+            try {
+                String meta = this.getmetainformation();
+                String page = this.getpage();
+                String pages = this.getpages();
+                String registers = this.getcount();
+                data = "{"
+                        + "\"meta\":" + meta
+                        + ",\"page\":" + page
+                        + ",\"pages\":" + pages
+                        + ",\"registers\":" + registers
+                        + "}";
+                data = JsonMessage.getJson("200", data);
+            } catch (Exception ex) {
+                ExceptionBooster.boost(new Exception(this.getClass().getName() + ":getAggregateViewSome ERROR: " + ex.getMessage()));
+            }
+            return data;
+        } else {
+            return JsonMessage.getJsonMsg("401", "Unauthorized");
+        }
+    }
+
+    @Override
+    public String getaggregateviewall() throws Exception {
+        if (this.checkpermission("getaggregateviewall")) {
+            String data = null;
+            try {
+                String meta = this.getmetainformation();
+                String all = this.getall();
+                String registers = this.getcount();
+                data = "{"
+                        + "\"meta\":" + meta
+                        + ",\"page\":" + all
+                        + ",\"registers\":" + registers
+                        + "}";
+                data = JsonMessage.getJson("200", data);
+            } catch (Exception ex) {
+                ExceptionBooster.boost(new Exception(this.getClass().getName() + ":getAggregateViewAll ERROR: " + ex.getMessage()));
+            }
+            return data;
+        } else {
+            return JsonMessage.getJsonMsg("401", "Unauthorized");
+        }
+    }
+
 }

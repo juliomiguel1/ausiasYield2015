@@ -108,7 +108,7 @@ public class OpcionService extends TableServiceGenImpl {
         String data = "{\"status\":200,\"message\":" + Integer.toString(counter) + "}";
         return data;
     }
-    
+
     @Override
     public String getpage() throws Exception {
 
@@ -139,8 +139,7 @@ public class OpcionService extends TableServiceGenImpl {
         return "{\"status\":200,\"message\":" + oGson.toJson(oOpcionArray) + "}";
 
     }
-    
-    
+
     @Override
     public String getpages() throws Exception {
         if (this.checkpermission("getpages")) {
@@ -165,18 +164,18 @@ public class OpcionService extends TableServiceGenImpl {
                     oDataConnectionSource.disposeConnection();
                 }
             }
-            return JsonMessage.getJsonMsg("200",strResult);
+            return JsonMessage.getJsonMsg("200", strResult);
         } else {
             return JsonMessage.getJsonMsg("401", "Unauthorized");
         }
     }
-    
+
     @Override
-    public String set() throws Exception{
-        
+    public String set() throws Exception {
+
         Connection oConnection = new BoneConnectionPoolImpl().newConnection();
         OpcionDao oOpcionDao = new OpcionDao(oConnection);
-        OpcionBean oOpcionBean = new OpcionBean();  
+        OpcionBean oOpcionBean = new OpcionBean();
         String json = ParameterCook.prepareJson(oRequest);
         Gson gson = new GsonBuilder().setDateFormat("dd/MM/yyyy").excludeFieldsWithoutExposeAnnotation().create();
 
@@ -188,27 +187,27 @@ public class OpcionService extends TableServiceGenImpl {
         String resultado = gson.toJson(data);
         return resultado;
     }
-    
+
     @Override
-    public String remove() throws Exception{
-        
+    public String remove() throws Exception {
+
         Connection oConnection = new BoneConnectionPoolImpl().newConnection();
         int id = ParameterCook.prepareId(oRequest);
         OpcionDao oOpcionDao = new OpcionDao(oConnection);
-        
+
         OpcionBean oOpcionBean = new OpcionBean();
         oOpcionBean.setId(id);
         oOpcionDao.remove(oOpcionBean);
-        
+
         Map<String, String> data = new HashMap<>();
         data.put("status", "200");
-        data.put("message", "se ha eliminado la respuesta con id= " + ((Integer)id).toString());
+        data.put("message", "se ha eliminado la respuesta con id= " + ((Integer) id).toString());
         Gson gson = new Gson();
         String resultado = gson.toJson(data);
         return resultado;
     }
-    
-        @Override
+
+    @Override
     public String getmetainformation() throws Exception {
 
         Connection oConnection = new BoneConnectionPoolImpl().newConnection();
@@ -217,6 +216,76 @@ public class OpcionService extends TableServiceGenImpl {
         return "{\"status\":200,\"message\":" + oGson.toJson(oOpcionDao.getmetainformation()) + "}";
 
     }
-    
+
+    @Override
+    public String getaggregateviewone() throws Exception {
+
+        if (this.checkpermission("getaggregateviewone")) {
+            String data = null;
+            try {
+                String meta = this.getmetainformation();
+                String one = this.get();
+                data = "{"
+                        + "\"meta\":" + meta
+                        + ",\"bean\":" + one
+                        + "}";
+                data = JsonMessage.getJson("200", data);
+                return data;
+            } catch (Exception ex) {
+                ExceptionBooster.boost(new Exception(this.getClass().getName() + ":getAggregateViewOne ERROR: " + ex.getMessage()));
+            }
+            return data;
+        } else {
+            return JsonMessage.getJsonMsg("401", "Unauthorized");
+        }
+    }
+
+    @Override
+    public String getaggregateviewsome() throws Exception {
+        if (this.checkpermission("getaggregateviewsome")) {
+            String data = null;
+            try {
+                String meta = this.getmetainformation();
+                String page = this.getpage();
+                String pages = this.getpages();
+                String registers = this.getcount();
+                data = "{"
+                        + "\"meta\":" + meta
+                        + ",\"page\":" + page
+                        + ",\"pages\":" + pages
+                        + ",\"registers\":" + registers
+                        + "}";
+                data = JsonMessage.getJson("200", data);
+            } catch (Exception ex) {
+                ExceptionBooster.boost(new Exception(this.getClass().getName() + ":getAggregateViewSome ERROR: " + ex.getMessage()));
+            }
+            return data;
+        } else {
+            return JsonMessage.getJsonMsg("401", "Unauthorized");
+        }
+    }
+
+    @Override
+    public String getaggregateviewall() throws Exception {
+        if (this.checkpermission("getaggregateviewall")) {
+            String data = null;
+            try {
+                String meta = this.getmetainformation();
+                String all = this.getall();
+                String registers = this.getcount();
+                data = "{"
+                        + "\"meta\":" + meta
+                        + ",\"page\":" + all
+                        + ",\"registers\":" + registers
+                        + "}";
+                data = JsonMessage.getJson("200", data);
+            } catch (Exception ex) {
+                ExceptionBooster.boost(new Exception(this.getClass().getName() + ":getAggregateViewAll ERROR: " + ex.getMessage()));
+            }
+            return data;
+        } else {
+            return JsonMessage.getJsonMsg("401", "Unauthorized");
+        }
+    }
 
 }

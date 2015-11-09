@@ -63,19 +63,19 @@ public class PreguntaDao extends TableDaoGenImpl<PreguntaBean> {
                 oPreguntaBean.setDescripcion(oMysql.getOne(strSqlSelectDataOrigin, "descripcion", oPreguntaBean.getId()));
                 String strIdDoc = oMysql.getOne(strSqlSelectDataOrigin, "id_documento", oPreguntaBean.getId());
                 oPreguntaBean.setId_documento(Integer.parseInt(strIdDoc));
-                
-                DocumentoDao oDocumentoDao = new DocumentoDao(oConnection);
-                    //un pojo de documento con elid de documento
-                    DocumentoBean oDocumentoBean = new DocumentoBean();
-                    oDocumentoBean.setId(oPreguntaBean.getId_documento());
-                    oDocumentoBean = oDocumentoDao.get(oDocumentoBean, 1);
 
-                    //rellenar el pojo de documento con el dao
-                    //meter el pojo relleno a la pregunta
-                    GroupBeanImpl oGroupBeanImpl = new GroupBeanImpl();
-                    oGroupBeanImpl.setBean(oDocumentoBean);
-                    oGroupBeanImpl.setMeta(oDocumentoDao.getmetainformation());
-                    oPreguntaBean.setObj_documento(oGroupBeanImpl);
+                DocumentoDao oDocumentoDao = new DocumentoDao(oConnection);
+                //un pojo de documento con elid de documento
+                DocumentoBean oDocumentoBean = new DocumentoBean();
+                oDocumentoBean.setId(oPreguntaBean.getId_documento());
+                oDocumentoBean = oDocumentoDao.get(oDocumentoBean, 1);
+
+                //rellenar el pojo de documento con el dao
+                //meter el pojo relleno a la pregunta
+                GroupBeanImpl oGroupBeanImpl = new GroupBeanImpl();
+                oGroupBeanImpl.setBean(oDocumentoBean);
+                oGroupBeanImpl.setMeta(oDocumentoDao.getmetainformation());
+                oPreguntaBean.setObj_documento(oGroupBeanImpl);
             }
         }
         try {
@@ -159,7 +159,7 @@ public class PreguntaDao extends TableDaoGenImpl<PreguntaBean> {
             oDocumentoBean.setId(result.getInt("id_documento"));
 
             oDocumentoBean = oDocumentoDao.get(oDocumentoBean, 1);
-                    //rellenar el pojo de documento con el dao
+            //rellenar el pojo de documento con el dao
             //meter el pojo relleno a la pregunta
             GroupBeanImpl oGroupBeanImpl = new GroupBeanImpl();
             oGroupBeanImpl.setBean(oDocumentoBean);
@@ -239,23 +239,25 @@ public class PreguntaDao extends TableDaoGenImpl<PreguntaBean> {
                 for (Integer i = 0; i < fieldAnnotations.length; i++) {
                     if (fieldAnnotations[i].annotationType().equals(MethodMetaInformation.class)) {
                         MethodMetaInformation fieldAnnotation = (MethodMetaInformation) fieldAnnotations[i];
-                        MetaBeanGenImpl oMeta = new MetaBeanGenImpl();
-                        oMeta.setName(field.getName());
-                        oMeta.setDefaultValue(fieldAnnotation.DefaultValue());
-                        oMeta.setDescription(fieldAnnotation.Description());
-                        oMeta.setIsId(fieldAnnotation.IsId());
-                        oMeta.setIsObjForeignKey(fieldAnnotation.IsObjForeignKey());
-                        oMeta.setMaxDecimal(fieldAnnotation.MaxDecimal());
-                        oMeta.setMaxInteger(fieldAnnotation.MaxInteger());
-                        oMeta.setMaxLength(fieldAnnotation.MaxLength());
-                        oMeta.setMinLength(fieldAnnotation.MinLength());
-                        oMeta.setMyIdName(fieldAnnotation.MyIdName());
-                        oMeta.setReferencesTable(fieldAnnotation.ReferencesTable());
-                        oMeta.setIsForeignKeyDescriptor(fieldAnnotation.IsForeignKeyDescriptor());
-                        oMeta.setShortName(fieldAnnotation.ShortName());
-                        oMeta.setType(fieldAnnotation.Type());
-                        oMeta.setUltraShortName(fieldAnnotation.UltraShortName());
-                        alVector.add(oMeta);
+                        if (!fieldAnnotation.IsIdForeignKey()) {
+                            MetaBeanGenImpl oMeta = new MetaBeanGenImpl();
+                            oMeta.setName(field.getName());
+                            oMeta.setDefaultValue(fieldAnnotation.DefaultValue());
+                            oMeta.setDescription(fieldAnnotation.Description());
+                            oMeta.setIsId(fieldAnnotation.IsId());
+                            oMeta.setIsObjForeignKey(fieldAnnotation.IsObjForeignKey());
+                            oMeta.setMaxDecimal(fieldAnnotation.MaxDecimal());
+                            oMeta.setMaxInteger(fieldAnnotation.MaxInteger());
+                            oMeta.setMaxLength(fieldAnnotation.MaxLength());
+                            oMeta.setMinLength(fieldAnnotation.MinLength());
+                            oMeta.setMyIdName(fieldAnnotation.MyIdName());
+                            oMeta.setReferencesTable(fieldAnnotation.ReferencesTable());
+                            oMeta.setIsForeignKeyDescriptor(fieldAnnotation.IsForeignKeyDescriptor());
+                            oMeta.setShortName(fieldAnnotation.ShortName());
+                            oMeta.setType(fieldAnnotation.Type());
+                            oMeta.setUltraShortName(fieldAnnotation.UltraShortName());
+                            alVector.add(oMeta);
+                        }
                     }
                 }
             }

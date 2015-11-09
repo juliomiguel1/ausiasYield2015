@@ -195,11 +195,11 @@ public class RespuestaDao extends TableDaoGenImpl<RespuestaBean> {
             oRespuestaBean.setId(result.getInt("id"));
             oRespuestaBean.setId_opcion(result.getInt("id_opcion"));
             oRespuestaBean.setId_usuario(result.getInt("id_usuario"));
-                      
+
             //crear un dao de opcion y de usuario
             OpcionDao oOpcionDao = new OpcionDao(oConnection);
             UsuarioDao oUsuarioDao = new UsuarioDao(oConnection);
-            
+
             //un pojo de documento con elid de documento
             OpcionBean oOpcionBean = new OpcionBean();
             oOpcionBean.setId(result.getInt("id_opcion"));
@@ -213,10 +213,10 @@ public class RespuestaDao extends TableDaoGenImpl<RespuestaBean> {
             GroupBeanImpl oGroupBeanImpl = new GroupBeanImpl();
             oGroupBeanImpl.setBean(oOpcionBean);
             oGroupBeanImpl.setBean(oUsuarioBean);
-            
+
             oGroupBeanImpl.setMeta(oOpcionDao.getmetainformation());
             oRespuestaBean.setObj_opcion(oGroupBeanImpl);
-            
+
             oGroupBeanImpl.setMeta(oUsuarioDao.getmetainformation());
             oRespuestaBean.setObj_usuario(oGroupBeanImpl);
 
@@ -277,23 +277,25 @@ public class RespuestaDao extends TableDaoGenImpl<RespuestaBean> {
                 for (Integer i = 0; i < fieldAnnotations.length; i++) {
                     if (fieldAnnotations[i].annotationType().equals(MethodMetaInformation.class)) {
                         MethodMetaInformation fieldAnnotation = (MethodMetaInformation) fieldAnnotations[i];
-                        MetaBeanGenImpl oMeta = new MetaBeanGenImpl();
-                        oMeta.setName(field.getName());
-                        oMeta.setDefaultValue(fieldAnnotation.DefaultValue());
-                        oMeta.setDescription(fieldAnnotation.Description());
-                        oMeta.setIsId(fieldAnnotation.IsId());
-                        oMeta.setIsObjForeignKey(fieldAnnotation.IsObjForeignKey());
-                        oMeta.setMaxDecimal(fieldAnnotation.MaxDecimal());
-                        oMeta.setMaxInteger(fieldAnnotation.MaxInteger());
-                        oMeta.setMaxLength(fieldAnnotation.MaxLength());
-                        oMeta.setMinLength(fieldAnnotation.MinLength());
-                        oMeta.setMyIdName(fieldAnnotation.MyIdName());
-                        oMeta.setReferencesTable(fieldAnnotation.ReferencesTable());
-                        oMeta.setIsForeignKeyDescriptor(fieldAnnotation.IsForeignKeyDescriptor());
-                        oMeta.setShortName(fieldAnnotation.ShortName());
-                        oMeta.setType(fieldAnnotation.Type());
-                        oMeta.setUltraShortName(fieldAnnotation.UltraShortName());
-                        alVector.add(oMeta);
+                        if (!fieldAnnotation.IsIdForeignKey()) {
+                            MetaBeanGenImpl oMeta = new MetaBeanGenImpl();
+                            oMeta.setName(field.getName());
+                            oMeta.setDefaultValue(fieldAnnotation.DefaultValue());
+                            oMeta.setDescription(fieldAnnotation.Description());
+                            oMeta.setIsId(fieldAnnotation.IsId());
+                            oMeta.setIsObjForeignKey(fieldAnnotation.IsObjForeignKey());
+                            oMeta.setMaxDecimal(fieldAnnotation.MaxDecimal());
+                            oMeta.setMaxInteger(fieldAnnotation.MaxInteger());
+                            oMeta.setMaxLength(fieldAnnotation.MaxLength());
+                            oMeta.setMinLength(fieldAnnotation.MinLength());
+                            oMeta.setMyIdName(fieldAnnotation.MyIdName());
+                            oMeta.setReferencesTable(fieldAnnotation.ReferencesTable());
+                            oMeta.setIsForeignKeyDescriptor(fieldAnnotation.IsForeignKeyDescriptor());
+                            oMeta.setShortName(fieldAnnotation.ShortName());
+                            oMeta.setType(fieldAnnotation.Type());
+                            oMeta.setUltraShortName(fieldAnnotation.UltraShortName());
+                            alVector.add(oMeta);
+                        }
                     }
                 }
             }

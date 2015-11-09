@@ -96,22 +96,22 @@ public class RespuestaService extends TableServiceGenImpl {
 
         return data;
     }
-    
+
     @Override
-       public String getcount() throws Exception {
+    public String getcount() throws Exception {
 
         Connection oConnection = new BoneConnectionPoolImpl().newConnection();
 
         RespuestaDao oRespuestaDao = new RespuestaDao(oConnection);
-        
-         ArrayList<FilterBeanHelper> alFilterBeanHelper = ParameterCook.prepareFilter(oRequest);
+
+        ArrayList<FilterBeanHelper> alFilterBeanHelper = ParameterCook.prepareFilter(oRequest);
         int counter = oRespuestaDao.getCount(alFilterBeanHelper/*alFilter*/);
 
         String data = "{\"status\":200,\"message\":" + Integer.toString(counter) + "}";
 
         return data;
     }
-    
+
     @Override
     public String getpage() throws Exception {
 
@@ -139,10 +139,10 @@ public class RespuestaService extends TableServiceGenImpl {
 
         //Creamos el Json para mostrarlo en pantalla
         Gson oGson = new GsonBuilder().setDateFormat("dd/MM/yyyy").create();
-        return "{\"status\":200,\"message\":" +oGson.toJson(oRespuestaArray) +"}";
+        return "{\"status\":200,\"message\":" + oGson.toJson(oRespuestaArray) + "}";
 
     }
-    
+
     @Override
     public String getpages() throws Exception {
         if (this.checkpermission("getpages")) {
@@ -218,5 +218,75 @@ public class RespuestaService extends TableServiceGenImpl {
         return "{\"status\":200,\"message\":" + oGson.toJson(oRespuestaDao.getmetainformation()) + "}";
     }
 
-    
+    @Override
+    public String getaggregateviewone() throws Exception {
+
+        if (this.checkpermission("getaggregateviewone")) {
+            String data = null;
+            try {
+                String meta = this.getmetainformation();
+                String one = this.get();
+                data = "{"
+                        + "\"meta\":" + meta
+                        + ",\"bean\":" + one
+                        + "}";
+                data = JsonMessage.getJson("200", data);
+                return data;
+            } catch (Exception ex) {
+                ExceptionBooster.boost(new Exception(this.getClass().getName() + ":getAggregateViewOne ERROR: " + ex.getMessage()));
+            }
+            return data;
+        } else {
+            return JsonMessage.getJsonMsg("401", "Unauthorized");
+        }
+    }
+
+    @Override
+    public String getaggregateviewsome() throws Exception {
+        if (this.checkpermission("getaggregateviewsome")) {
+            String data = null;
+            try {
+                String meta = this.getmetainformation();
+                String page = this.getpage();
+                String pages = this.getpages();
+                String registers = this.getcount();
+                data = "{"
+                        + "\"meta\":" + meta
+                        + ",\"page\":" + page
+                        + ",\"pages\":" + pages
+                        + ",\"registers\":" + registers
+                        + "}";
+                data = JsonMessage.getJson("200", data);
+            } catch (Exception ex) {
+                ExceptionBooster.boost(new Exception(this.getClass().getName() + ":getAggregateViewSome ERROR: " + ex.getMessage()));
+            }
+            return data;
+        } else {
+            return JsonMessage.getJsonMsg("401", "Unauthorized");
+        }
+    }
+
+    @Override
+    public String getaggregateviewall() throws Exception {
+        if (this.checkpermission("getaggregateviewall")) {
+            String data = null;
+            try {
+                String meta = this.getmetainformation();
+                String all = this.getall();
+                String registers = this.getcount();
+                data = "{"
+                        + "\"meta\":" + meta
+                        + ",\"page\":" + all
+                        + ",\"registers\":" + registers
+                        + "}";
+                data = JsonMessage.getJson("200", data);
+            } catch (Exception ex) {
+                ExceptionBooster.boost(new Exception(this.getClass().getName() + ":getAggregateViewAll ERROR: " + ex.getMessage()));
+            }
+            return data;
+        } else {
+            return JsonMessage.getJsonMsg("401", "Unauthorized");
+        }
+    }
+
 }
