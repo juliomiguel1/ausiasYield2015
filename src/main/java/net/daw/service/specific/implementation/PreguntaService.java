@@ -75,6 +75,29 @@ public class PreguntaService extends TableServiceGenImpl {
 
         return "{\"status\":200,\"message\":" + data + "}";
     }
+    
+    
+    public String getopciones() throws Exception {
+
+        int id = ParameterCook.prepareId(oRequest);
+
+        Connection oConnection = new BoneConnectionPoolImpl().newConnection();
+
+        PreguntaDao oPreguntaDao = new PreguntaDao(oConnection);
+
+        OpcionBean oOpcionBean = new OpcionBean();
+        oOpcionBean.setId_pregunta(id);
+
+        ArrayList<OpcionBean> alOpcionBean = new ArrayList<OpcionBean>();
+        alOpcionBean = oPreguntaDao.getOpciones(oOpcionBean, 1);
+
+        Gson gson = AppConfigurationHelper.getGson();
+        String data = gson.toJson(alOpcionBean);
+
+        return "{\"status\":200,\"message\":" + data + "}";
+    }
+    
+    
 
     @Override
     public String getall() throws Exception {
