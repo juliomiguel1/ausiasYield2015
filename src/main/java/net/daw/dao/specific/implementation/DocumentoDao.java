@@ -28,7 +28,13 @@ package net.daw.dao.specific.implementation;
 
 import net.daw.dao.generic.implementation.TableDaoGenImpl;
 import java.sql.Connection;
+import java.sql.ResultSet;
+import java.util.ArrayList;
+import net.daw.bean.group.GroupBeanImpl;
 import net.daw.bean.specific.implementation.DocumentoBean;
+import net.daw.bean.specific.implementation.DocumentoxPreguntasBean;
+import net.daw.bean.specific.implementation.PreguntaBean;
+import net.daw.data.specific.implementation.MysqlDataSpImpl;
 
 public class DocumentoDao extends TableDaoGenImpl<DocumentoBean> {
 
@@ -49,4 +55,50 @@ public class DocumentoDao extends TableDaoGenImpl<DocumentoBean> {
 //        description += " (" + oDocumentoBean.getHits().toString() + " hits)";
 //        return description;
 //    }
+    
+     public ArrayList<DocumentoxPreguntasBean> getAllPreguntas(DocumentoBean oDocumentoBean) throws Exception {
+
+        ArrayList<DocumentoxPreguntasBean> alString = new ArrayList<DocumentoxPreguntasBean>();
+
+        MysqlDataSpImpl oMysql = new MysqlDataSpImpl(oConnection);
+        if (oDocumentoBean.getId() > 0) {
+            if (oMysql.existsOne(strSqlSelectDataOrigin, oDocumentoBean.getId())) {
+                ResultSet result = oMysql.getAllSql(strSqlSelectDataOrigin);
+
+                if (result != null) {
+                    while (result.next()) {
+                        if (result.getInt("id") == oDocumentoBean.getId()) {
+
+                            ResultSet resultpregunta = oMysql.getAllSql("select * from pregunta");
+
+                            while (resultpregunta.next()) {
+
+                                if (result.getInt("id") == resultpregunta.getInt("id_documento")) {
+                                    DocumentoxPreguntasBean oDocumentoxPreguntasBean = new DocumentoxPreguntasBean();
+                                    oDocumentoxPreguntasBean.setId_documento(result.getInt("id"));
+                                    oDocumentoxPreguntasBean.setTitulo(result.getString("titulo"));
+                                    PreguntaDao oPreguntaDao = new PreguntaDao(oConnection);
+                                    PreguntaBean oPreguntaBean = new PreguntaBean();
+                                    oPreguntaBean.setId(resultpregunta.getInt("id"));
+                                    oDocumentoxPreguntasBean.setId_pregunta(resultpregunta.getInt("id"));
+                                    oDocumentoxPreguntasBean.setDescripcion(resultpregunta.getString("descripcion"));
+                                    oPreguntaBean = oPreguntaDao.get(oPreguntaBean, 1);
+
+                                    GroupBeanImpl oGroupBeanImpl = new GroupBeanImpl();
+                                    oGroupBeanImpl.setBean(oPreguntaBean);
+                                    oGroupBeanImpl.setMeta(oPreguntaDao.getmetainformation());
+                                    oDocumentoxPreguntasBean.setObj_pregunta(oGroupBeanImpl);
+                                    alString.add(oDocumentoxPreguntasBean);
+                                }
+
+                            }
+
+                        }
+                    }
+                }
+            }
+
+        }
+        return alString;
+    }
 }

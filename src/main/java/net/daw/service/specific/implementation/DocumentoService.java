@@ -26,14 +26,19 @@
  */
 package net.daw.service.specific.implementation;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import net.daw.service.generic.implementation.TableServiceGenImpl;
 import java.sql.Connection;
+import java.util.ArrayList;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import net.daw.bean.specific.implementation.DocumentoBean;
+import net.daw.bean.specific.implementation.DocumentoxPreguntasBean;
 import net.daw.connection.implementation.BoneConnectionPoolImpl;
 import net.daw.dao.specific.implementation.DocumentoDao;
 import net.daw.helper.statics.AppConfigurationHelper;
+import net.daw.helper.statics.ParameterCook;
 
 public class DocumentoService extends TableServiceGenImpl {
 
@@ -57,5 +62,26 @@ public class DocumentoService extends TableServiceGenImpl {
         }
         oConnection.close();
         return "{\"data\":\"" + oDocumentoBean.getContenido() + "\"}";
+    }
+    
+    public String getallpreguntas() throws Exception {
+
+        Connection oConnection = new BoneConnectionPoolImpl().newConnection();
+
+        DocumentoDao oDocumentoDao = new DocumentoDao(oConnection);
+        ArrayList<DocumentoxPreguntasBean> alDocumentoBean = new ArrayList<DocumentoxPreguntasBean>();
+        int id = ParameterCook.prepareId(oRequest);
+
+        
+        DocumentoBean oDocumentoBean = new DocumentoBean();
+        oDocumentoBean.setId(id);
+        
+        alDocumentoBean = oDocumentoDao.getAllPreguntas(oDocumentoBean);
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.setDateFormat("dd/MM/yyyy");
+        Gson gson = gsonBuilder.create();
+        String data = "{\"status\":200,\"message\":" + gson.toJson(alDocumentoBean) + "}";
+
+        return data;
     }
 }
