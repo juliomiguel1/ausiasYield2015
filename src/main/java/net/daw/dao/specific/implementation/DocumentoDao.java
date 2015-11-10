@@ -70,9 +70,9 @@ public class DocumentoDao extends TableDaoGenImpl<DocumentoBean> {
                         if (result.getInt("id") == oDocumentoBean.getId()) {
 
                             ResultSet resultpregunta = oMysql.getAllSql("select * from pregunta");
-                            ResultSet resultopcion = oMysql.getAllSql("select * from opcion");
+                            
                             while (resultpregunta.next()) {
-
+                                
                                 if (result.getInt("id") == resultpregunta.getInt("id_documento")) {
 
                                     PreguntaDao oPreguntaDao = new PreguntaDao(oConnection);
@@ -82,7 +82,8 @@ public class DocumentoDao extends TableDaoGenImpl<DocumentoBean> {
                                     GroupBeanImpl oGroupBeanImpl = new GroupBeanImpl();
                                     oGroupBeanImpl.setBean(oPreguntaBean);
                                     oGroupBeanImpl.setMeta(oPreguntaDao.getmetainformation());
-
+                                    
+                                    ResultSet resultopcion = oMysql.getAllSql("select * from opcion");
                                     while (resultopcion.next()) {
                                         if (resultpregunta.getInt("id") == resultopcion.getInt("id_pregunta")) {
 
