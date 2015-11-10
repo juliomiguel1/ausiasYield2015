@@ -75,28 +75,25 @@ public class DocumentoDao extends TableDaoGenImpl<DocumentoBean> {
                             while (resultpregunta.next()) {
 
                                 if (result.getInt("id") == resultpregunta.getInt("id_documento")) {
-                                    DocumentoxPreguntasBean oDocumentoxPreguntasBean = new DocumentoxPreguntasBean();
-                                    oDocumentoxPreguntasBean.setId_documento(result.getInt("id"));
-                                    oDocumentoxPreguntasBean.setTitulo(result.getString("titulo"));
+
                                     PreguntaDao oPreguntaDao = new PreguntaDao(oConnection);
                                     PreguntaBean oPreguntaBean = new PreguntaBean();
                                     oPreguntaBean.setId(resultpregunta.getInt("id"));
-                                    oDocumentoxPreguntasBean.setId_pregunta(resultpregunta.getInt("id"));
-                                    oDocumentoxPreguntasBean.setDescripcion(resultpregunta.getString("descripcion"));
                                     oPreguntaBean = oPreguntaDao.get(oPreguntaBean, 1);
-
                                     GroupBeanImpl oGroupBeanImpl = new GroupBeanImpl();
                                     oGroupBeanImpl.setBean(oPreguntaBean);
                                     oGroupBeanImpl.setMeta(oPreguntaDao.getmetainformation());
-                                    oDocumentoxPreguntasBean.setObj_pregunta(oGroupBeanImpl);
-                                    
-                                    
-                                    
+
                                     while (resultopcion.next()) {
                                         if (resultpregunta.getInt("id") == resultopcion.getInt("id_pregunta")) {
 
-                                            
-                                            
+                                            DocumentoxPreguntasBean oDocumentoxPreguntasBean = new DocumentoxPreguntasBean();
+                                            oDocumentoxPreguntasBean.setId_documento(result.getInt("id"));
+                                            oDocumentoxPreguntasBean.setTitulo(result.getString("titulo"));
+
+                                            oDocumentoxPreguntasBean.setObj_pregunta(oGroupBeanImpl);
+                                            oDocumentoxPreguntasBean.setId_pregunta(resultopcion.getInt("id_pregunta"));
+                                            oDocumentoxPreguntasBean.setDescripcion(resultopcion.getString("descripcion"));
                                             OpcionDao oOpcionDao = new OpcionDao(oConnection);
                                             OpcionBean oOpcionBean = new OpcionBean();
                                             oOpcionBean.setId(resultopcion.getInt("id"));
@@ -106,13 +103,12 @@ public class DocumentoDao extends TableDaoGenImpl<DocumentoBean> {
                                             oGroupBeanImplOpcion.setBean(oOpcionBean);
                                             oGroupBeanImplOpcion.setMeta(oOpcionDao.getmetainformation());
                                             oDocumentoxPreguntasBean.setObj_opcion(oGroupBeanImplOpcion);
-                                            alString.add(oDocumentoxPreguntasBean);   
-                                            
-                                            
+                                            alString.add(oDocumentoxPreguntasBean);
+
                                         }
-                                       
+
                                     }
-                                     
+
                                 }
 
                             }
