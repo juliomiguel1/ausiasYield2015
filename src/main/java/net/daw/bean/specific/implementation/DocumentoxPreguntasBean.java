@@ -40,7 +40,7 @@ import net.daw.helper.statics.MetaEnum;
  * @author juliomiguel
  */
 @SelectSourceMetaInformation( 
-        SqlSelect = "SELECT pregunta.id_documento, documento.titulo, pregunta.id, pregunta.descripcion FROM pregunta, documento WHERE pregunta.id_documento = documento.id",
+        SqlSelect = "SELECT pregunta.id_documento, documento.titulo, pregunta.id, pregunta.descripcion, opcion.id, opcion.descripcion FROM pregunta, documento, opcion WHERE pregunta.id_documento = documento.id AND opcion.id_pregunta = pregunta.id",
         Description = "Documento"
 )
 public class DocumentoxPreguntasBean extends BeanGenImpl implements BeanInterface {
@@ -92,6 +92,29 @@ public class DocumentoxPreguntasBean extends BeanGenImpl implements BeanInterfac
             MyIdName = "id_pregunta"
     )
     private GroupBeanImpl obj_pregunta = null;
+    
+    @Expose(serialize = false)
+    @MethodMetaInformation(
+            UltraShortName = "Opcion",
+            ShortName = "Iden. Opcion",
+            Description = "Identificador de Opcion",
+            IsIdForeignKey = true,
+            ReferencesTable = "opcion",
+            Type = MetaEnum.FieldType.Integer
+    )
+    private Integer id_opcion = 0; //important zero-initialize foreign keys
+
+    @Expose(deserialize = false)
+    @MethodMetaInformation(
+            UltraShortName = "Opcion",
+            ShortName = "Opcion",
+            Description = "Referencia de la Opcion",
+            IsObjForeignKey = true,
+            ReferencesTable = "opcion",
+            MyIdName = "id_opcion"
+    )
+    private GroupBeanImpl obj_opcion = null;
+    
     
     @Expose
     @MethodMetaInformation(
@@ -173,5 +196,33 @@ public class DocumentoxPreguntasBean extends BeanGenImpl implements BeanInterfac
      */
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
+    }
+
+    /**
+     * @return the id_opcion
+     */
+    public Integer getId_opcion() {
+        return id_opcion;
+    }
+
+    /**
+     * @param id_opcion the id_opcion to set
+     */
+    public void setId_opcion(Integer id_opcion) {
+        this.id_opcion = id_opcion;
+    }
+
+    /**
+     * @return the obj_opcion
+     */
+    public GroupBeanImpl getObj_opcion() {
+        return obj_opcion;
+    }
+
+    /**
+     * @param obj_opcion the obj_opcion to set
+     */
+    public void setObj_opcion(GroupBeanImpl obj_opcion) {
+        this.obj_opcion = obj_opcion;
     }
 }
