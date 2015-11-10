@@ -36,6 +36,7 @@ import java.util.HashMap;
 import net.daw.bean.group.GroupBeanImpl;
 import net.daw.bean.meta.MetaBeanGenImpl;
 import net.daw.bean.specific.implementation.DocumentoBean;
+import net.daw.bean.specific.implementation.OpcionBean;
 import net.daw.bean.specific.implementation.PreguntaBean;
 import net.daw.dao.generic.implementation.TableDaoGenImpl;
 import net.daw.data.specific.implementation.MysqlDataSpImpl;
