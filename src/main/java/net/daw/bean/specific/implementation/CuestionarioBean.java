@@ -43,7 +43,7 @@ import net.daw.helper.statics.MetaEnum;
         SqlSelect = "SELECT pregunta.id_documento, documento.titulo, pregunta.id, pregunta.descripcion, opcion.id, opcion.descripcion FROM pregunta, documento, opcion WHERE pregunta.id_documento = documento.id AND opcion.id_pregunta = pregunta.id",
         Description = "Documento"
 )
-public class DocumentoxPreguntasBean extends BeanGenImpl implements BeanInterface {
+public class CuestionarioBean extends BeanGenImpl implements BeanInterface {
      
     @Expose
     @MethodMetaInformation(
