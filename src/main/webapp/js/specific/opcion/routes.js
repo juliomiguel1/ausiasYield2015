@@ -47,7 +47,7 @@ function fOpcionRoutes() {
         header.empty().append(fillOpcionPageHeader('New'));
         var strParam = parameter.getUrlObjectFromUrlString(this.params['url']);
         ausiasFLOW.reset();
-        ausiasFLOW.initialize(documentoNew, content, strClass, 'new', strParam);
+        ausiasFLOW.initialize(newModule, content, strClass, 'new', strParam);
         return false;
     });
     //--------------------------------------------------------------------------    
@@ -55,7 +55,7 @@ function fOpcionRoutes() {
         header.empty().append(fillOpcionPageHeader('Edit'));
         var strParam = parameter.getUrlObjectFromUrlString(this.params['url']);
         ausiasFLOW.reset();
-        ausiasFLOW.initialize(documentoEdit, content, strClass, 'edit', strParam);
+        ausiasFLOW.initialize(editModule, content, strClass, 'edit', strParam);
         return false;
     });
     //--------------------------------------------------------------------------
@@ -82,14 +82,14 @@ function fOpcionRoutes() {
         ausiasFLOW.initialize(pListModule, content, strClass, 'plist', strParam);
         return false;
     });
-    //--------------------------------------------------------------------------
-    Path.map("#/" + strClass + "/plist_labels_authors_x_ndocs(/:url)").to(function () {
-        header.empty().append(fillOpcionPageHeader('Paginated List'));
-        var strParam = parameter.getUrlObjectFromUrlString(this.params['url']);
-        ausiasFLOW.reset();
-        ausiasFLOW.initialize(pListModule, content, strClass, 'plist_labels_authors_x_ndocs', strParam);
-        return false;
-    });
+//    //--------------------------------------------------------------------------
+//    Path.map("#/" + strClass + "/plist_labels_authors_x_ndocs(/:url)").to(function () {
+//        header.empty().append(fillOpcionPageHeader('Paginated List'));
+//        var strParam = parameter.getUrlObjectFromUrlString(this.params['url']);
+//        ausiasFLOW.reset();
+//        ausiasFLOW.initialize(pListModule, content, strClass, 'plist_labels_authors_x_ndocs', strParam);
+//        return false;
+//    });
 //    //--------------------------------------------------------------------------
 //    Path.map("#/" + strClass + "/abc(/:url)").to(function () {
 //        var strParam = parameter.getUrlObjectFromUrlString(this.params['url']);

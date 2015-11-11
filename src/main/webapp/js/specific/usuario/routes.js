@@ -40,6 +40,8 @@ function fUsuarioRoutes() {
         ausiasFLOW.initialize(removeModule, content, strClass, 'remove', strParam);
         return false;
     });
+    
+    
     //--------------------------------------------------------------------------
     Path.map("#/" + strClass + "/new(/:url)").to(function () {
         header.empty().append(fillDocumentoPageHeader('New'));
@@ -48,12 +50,14 @@ function fUsuarioRoutes() {
         ausiasFLOW.initialize(usuarioNew, content, strClass, 'new', strParam);
         return false;
     });
+    
+    
     //--------------------------------------------------------------------------    
     Path.map("#/" + strClass + "/edit/:url").to(function () {
         header.empty().append(fillDocumentoPageHeader('Edit'));
         var strParam = parameter.getUrlObjectFromUrlString(this.params['url']);
         ausiasFLOW.reset();
-        ausiasFLOW.initialize(usuarioEdit, content, strClass, 'edit', strParam);
+        ausiasFLOW.initialize(usuarioNew, content, strClass, 'edit', strParam);
         return false;
     });
     //--------------------------------------------------------------------------
