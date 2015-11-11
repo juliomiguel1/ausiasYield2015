@@ -58,23 +58,27 @@ public class DocumentoDao extends TableDaoGenImpl<DocumentoBean> {
 //    }
     public ArrayList<CuestionarioBean> getCuestionario(DocumentoBean oDocumentoBean) throws Exception {
 
+        //Se crea un arraylist de CuestionarioBean
         ArrayList<CuestionarioBean> alCuestionario = new ArrayList();
 
+        //Se pide la conexión y se le asigna la operación a ResultSet (getAllSql)
         MysqlDataSpImpl oMysql = new MysqlDataSpImpl(oConnection);
         if (oDocumentoBean.getId() > 0) {
             if (oMysql.existsOne(strSqlSelectDataOrigin, oDocumentoBean.getId())) {
                 ResultSet result = oMysql.getAllSql(strSqlSelectDataOrigin);
 
+                //Se recorre la consulta
                 if (result != null) {
                     while (result.next()) {
                         if (result.getInt("id") == oDocumentoBean.getId()) {
 
+                            //Se crea un ResultSet para la pregunta y se recorre
                             ResultSet resultpregunta = oMysql.getAllSql("select * from pregunta");
                             
                             while (resultpregunta.next()) {
                                 
                                 if (result.getInt("id") == resultpregunta.getInt("id_documento")) {
-
+                                    //Se crean instancias de PreguntaDao y PreguntaBean y se asignan parámetros    
                                     PreguntaDao oPreguntaDao = new PreguntaDao(oConnection);
                                     PreguntaBean oPreguntaBean = new PreguntaBean();
                                     oPreguntaBean.setId(resultpregunta.getInt("id"));
@@ -82,11 +86,11 @@ public class DocumentoDao extends TableDaoGenImpl<DocumentoBean> {
                                     GroupBeanImpl oGroupBeanImpl = new GroupBeanImpl();
                                     oGroupBeanImpl.setBean(oPreguntaBean);
                                     oGroupBeanImpl.setMeta(oPreguntaDao.getmetainformation());
-                                    
+                                    //Se crea un ResultSet para la opción y se recorre
                                     ResultSet resultopcion = oMysql.getAllSql("select * from opcion");
                                     while (resultopcion.next()) {
                                         if (resultpregunta.getInt("id") == resultopcion.getInt("id_pregunta")) {
-
+                                            //Se crea instancia de CuestionarioBean y se asignan parámetros    
                                             CuestionarioBean oCuestionarioBean = new CuestionarioBean();
                                             oCuestionarioBean.setId_documento(result.getInt("id"));
                                             oCuestionarioBean.setTitulo(result.getString("titulo"));

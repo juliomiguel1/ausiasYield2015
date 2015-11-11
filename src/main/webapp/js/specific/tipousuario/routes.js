@@ -45,7 +45,7 @@ function fTipousuarioRoutes() {
         header.empty().append(fillDocumentoPageHeader('New'));
         var strParam = parameter.getUrlObjectFromUrlString(this.params['url']);
         ausiasFLOW.reset();
-        ausiasFLOW.initialize(newModule, content, strClass, 'new', strParam);
+        ausiasFLOW.initialize(usuarionew, content, strClass, 'new', strParam);
         return false;
     });
     //--------------------------------------------------------------------------    
@@ -53,7 +53,7 @@ function fTipousuarioRoutes() {
         header.empty().append(fillDocumentoPageHeader('Edit'));
         var strParam = parameter.getUrlObjectFromUrlString(this.params['url']);
         ausiasFLOW.reset();
-        ausiasFLOW.initialize(editModule, content, strClass, 'edit', strParam);
+        ausiasFLOW.initialize(usuarioedit, content, strClass, 'edit', strParam);
         return false;
     });
     //--------------------------------------------------------------------------

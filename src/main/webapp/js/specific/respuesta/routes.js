@@ -29,7 +29,7 @@
 
 function fRespuestaRoutes() {
     var icon = '<i class="fa fa-file-text-o fa-5x"></i>';
-    var fillRespuestaPageHeader = _.partial(html.getPageHeader, icon, 'respuesta', _);
+    var fillRespuestaPageHeader = _.partial(html.getPageHeader, icon, 'Respuesta', _);
     var strClass = 'respuesta';
     var header=$('#broth_panel_heading');
     var content = $('#broth_content');
@@ -46,7 +46,7 @@ function fRespuestaRoutes() {
         header.empty().append(fillRespuestaPageHeader('New'));
         var strParam = parameter.getUrlObjectFromUrlString(this.params['url']);
         ausiasFLOW.reset();
-        ausiasFLOW.initialize(documentoNew, content, strClass, 'new', strParam);
+        ausiasFLOW.initialize(newModule, content, strClass, 'new', strParam);
         return false;
     });
     //--------------------------------------------------------------------------    
@@ -54,7 +54,7 @@ function fRespuestaRoutes() {
         header.empty().append(fillRespuestaPageHeader('Edit'));
         var strParam = parameter.getUrlObjectFromUrlString(this.params['url']);
         ausiasFLOW.reset();
-        ausiasFLOW.initialize(documentoEdit, content, strClass, 'edit', strParam);
+        ausiasFLOW.initialize(editModule, content, strClass, 'edit', strParam);
         return false;
     });
     //--------------------------------------------------------------------------
@@ -81,14 +81,14 @@ function fRespuestaRoutes() {
         ausiasFLOW.initialize(pListModule, content, strClass, 'plist', strParam);
         return false;
     });
-    //--------------------------------------------------------------------------
-    Path.map("#/" + strClass + "/plist_labels_authors_x_ndocs(/:url)").to(function () {
-        header.empty().append(fillRespuestaPageHeader('Paginated List'));
-        var strParam = parameter.getUrlObjectFromUrlString(this.params['url']);
-        ausiasFLOW.reset();
-        ausiasFLOW.initialize(pListModule, content, strClass, 'plist_labels_authors_x_ndocs', strParam);
-        return false;
-    });
+//    //--------------------------------------------------------------------------
+//    Path.map("#/" + strClass + "/plist_labels_authors_x_ndocs(/:url)").to(function () {
+//        header.empty().append(fillRespuestaPageHeader('Paginated List'));
+//        var strParam = parameter.getUrlObjectFromUrlString(this.params['url']);
+//        ausiasFLOW.reset();
+//        ausiasFLOW.initialize(pListModule, content, strClass, 'plist_labels_authors_x_ndocs', strParam);
+//        return false;
+//    });
 //    //--------------------------------------------------------------------------
 //    Path.map("#/" + strClass + "/abc(/:url)").to(function () {
 //        var strParam = parameter.getUrlObjectFromUrlString(this.params['url']);
