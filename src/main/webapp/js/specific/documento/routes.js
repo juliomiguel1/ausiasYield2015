@@ -111,6 +111,15 @@ function fDocumentoRoutes() {
         ausiasFLOW.initialize(documentosautorList, content, 'documentosautor', 'list', strParam);
         return false;
     });
+    
+     Path.map("#/" + strClass + "/cuestionario/:id").to(function () {
+         //Cambiar cabecera por titulo de cuestionario
+        header.empty().append(fillDocumentoPageHeader('Cuestionario'));
+        var strParam = parameter.getUrlObjectFromUrlString(this.params['url']);
+        ausiasFLOW.reset();
+        ausiasFLOW.initialize(viewCuestionario, content, strClass, 'viewcuestionario', strParam);
+        return false;
+    });
 
 
 }

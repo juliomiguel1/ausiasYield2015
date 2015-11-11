@@ -78,6 +78,7 @@ public class DocumentoDao extends TableDaoGenImpl<DocumentoBean> {
                                     PreguntaDao oPreguntaDao = new PreguntaDao(oConnection);
                                     PreguntaBean oPreguntaBean = new PreguntaBean();
                                     oPreguntaBean.setId(resultpregunta.getInt("id"));
+                                    
                                     oPreguntaBean = oPreguntaDao.get(oPreguntaBean, 1);
                                     GroupBeanImpl oGroupBeanImpl = new GroupBeanImpl();
                                     oGroupBeanImpl.setBean(oPreguntaBean);
@@ -93,7 +94,8 @@ public class DocumentoDao extends TableDaoGenImpl<DocumentoBean> {
 
                                             oCuestionarioBean.setObj_pregunta(oGroupBeanImpl);
                                             oCuestionarioBean.setId_pregunta(resultopcion.getInt("id_pregunta"));
-                                            oCuestionarioBean.setDescripcion(resultopcion.getString("descripcion"));
+                                            oCuestionarioBean.setDescripcionOpcion(resultopcion.getString("descripcion"));
+                                            oCuestionarioBean.setDescripcionPregunta(resultpregunta.getString("descripcion"));
                                             OpcionDao oOpcionDao = new OpcionDao(oConnection);
                                             OpcionBean oOpcionBean = new OpcionBean();
                                             oOpcionBean.setId(resultopcion.getInt("id"));

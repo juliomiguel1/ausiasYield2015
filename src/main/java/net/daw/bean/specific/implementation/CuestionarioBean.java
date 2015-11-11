@@ -81,7 +81,7 @@ public class CuestionarioBean extends BeanGenImpl implements BeanInterface {
     )
     private Integer id_pregunta = 0;
     
-     
+         
     @Expose(deserialize = false)
     @MethodMetaInformation(
             UltraShortName = "Iden. Preg",
@@ -92,6 +92,17 @@ public class CuestionarioBean extends BeanGenImpl implements BeanInterface {
             MyIdName = "id_pregunta"
     )
     private GroupBeanImpl obj_pregunta = null;
+    
+    @Expose
+    @MethodMetaInformation(
+            UltraShortName = "Desc.",
+            ShortName = "Descripcion",
+            Description = "Descripcion de pregunta",
+            Type = MetaEnum.FieldType.String,
+            DefaultValue = "Sin contenido"
+    )
+    private String descripcionPregunta = "";
+
     
     @Expose(serialize = false)
     @MethodMetaInformation(
@@ -124,7 +135,7 @@ public class CuestionarioBean extends BeanGenImpl implements BeanInterface {
             Type = MetaEnum.FieldType.String,
             DefaultValue = "Sin contenido"
     )
-    private String descripcion = "";
+    private String descripcionOpcion = "";
 
     /**
      * @return the id_documento
@@ -187,15 +198,15 @@ public class CuestionarioBean extends BeanGenImpl implements BeanInterface {
     /**
      * @return the descripcion
      */
-    public String getDescripcion() {
-        return descripcion;
+    public String getDescripcionOpcion() {
+        return descripcionOpcion;
     }
 
     /**
      * @param descripcion the descripcion to set
      */
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
+    public void setDescripcionOpcion(String descripcionOpcion) {
+        this.descripcionOpcion = descripcionOpcion;
     }
 
     /**
@@ -224,5 +235,19 @@ public class CuestionarioBean extends BeanGenImpl implements BeanInterface {
      */
     public void setObj_opcion(GroupBeanImpl obj_opcion) {
         this.obj_opcion = obj_opcion;
+    }
+
+    /**
+     * @return the descripcionPregunta
+     */
+    public String getDescripcionPregunta() {
+        return descripcionPregunta;
+    }
+
+    /**
+     * @param descripcionPregunta the descripcionPregunta to set
+     */
+    public void setDescripcionPregunta(String descripcionPregunta) {
+        this.descripcionPregunta = descripcionPregunta;
     }
 }
