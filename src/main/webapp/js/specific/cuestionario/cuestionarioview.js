@@ -1,3 +1,4 @@
+
 /* 
  * Copyright (c) 2015 by Rafael Angel Aznar Aparici (rafaaznar at gmail dot com)
  * 
@@ -25,46 +26,52 @@
  * THE SOFTWARE.
  * 
  */
-var viewCuestionario = function () {    
-}
+var viewCuestionario = function () {
+};
 
 viewCuestionario.prototype = new viewModule();
 viewCuestionario.prototype.getViewTemplate_func = function (strClass, jsonDataViewModule) {
-   /*Ejemplo
-    * 
-    * usuariotabla.prototype.getViewTemplate_func = function (strClass, jsonDataViewModule) {
 
-    
+    //TO DO
+};
 
 
-    var nuevo = "<table class=\"table table table-bordered table-condensed\">";
 
-    
-    for (var i = 0; i <= jsonDataViewModule.meta.message.length; i++) {
+/*Ejemplo
+ * 
+ * usuariotabla.prototype.getViewTemplate_func = function (strClass, jsonDataViewModule) {
+ 
+ 
+ 
+ 
+ var nuevo = "<table class=\"table table table-bordered table-condensed\">";
+ 
+ 
+ for (var i = 0; i <= jsonDataViewModule.meta.message.length; i++) {
+ 
+ var short = jsonDataViewModule.meta.message[i];
+ var beaner = jsonDataViewModule.bean.message;
+ for (var metadatos in short) {
+ for (var beandatos in beaner) {
+ if (short[metadatos] === beandatos) {
+ if (short[metadatos] === 'obj_tipousuario' || short[metadatos] === 'obj_estado') {
+ var ultimorecorrido = beaner[beandatos].bean;
+ var imprimir="";
+ for (var ajena in ultimorecorrido) {
+ 
+ imprimir=ultimorecorrido[ajena]+ " "+imprimir;
+ imprimir += " ";
+ }
+ nuevo += '<tr><td><strong>' + short[metadatos] + '</strong></td><td>' + imprimir+ '</td></tr>';
+ } else {
+ nuevo += '<tr><td><strong>' + short[metadatos] + '</strong></td><td>' + beaner[beandatos] + '</td></tr>';
+ }
+ }
+ }
+ }
+ }
+ nuevo += '</table>';
+ return nuevo;
+ }*/
 
-        var short = jsonDataViewModule.meta.message[i];
-        var beaner = jsonDataViewModule.bean.message;
-        for (var metadatos in short) {
-            for (var beandatos in beaner) {
-                if (short[metadatos] === beandatos) {
-                    if (short[metadatos] === 'obj_tipousuario' || short[metadatos] === 'obj_estado') {
-                        var ultimorecorrido = beaner[beandatos].bean;
-                        var imprimir="";
-                        for (var ajena in ultimorecorrido) {
-                            
-                               imprimir=ultimorecorrido[ajena]+ " "+imprimir;
-                               imprimir += " ";
-                        }
-                        nuevo += '<tr><td><strong>' + short[metadatos] + '</strong></td><td>' + imprimir+ '</td></tr>';
-                    } else {
-                        nuevo += '<tr><td><strong>' + short[metadatos] + '</strong></td><td>' + beaner[beandatos] + '</td></tr>';
-                    }
-                }
-            }
-        }
-    }
-    nuevo += '</table>';
-    return nuevo;
-}*/
-}
 
