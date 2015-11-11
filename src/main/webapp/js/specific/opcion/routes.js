@@ -1,8 +1,8 @@
-/* 
+/*
  * Copyright (c) 2015 by Rafael Angel Aznar Aparici (rafaaznar at gmail dot com)
  * 
  * openAUSIAS: The stunning micro-library that helps you to develop easily 
- * AJAX web applications by using Java and jQuery
+ *             AJAX web applications by using Java and jQuery
  * openAUSIAS is distributed under the MIT License (MIT)
  * Sources at https://github.com/rafaelaznar/openAUSIAS
  * 
@@ -23,96 +23,66 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
- * 
  */
-
 
 
 function fOpcionRoutes() {
     var icon = '<i class="fa fa-file-text-o fa-5x"></i>';
-    var fillOpcionPageHeader = _.partial(html.getPageHeader, icon, 'opcion', _);
+    var fillDocumentoPageHeader = _.partial(html.getPageHeader, icon, 'Opción', _);
     var strClass = 'opcion';
-    var header=$('#broth_panel_heading');
+    var header = $('#broth_panel_heading');
     var content = $('#broth_content');
     //--------------------------------------------------------------------------
     Path.map("#/" + strClass + "/remove/:id").to(function () {
-        header.empty().append(fillOpcionPageHeader('Remove'));
+        header.empty().append(fillDocumentoPageHeader('Remove'));
         var strParam = parameter.getUrlObjectFromUrlString(this.params['url']);
         ausiasFLOW.reset();
         ausiasFLOW.initialize(removeModule, content, strClass, 'remove', strParam);
         return false;
     });
+
+
     //--------------------------------------------------------------------------
     Path.map("#/" + strClass + "/new(/:url)").to(function () {
-        header.empty().append(fillOpcionPageHeader('New'));
+        header.empty().append(fillDocumentoPageHeader('New'));
         var strParam = parameter.getUrlObjectFromUrlString(this.params['url']);
         ausiasFLOW.reset();
-        ausiasFLOW.initialize(newModule, content, strClass, 'new', strParam);
+        ausiasFLOW.initialize(opcionNew, content, strClass, 'new', strParam);
         return false;
     });
+
+
     //--------------------------------------------------------------------------    
     Path.map("#/" + strClass + "/edit/:url").to(function () {
-        header.empty().append(fillOpcionPageHeader('Edit'));
+        header.empty().append(fillDocumentoPageHeader('Edit'));
         var strParam = parameter.getUrlObjectFromUrlString(this.params['url']);
         ausiasFLOW.reset();
-        ausiasFLOW.initialize(editModule, content, strClass, 'edit', strParam);
+        ausiasFLOW.initialize(opcionEdit, content, strClass, 'edit', strParam);
         return false;
     });
     //--------------------------------------------------------------------------
     Path.map("#/" + strClass + "/view/:id").to(function () {
-        header.empty().append(fillOpcionPageHeader('View'));
+        header.empty().append(fillDocumentoPageHeader('View'));
         var strParam = parameter.getUrlObjectFromUrlString(this.params['url']);
         ausiasFLOW.reset();
         ausiasFLOW.initialize(viewModule, content, strClass, 'view', strParam);
         return false;
     });
-    //--------------------------------------------------------------------------    
-    Path.map("#/" + strClass + "/list(/:url)").to(function () {
-        header.empty().append(fillOpcionPageHeader('List'));
-        var strParam = parameter.defaultizeUrlObjectParametersForLists(parameter.getUrlObjectFromUrlString(this.params['url']));
-        ausiasFLOW.reset();
-        ausiasFLOW.initialize(listModule, content, strClass, 'list', strParam);
-        return false;
-    });
     //--------------------------------------------------------------------------
     Path.map("#/" + strClass + "/plist(/:url)").to(function () {
-        header.empty().append(fillOpcionPageHeader('Paginated List'));
+        header.empty().append(fillDocumentoPageHeader('Paginated List'));
         var strParam = parameter.getUrlObjectFromUrlString(this.params['url']);
         ausiasFLOW.reset();
         ausiasFLOW.initialize(pListModule, content, strClass, 'plist', strParam);
         return false;
     });
-//    //--------------------------------------------------------------------------
-//    Path.map("#/" + strClass + "/plist_labels_authors_x_ndocs(/:url)").to(function () {
-//        header.empty().append(fillOpcionPageHeader('Paginated List'));
-//        var strParam = parameter.getUrlObjectFromUrlString(this.params['url']);
-//        ausiasFLOW.reset();
-//        ausiasFLOW.initialize(pListModule, content, strClass, 'plist_labels_authors_x_ndocs', strParam);
-//        return false;
-//    });
-//    //--------------------------------------------------------------------------
-//    Path.map("#/" + strClass + "/abc(/:url)").to(function () {
-//        var strParam = parameter.getUrlObjectFromUrlString(this.params['url']);
-//        if (strParam) {
-//            strParam.vf = 4;
-//        } else {
-//            strParam = {'vf': 4};
-//        }
-//        header.empty().append(fillOpcionPageHeader('Composed operation'));
-//        content.empty().append('<div class="col-md-8" id="c1"></div><div class="col-md-4" id="c2"></div>')
-//        ausiasFLOW.reset();
-//        ausiasFLOW.initialize(documentoPaginatedList, $('#c1'), strClass, 'abc', strParam);
-//        ausiasFLOW.initialize(viewModule, $('#c2'), strClass, 'view', strParam);
-//        return false;
-//    });
-//    //--------------------------------------------------------------------------
-//    Path.map("#/" + strClass + "/documentosautor").to(function () {
-//        header.empty().append(fillOpcionPageHeader('Documentos de cada autor'));
-//        var strParam = parameter.getUrlObjectFromUrlString(this.params['url']);
-//        ausiasFLOW.reset();
-//        ausiasFLOW.initialize(documentosautorList, content, 'documentosautor', 'list', strParam);
-//        return false;
-//   });
-
+    //--------------------------------------------------------------------------    
+    Path.map("#/" + strClass + "/list(/:url)").to(function () {
+        header.empty().append(fillDocumentoPageHeader('List'));
+        var strParam = parameter.defaultizeUrlObjectParametersForLists(parameter.getUrlObjectFromUrlString(this.params['url']));
+        ausiasFLOW.reset();
+        ausiasFLOW.initialize(listModule, content, strClass, 'list', strParam);
+        return false;
+    });
 
 }

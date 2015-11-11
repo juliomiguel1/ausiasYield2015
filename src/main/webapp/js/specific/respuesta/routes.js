@@ -46,7 +46,7 @@ function fRespuestaRoutes() {
         header.empty().append(fillRespuestaPageHeader('New'));
         var strParam = parameter.getUrlObjectFromUrlString(this.params['url']);
         ausiasFLOW.reset();
-        ausiasFLOW.initialize(newModule, content, strClass, 'new', strParam);
+        ausiasFLOW.initialize(respuestaNew, content, strClass, 'new', strParam);
         return false;
     });
     //--------------------------------------------------------------------------    
@@ -54,7 +54,7 @@ function fRespuestaRoutes() {
         header.empty().append(fillRespuestaPageHeader('Edit'));
         var strParam = parameter.getUrlObjectFromUrlString(this.params['url']);
         ausiasFLOW.reset();
-        ausiasFLOW.initialize(editModule, content, strClass, 'edit', strParam);
+        ausiasFLOW.initialize(respuestaEdit, content, strClass, 'edit', strParam);
         return false;
     });
     //--------------------------------------------------------------------------

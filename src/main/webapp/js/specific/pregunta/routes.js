@@ -45,7 +45,7 @@ function fPreguntaRoutes() {
         header.empty().append(fillPreguntaPageHeader('New'));
         var strParam = parameter.getUrlObjectFromUrlString(this.params['url']);
         ausiasFLOW.reset();
-        ausiasFLOW.initialize(newModule, content, strClass, 'new', strParam);
+        ausiasFLOW.initialize(preguntaNew, content, strClass, 'new', strParam);
         return false;
     });
     //--------------------------------------------------------------------------    
@@ -53,7 +53,7 @@ function fPreguntaRoutes() {
         header.empty().append(fillPreguntaPageHeader('Edit'));
         var strParam = parameter.getUrlObjectFromUrlString(this.params['url']);
         ausiasFLOW.reset();
-        ausiasFLOW.initialize(editModule, content, strClass, 'edit', strParam);
+        ausiasFLOW.initialize(preguntaEdit, content, strClass, 'edit', strParam);
         return false;
     });
     //--------------------------------------------------------------------------

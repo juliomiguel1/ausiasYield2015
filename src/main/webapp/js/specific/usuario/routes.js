@@ -57,7 +57,7 @@ function fUsuarioRoutes() {
         header.empty().append(fillDocumentoPageHeader('Edit'));
         var strParam = parameter.getUrlObjectFromUrlString(this.params['url']);
         ausiasFLOW.reset();
-        ausiasFLOW.initialize(usuarioNew, content, strClass, 'edit', strParam);
+        ausiasFLOW.initialize(usuarioEdit, content, strClass, 'edit', strParam);
         return false;
     });
     //--------------------------------------------------------------------------
