@@ -30,9 +30,11 @@ var viewCuestionario = function () {
 
 viewCuestionario.prototype = new viewModule();
 viewCuestionario.prototype.getViewTemplate_func = function (strClass, jsonDataViewModule) {
-   /*usuariotabla.prototype.getViewTemplate_func = function (strClass, jsonDataViewModule) {
+   /*Ejemplo
+    * 
+    * usuariotabla.prototype.getViewTemplate_func = function (strClass, jsonDataViewModule) {
 
-
+    
 
 
     var nuevo = "<table class=\"table table table-bordered table-condensed\">";
