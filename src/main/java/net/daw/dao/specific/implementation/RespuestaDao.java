@@ -240,13 +240,18 @@ public class RespuestaDao extends TableDaoGenImpl<RespuestaBean> {
     public RespuestaBean set(RespuestaBean oRespuestaBean) throws Exception {
 
         MysqlDataSpImpl oMysql = new MysqlDataSpImpl(oConnection);
-
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
         try {
             if (oRespuestaBean.getId() == 0) {
                 oRespuestaBean.setId(oMysql.insertOne(strTableOrigin));
             }
             oMysql.updateOne(oRespuestaBean.getId(), strTableOrigin, "id_opcion", oRespuestaBean.getId_opcion().toString());
             oMysql.updateOne(oRespuestaBean.getId(), strTableOrigin, "id_usuario", oRespuestaBean.getId_usuario().toString());
+            //se pone la fecha y hora del edit 
+            Date date = new Date();
+            formatter.format(date);
+            //BUG: no coge bien la fecha
+            oRespuestaBean.setFechaHoraAlta(date);
             oMysql.updateOne(oRespuestaBean.getId(), strTableOrigin, "fechaHoraAlta", oRespuestaBean.getFechaHoraAlta().toString());
         } catch (Exception e) {
             throw new Exception(this.getClass().getName() + ".set: Error: " + e.getMessage());
