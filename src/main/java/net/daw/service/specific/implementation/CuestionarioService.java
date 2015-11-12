@@ -35,6 +35,7 @@ import javax.servlet.http.HttpServletRequest;
 import net.daw.bean.specific.implementation.CuestionarioBean;
 import net.daw.bean.specific.implementation.DocumentoBean;
 import net.daw.connection.implementation.BoneConnectionPoolImpl;
+import net.daw.dao.specific.implementation.CuestionarioDao;
 import net.daw.dao.specific.implementation.DocumentoDao;
 import net.daw.helper.statics.ParameterCook;
 import net.daw.service.generic.implementation.TableServiceGenImpl;
@@ -52,14 +53,14 @@ public class CuestionarioService extends TableServiceGenImpl {
     public String get() throws Exception {
 
         Connection oConnection = new BoneConnectionPoolImpl().newConnection();
-        DocumentoDao oDocumentoDao = new DocumentoDao(oConnection);
+        CuestionarioDao oCuestionarioDao = new CuestionarioDao(oConnection);
         
         int id = ParameterCook.prepareId(oRequest);
         
         DocumentoBean oDocumentoBean = new DocumentoBean();
         oDocumentoBean.setId(id);
         ArrayList<CuestionarioBean> alCuestionarioBean = new ArrayList();
-        alCuestionarioBean = oDocumentoDao.getCuestionario(oDocumentoBean);
+        alCuestionarioBean = oCuestionarioDao.getCuestionario(oDocumentoBean);
         
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.setDateFormat("dd/MM/yyyy");

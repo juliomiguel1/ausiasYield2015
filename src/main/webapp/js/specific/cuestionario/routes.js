@@ -30,14 +30,14 @@ function fCuestionarioRoutes() {
     var fillDocumentoPageHeader = _.partial(html.getPageHeader, icon, 'Cuestionario', _);
     var strClass = 'cuestionario';
     var header = $('#broth_panel_heading');
-    var content = $('#broth_content');
+    var place = $('#broth_content');
 
     Path.map("#/" + strClass + "/view/:id").to(function () {
         //Cambiar cabecera por titulo de cuestionario
         header.empty().append(fillDocumentoPageHeader('View'));
         var strParam = parameter.getUrlObjectFromUrlString(this.params['url']);
         ausiasFLOW.reset();
-        ausiasFLOW.initialize(viewModule, content, strClass, 'view', strParam);
+        ausiasFLOW.initialize(cuestionarioView, place, strClass, 'cuestionarioview', strParam);
         return false;
     });
 

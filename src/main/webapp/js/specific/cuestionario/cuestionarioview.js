@@ -26,52 +26,44 @@
  * THE SOFTWARE.
  * 
  */
-var viewCuestionario = function () {
+var cuestionarioView = function () {
 };
 
-viewCuestionario.prototype = new viewModule();
-viewCuestionario.prototype.getViewTemplate_func = function (strClass, jsonDataViewModule) {
+cuestionarioView.prototype = new viewModule();
+cuestionarioView.prototype.getViewTemplate_func = function (strClass, jsonDataViewModule) {
 
-    //TO DO
+    var nuevo = "<div>";
+    var k = 0;
+    var short;
+    var j = 0;
+    for (var i = 0; i < jsonDataViewModule.bean.message.length; i++) {
+        if (k == 0) {
+            short = jsonDataViewModule.bean.message[i].titulo;
+            nuevo += short;
+            nuevo += "</div>"
+            k++;
+        }
+        
+        if (j < jsonDataViewModule.bean.message.length - 1) {
+            j = j + 1;
+        }
+
+        if (jsonDataViewModule.bean.message[i].descripcionPregunta !== jsonDataViewModule.bean.message[j].descripcionPregunta) {
+            nuevo += "<div>"
+            short = jsonDataViewModule.bean.message[i].descripcionPregunta;
+            nuevo += short;
+            nuevo += "</div>"
+
+        }
+        
+        if(i===jsonDataViewModule.bean.message.length-1){
+            nuevo += "<div>"
+            short = jsonDataViewModule.bean.message[i].descripcionPregunta;
+            nuevo += short;
+            nuevo += "</div>"
+        }
+    }
+
+
+    return nuevo;
 };
-
-
-
-/*Ejemplo
- * 
- * usuariotabla.prototype.getViewTemplate_func = function (strClass, jsonDataViewModule) {
- 
- 
- 
- 
- var nuevo = "<table class=\"table table table-bordered table-condensed\">";
- 
- 
- for (var i = 0; i <= jsonDataViewModule.meta.message.length; i++) {
- 
- var short = jsonDataViewModule.meta.message[i];
- var beaner = jsonDataViewModule.bean.message;
- for (var metadatos in short) {
- for (var beandatos in beaner) {
- if (short[metadatos] === beandatos) {
- if (short[metadatos] === 'obj_tipousuario' || short[metadatos] === 'obj_estado') {
- var ultimorecorrido = beaner[beandatos].bean;
- var imprimir="";
- for (var ajena in ultimorecorrido) {
- 
- imprimir=ultimorecorrido[ajena]+ " "+imprimir;
- imprimir += " ";
- }
- nuevo += '<tr><td><strong>' + short[metadatos] + '</strong></td><td>' + imprimir+ '</td></tr>';
- } else {
- nuevo += '<tr><td><strong>' + short[metadatos] + '</strong></td><td>' + beaner[beandatos] + '</td></tr>';
- }
- }
- }
- }
- }
- nuevo += '</table>';
- return nuevo;
- }*/
-
-
