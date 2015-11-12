@@ -36,6 +36,8 @@ cuestionarioView.prototype.getViewTemplate_func = function (strClass, jsonDataVi
     var k = 0;
     var short;
     var j = 0;
+    var opciones = 0;
+    var nuevaopcion = 0;
     for (var i = 0; i < jsonDataViewModule.bean.message.length; i++) {
         if (k == 0) {
             short = jsonDataViewModule.bean.message[i].titulo;
@@ -43,20 +45,38 @@ cuestionarioView.prototype.getViewTemplate_func = function (strClass, jsonDataVi
             nuevo += "</div>"
             k++;
         }
-        
+
         if (j < jsonDataViewModule.bean.message.length - 1) {
             j = j + 1;
         }
 
-        if (jsonDataViewModule.bean.message[i].descripcionPregunta !== jsonDataViewModule.bean.message[j].descripcionPregunta) {
+        if (jsonDataViewModule.bean.message[i].id_pregunta !== jsonDataViewModule.bean.message[j].id_pregunta) {
             nuevo += "<div>"
             short = jsonDataViewModule.bean.message[i].descripcionPregunta;
             nuevo += short;
             nuevo += "</div>"
 
+            while (opciones >= 0) {
+
+                nuevo += "<div>"
+                short = jsonDataViewModule.bean.message[nuevaopcion].descripcionOpcion;
+                nuevo += short;
+                nuevo += "</div>"
+                nuevaopcion++;
+                opciones--;
+            }
+            opciones = 0;
+        } else {
+            opciones++;
         }
-        
-        if(i===jsonDataViewModule.bean.message.length-1){
+
+
+        // if (jsonDataViewModule.bean.message[i].id_pregunta === jsonDataViewModule.bean.message[j].id_pregunta) {
+
+        // }
+
+
+        if (i === jsonDataViewModule.bean.message.length - 1) {
             nuevo += "<div>"
             short = jsonDataViewModule.bean.message[i].descripcionPregunta;
             nuevo += short;
