@@ -140,7 +140,7 @@
         <script src="vendor/underscore/underscore-min.js" type="text/javascript"></script>
 
         <script src="vendor/moment/moment-with-locales.min.js" type="text/javascript"></script>
-        
+
         <script src="vendor/bootstrap-datetimepicker/bootstrap-datetimepicker.min.js" type="text/javascript"></script>
         <!-- Ausiàs -->
         <script src="vendor/ausias/ausiasFLOW.js" type="text/javascript"></script>
@@ -176,7 +176,7 @@
         <!-- Specific modules -->
         <script src="js/specific/menu.js" type="text/javascript"></script>
         <script src="js/specific/configuration.js" type="text/javascript"></script>
-        
+
         <!-- Documento -->        
         <script src="js/specific/documento/documentonew.js" type="text/javascript"></script>
         <script src="js/specific/documento/documentoedit.js" type="text/javascript"></script>
@@ -213,9 +213,12 @@
 
         <!-- --------------------------------------------------------------- -->
         <script type="text/javascript">
-            function loadRoutes() {                
-                fUsuarioRoutes(); 
-                fTipodocumentoRoutes(); 
+            function resetCSS() {
+                $('<link href="css/main/main.css" rel="stylesheet" type="text/css"/>').appendTo("head");
+            }
+            function loadRoutes() {
+                fUsuarioRoutes();
+                fTipodocumentoRoutes();
                 fDocumentoRoutes();
                 fEstadoRoutes();
                 fTipousuarioRoutes();
