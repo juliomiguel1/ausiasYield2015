@@ -32,7 +32,7 @@ var cuestionarioView = function () {
 cuestionarioView.prototype = new viewModule();
 cuestionarioView.prototype.getViewTemplate_func = function (strClass, jsonDataViewModule) {
 
-    var cuestionario = "<div>";
+    var cuestionario = '<div class="pregresp">';
     var tituloPintado = 0;
     var dataJSON;
     var iteradorJ = 0;
@@ -44,7 +44,7 @@ cuestionarioView.prototype.getViewTemplate_func = function (strClass, jsonDataVi
             cuestionario +='<h3>';
             cuestionario += dataJSON;
             cuestionario +="</h3>";
-            cuestionario += "</div>"
+            cuestionario += "</div>";
             tituloPintado++;
         }
 
@@ -53,28 +53,28 @@ cuestionarioView.prototype.getViewTemplate_func = function (strClass, jsonDataVi
         }
 
         if (jsonDataViewModule.bean.message[i].id_pregunta !== jsonDataViewModule.bean.message[iteradorJ].id_pregunta) {
-            cuestionario += "<div>"
+            cuestionario += '<div class="pregunta">';
             dataJSON = jsonDataViewModule.bean.message[i].descripcionPregunta;
             cuestionario += dataJSON;
-            cuestionario += "</div>"
-            cuestionario += '<ul>';
+            cuestionario += "</div>";
+            cuestionario += '<ul class="opciones">';
             while (opcion >= 0) {
 
-                cuestionario += "<li>"
+                cuestionario += "<li>";
                 dataJSON = jsonDataViewModule.bean.message[newOpcion].descripcionOpcion;
                 cuestionario += dataJSON;
-                cuestionario += "</li>"
+                cuestionario += "</li>";
                 newOpcion++;
                 opcion--;
             }
             cuestionario +="</ul>";
             opcion = 0;
         } else if (i === jsonDataViewModule.bean.message.length - 1) {
-            cuestionario += "<div>"
+            cuestionario += '<div class="pregunta">';
             dataJSON = jsonDataViewModule.bean.message[i].descripcionPregunta;
             cuestionario += dataJSON;
             cuestionario += "</div>";
-            cuestionario += '<ul style="list-style:none">';
+            cuestionario += '<ul class="opciones">';
             while (opcion >= 0) {
 
                 cuestionario += "<li>";

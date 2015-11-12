@@ -33,6 +33,8 @@ function fCuestionarioRoutes() {
     var place = $('#broth_content');
 
     Path.map("#/" + strClass + "/view/:id").to(function () {
+        //INSERTAMOS EL CSS
+        $('<link href="css/main/cuestyle.css" rel="stylesheet" type="text/css"/>').appendTo("head");
         //Cambiar cabecera por titulo de cuestionario
         header.empty().append(fillDocumentoPageHeader('View'));
         var strParam = parameter.getUrlObjectFromUrlString(this.params['url']);
