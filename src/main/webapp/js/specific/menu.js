@@ -36,7 +36,7 @@ appMenu = function () {
                             dom.i('class="fa fa-icon-smile"', '') +
                             'About'
                             )
-                    ) +           
+                    ) +
             dom.li('class="dropdown"',
                     dom.a('href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"',
                             dom.i('class="fa fa-icon-list-alt"', '') +
@@ -107,6 +107,22 @@ appMenu = function () {
                                     dom.a('href="#/tipousuario/plist"',
                                             dom.i('class="fa fa-fw fa-male"', '') +
                                             'Tipos de usuario'
+                                            )
+                                    )
+
+                            )
+                    ) +
+            dom.li('class="dropdown"',
+                    dom.a('href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"',
+                            dom.i('class="fa fa-icon-list-alt"', '') +
+                            'Proyectos' +
+                            dom.span('class="caret"', '')
+                            ) +
+                    dom.ul('class="dropdown-menu" role="menu"',
+                            dom.li('',
+                                    dom.a('href="#/cuestionario/view/91"',
+                                            dom.i('class="fa fa-fw fa-question"', '') +
+                                            'Cuestionario'
                                             )
                                     )
 

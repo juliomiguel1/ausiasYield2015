@@ -26,7 +26,7 @@
  * 
  */
 function fCuestionarioRoutes() {
-    var icon = '<i class="fa fa-file-text-o fa-5x"></i>';
+    var icon = '<i class="fa fa-question fa-5x"></i>';
     var fillDocumentoPageHeader = _.partial(html.getPageHeader, icon, 'Cuestionario', _);
     var strClass = 'cuestionario';
     var header = $('#broth_panel_heading');
