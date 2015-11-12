@@ -32,60 +32,64 @@ var cuestionarioView = function () {
 cuestionarioView.prototype = new viewModule();
 cuestionarioView.prototype.getViewTemplate_func = function (strClass, jsonDataViewModule) {
 
-    var nuevo = "<div>";
-    var k = 0;
-    var short;
-    var j = 0;
-    var opciones = 0;
-    var nuevaopcion = 0;
+    var cuestionario = "<div>";
+    var tituloPintado = 0;
+    var dataJSON;
+    var iteradorJ = 0;
+    var opcion = 0;
+    var newOpcion = 0;
     for (var i = 0; i < jsonDataViewModule.bean.message.length; i++) {
-        if (k == 0) {
-            short = jsonDataViewModule.bean.message[i].titulo;
-            nuevo += short;
-            nuevo += "</div>"
-            k++;
+        if (tituloPintado == 0) {
+            dataJSON = jsonDataViewModule.bean.message[i].titulo;
+            cuestionario +='<h3>';
+            cuestionario += dataJSON;
+            cuestionario +="</h3>";
+            cuestionario += "</div>"
+            tituloPintado++;
         }
 
-        if (j < jsonDataViewModule.bean.message.length - 1) {
-            j = j + 1;
+        if (iteradorJ < jsonDataViewModule.bean.message.length - 1) {
+            iteradorJ = iteradorJ + 1;
         }
 
-        if (jsonDataViewModule.bean.message[i].id_pregunta !== jsonDataViewModule.bean.message[j].id_pregunta) {
-            nuevo += "<div>"
-            short = jsonDataViewModule.bean.message[i].descripcionPregunta;
-            nuevo += short;
-            nuevo += "</div>"
+        if (jsonDataViewModule.bean.message[i].id_pregunta !== jsonDataViewModule.bean.message[iteradorJ].id_pregunta) {
+            cuestionario += "<div>"
+            dataJSON = jsonDataViewModule.bean.message[i].descripcionPregunta;
+            cuestionario += dataJSON;
+            cuestionario += "</div>"
+            cuestionario += '<ul>';
+            while (opcion >= 0) {
 
-            while (opciones >= 0) {
-
-                nuevo += "<div>"
-                short = jsonDataViewModule.bean.message[nuevaopcion].descripcionOpcion;
-                nuevo += short;
-                nuevo += "</div>"
-                nuevaopcion++;
-                opciones--;
+                cuestionario += "<li>"
+                dataJSON = jsonDataViewModule.bean.message[newOpcion].descripcionOpcion;
+                cuestionario += dataJSON;
+                cuestionario += "</li>"
+                newOpcion++;
+                opcion--;
             }
-            opciones = 0;
+            cuestionario +="</ul>";
+            opcion = 0;
         } else if (i === jsonDataViewModule.bean.message.length - 1) {
-            nuevo += "<div>"
-            short = jsonDataViewModule.bean.message[i].descripcionPregunta;
-            nuevo += short;
-            nuevo += "</div>"
-            while (opciones >= 0) {
+            cuestionario += "<div>"
+            dataJSON = jsonDataViewModule.bean.message[i].descripcionPregunta;
+            cuestionario += dataJSON;
+            cuestionario += "</div>";
+            cuestionario += '<ul style="list-style:none">';
+            while (opcion >= 0) {
 
-                nuevo += "<div>"
-                short = jsonDataViewModule.bean.message[nuevaopcion].descripcionOpcion;
-                nuevo += short;
-                nuevo += "</div>"
-                nuevaopcion++;
-                opciones--;
+                cuestionario += "<li>";
+                dataJSON = jsonDataViewModule.bean.message[newOpcion].descripcionOpcion;
+                cuestionario += dataJSON;
+                cuestionario += "</li>";
+                newOpcion++;
+                opcion--;
             }
 
         } else {
-            opciones++;
+            opcion++;
         }
     }
 
 
-    return nuevo;
+    return cuestionario;
 };
