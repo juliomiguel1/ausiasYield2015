@@ -66,21 +66,23 @@ cuestionarioView.prototype.getViewTemplate_func = function (strClass, jsonDataVi
                 opciones--;
             }
             opciones = 0;
-        } else {
-            opciones++;
-        }
-
-
-        // if (jsonDataViewModule.bean.message[i].id_pregunta === jsonDataViewModule.bean.message[j].id_pregunta) {
-
-        // }
-
-
-        if (i === jsonDataViewModule.bean.message.length - 1) {
+        } else if (i === jsonDataViewModule.bean.message.length - 1) {
             nuevo += "<div>"
             short = jsonDataViewModule.bean.message[i].descripcionPregunta;
             nuevo += short;
             nuevo += "</div>"
+            while (opciones >= 0) {
+
+                nuevo += "<div>"
+                short = jsonDataViewModule.bean.message[nuevaopcion].descripcionOpcion;
+                nuevo += short;
+                nuevo += "</div>"
+                nuevaopcion++;
+                opciones--;
+            }
+
+        } else {
+            opciones++;
         }
     }
 
