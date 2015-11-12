@@ -46,9 +46,9 @@ public class CuestionarioDao extends TableDaoGenImpl<CuestionarioBean> {
 
     public CuestionarioDao(Connection pooledConnection) throws Exception {
         super(pooledConnection);
-    }  
-    
-     public ArrayList<CuestionarioBean> getCuestionario(DocumentoBean oDocumentoBean) throws Exception {
+    }
+
+    public ArrayList<CuestionarioBean> getCuestionario(DocumentoBean oDocumentoBean) throws Exception {
 
         //Se crea un arraylist de CuestionarioBean
         ArrayList<CuestionarioBean> alCuestionario = new ArrayList();
@@ -66,15 +66,15 @@ public class CuestionarioDao extends TableDaoGenImpl<CuestionarioBean> {
 
                             //Se crea un ResultSet para la pregunta y se recorre
                             ResultSet resultpregunta = oMysql.getAllSql("select * from pregunta");
-                            
+
                             while (resultpregunta.next()) {
-                                
+
                                 if (result.getInt("id") == resultpregunta.getInt("id_documento")) {
                                     //Se crean instancias de PreguntaDao y PreguntaBean y se asignan parámetros    
                                     PreguntaDao oPreguntaDao = new PreguntaDao(oConnection);
                                     PreguntaBean oPreguntaBean = new PreguntaBean();
                                     oPreguntaBean.setId(resultpregunta.getInt("id"));
-                                    
+
                                     oPreguntaBean = oPreguntaDao.get(oPreguntaBean, 1);
                                     GroupBeanImpl oGroupBeanImpl = new GroupBeanImpl();
                                     oGroupBeanImpl.setBean(oPreguntaBean);
@@ -119,4 +119,55 @@ public class CuestionarioDao extends TableDaoGenImpl<CuestionarioBean> {
         }
         return alCuestionario;
     }
+
+    public CuestionarioBean set(CuestionarioBean oCuestionarioBean) throws Exception {
+
+        MysqlDataSpImpl oMysql = new MysqlDataSpImpl(oConnection);
+
+        try {
+
+            if (oCuestionarioBean.getId_documento() > 0) {
+                if (oMysql.existsOne("select * from pregunta", oCuestionarioBean.getId_pregunta())) {
+                    ResultSet resultPregunta = oMysql.getAllSql("select * from pregunta");
+
+                    //Se recorre la consulta
+                    if (resultPregunta != null) {
+                        while (resultPregunta.next()) {
+                            if (resultPregunta.getInt("id") == oCuestionarioBean.getId_pregunta()) {
+
+                                //Se crea un ResultSet para la pregunta y se recorre
+                                ResultSet resultOpcion = oMysql.getAllSql("select * from opcion");
+
+                                while (resultOpcion.next()) {
+
+                                    if (resultPregunta.getInt("id") == resultOpcion.getInt("id_pregunta")) {
+                                        //Se crean instancias de PreguntaDao y PreguntaBean y se asignan parámetros    
+
+                                        PreguntaBean oPreguntaBean = new PreguntaBean();
+
+                                        oMysql.updateOne(oPreguntaBean.getId(), strTableOrigin, "descripcion", oCuestionarioBean.getDescripcionPregunta());
+
+                                        OpcionBean oOpcionBean = new OpcionBean();
+
+                                        oMysql.updateOne(oOpcionBean.getId(), strTableOrigin, "descripcion", oCuestionarioBean.getDescripcionOpcion());
+
+                                    }
+
+                                }
+                            }
+
+                        }
+
+                    }
+                }
+
+            }
+        } catch (Exception e) {
+
+            throw new Exception(this.getClass().getName() + ".set: Error: " + e.getMessage());
+
+        }
+        return oCuestionarioBean;
+    }
+
 }
