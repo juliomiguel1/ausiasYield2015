@@ -32,7 +32,7 @@ var cuestionarioView = function () {
 cuestionarioView.prototype = new viewModule();
 cuestionarioView.prototype.getViewTemplate_func = function (strClass, jsonDataViewModule) {
 
-    var cuestionario = '<div class="pregresp">';
+    var cuestionario = '<div class="cuestionario">';
     var tituloPintado = 0;
     var dataJSON;
     var iteradorJ = 0;
