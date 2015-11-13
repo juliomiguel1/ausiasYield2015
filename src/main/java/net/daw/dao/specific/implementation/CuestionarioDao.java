@@ -30,13 +30,17 @@ package net.daw.dao.specific.implementation;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.HashMap;
 import net.daw.bean.group.GroupBeanImpl;
 import net.daw.bean.specific.implementation.CuestionarioBean;
 import net.daw.bean.specific.implementation.DocumentoBean;
 import net.daw.bean.specific.implementation.OpcionBean;
 import net.daw.bean.specific.implementation.PreguntaBean;
+import net.daw.bean.specific.implementation.TipodocumentoBean;
+import net.daw.bean.specific.implementation.TipousuarioBean;
 import net.daw.dao.generic.implementation.TableDaoGenImpl;
 import net.daw.data.specific.implementation.MysqlDataSpImpl;
+import net.daw.helper.statics.FilterBeanHelper;
 
 /**
  *
@@ -170,4 +174,48 @@ public class CuestionarioDao extends TableDaoGenImpl<CuestionarioBean> {
         return oCuestionarioBean;
     }
 
+    public ArrayList<DocumentoBean> getsolocuestionario(ArrayList<FilterBeanHelper> alFilter, HashMap<String, String> hmOrder) throws Exception {
+
+        MysqlDataSpImpl oMysql = new MysqlDataSpImpl(oConnection);
+        ArrayList<DocumentoBean> alCuestionario = new ArrayList<>();
+
+        ResultSet resultpregunta = oMysql.getAllSql("select * from pregunta");
+        ResultSet resultdocumento = oMysql.getAllSql("select * from documento");
+        if (resultpregunta != null) {
+            int i = 0;
+            while (resultpregunta.next()) {
+                
+                while (resultdocumento.next()) {
+                    
+                    if (resultpregunta.getInt("id_documento") == resultdocumento.getInt("id")) {
+                        if (i == 0) {
+                            i = 0;
+                            DocumentoBean oDocumentoBean = new DocumentoBean();
+                            oDocumentoBean.setId(resultdocumento.getInt("id"));
+                            oDocumentoBean.setAlta(resultdocumento.getDate("alta"));
+                            oDocumentoBean.setCambio(resultdocumento.getDate("cambio"));
+                            oDocumentoBean.setContenido(resultdocumento.getString("contenido"));
+                            oDocumentoBean.setDestacado(resultdocumento.getBoolean("destacado"));
+                            oDocumentoBean.setEtiquetas(resultdocumento.getString("etiquetas"));
+                            oDocumentoBean.setHits(resultdocumento.getInt("hits"));
+                            oDocumentoBean.setId_tipodocumento(resultdocumento.getInt("id_tipodocumento"));
+                            oDocumentoBean.setId_usuario(resultdocumento.getInt("id_usuario"));
+                            oDocumentoBean.setPortada(resultdocumento.getBoolean("portada"));
+                            oDocumentoBean.setPublicado(resultdocumento.getBoolean("publicado"));
+                            oDocumentoBean.setTitulo(resultdocumento.getString("titulo"));
+
+                           
+                            alCuestionario.add(oDocumentoBean);
+                            
+                        }
+                        i++;
+                    }
+                    
+                }
+                
+            }
+        }
+
+        return alCuestionario;
+    }
 }

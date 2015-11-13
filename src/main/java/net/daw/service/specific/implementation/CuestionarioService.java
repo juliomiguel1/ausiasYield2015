@@ -31,12 +31,14 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import java.sql.Connection;
 import java.util.ArrayList;
+import java.util.HashMap;
 import javax.servlet.http.HttpServletRequest;
 import net.daw.bean.specific.implementation.CuestionarioBean;
 import net.daw.bean.specific.implementation.DocumentoBean;
 import net.daw.connection.implementation.BoneConnectionPoolImpl;
 import net.daw.dao.specific.implementation.CuestionarioDao;
 import net.daw.dao.specific.implementation.DocumentoDao;
+import net.daw.helper.statics.FilterBeanHelper;
 import net.daw.helper.statics.ParameterCook;
 import net.daw.service.generic.implementation.TableServiceGenImpl;
 
@@ -69,6 +71,22 @@ public class CuestionarioService extends TableServiceGenImpl {
 
         return data;
 
+    }
+    
+    public String getall() throws Exception{
+    
+        Connection oConnection = new BoneConnectionPoolImpl().newConnection();
+        CuestionarioDao oCuestionarioDao = new CuestionarioDao(oConnection);
+        ArrayList<DocumentoBean> alDocumentoBean = new ArrayList<DocumentoBean>();
+        ArrayList<FilterBeanHelper> alFilterBeanHelper = ParameterCook.prepareFilter(oRequest);
+        HashMap<String, String> hmOrder = ParameterCook.prepareOrder(oRequest);
+        
+        alDocumentoBean = oCuestionarioDao.getsolocuestionario(alFilterBeanHelper, hmOrder);
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.setDateFormat("dd/MM/yyyy");
+        Gson gson = gsonBuilder.create();
+        String data = "{\"status\":200,\"message\":" + gson.toJson(alDocumentoBean) + "}";
+        return data;
     }
     
 }

@@ -25,31 +25,18 @@
  * THE SOFTWARE.
  * 
  */
-function fCuestionarioRoutes() {
-    var icon = '<i class="fa fa-question fa-5x"></i>';
-    var fillDocumentoPageHeader = _.partial(html.getPageHeader, icon, 'Cuestionario', _);
-    var strClass = 'cuestionario';
-    var header = $('#broth_panel_heading');
-    var place = $('#broth_content');
 
-    Path.map("#/" + strClass + "/view/:id").to(function () {
-        //INSERTAMOS EL CSS
-        $('<link href="css/main/cuestyle.css" rel="stylesheet" type="text/css"/>').appendTo("head");
-        //Cambiar cabecera por titulo de cuestionario
-        header.empty().append(fillDocumentoPageHeader('View'));
-        var strParam = parameter.getUrlObjectFromUrlString(this.params['url']);
-        ausiasFLOW.reset();
-        ausiasFLOW.initialize(cuestionarioView, place, strClass, 'cuestionarioview', strParam);
-        return false;
-    });
-    
-    //--------------------------------------------------------------------------    
-    Path.map("#/" + strClass + "/list(/:url)").to(function () {
-        header.empty().append(fillDocumentoPageHeader('List'));
-        var strParam = parameter.getUrlObjectFromUrlString(this.params['url']);
-        ausiasFLOW.reset();
-        ausiasFLOW.initialize(cuestionarioList, place, strClass, 'cuestionariolist', strParam);
-        return false;
-    });
+var cuestionarioList = function () {
 
-}
+};
+
+cuestionarioList.prototype = new listModule();
+/*cuestionarioList.prototype.getViewTemplate_func = function (strClass, jsonDataViewModule) {
+
+ var nuevo = "<table class=\"table table table-bordered table-condensed\">";
+ 
+ nuevo +='</table>';
+ 
+ return nuevo;
+
+};*/

@@ -27,23 +27,29 @@
  * 
  */
 var cuestionarioView = function () {
+    var miarray;
+    var validados;
+    var cantidad;
 };
 
 cuestionarioView.prototype = new viewModule();
 cuestionarioView.prototype.getViewTemplate_func = function (strClass, jsonDataViewModule) {
-
-    var cuestionario = '<div class="pregresp">';
+    cantidad=0;
+    var cuestionario = '<form name="myform">';
+    cuestionario += '<div class="pregresp">';
     var tituloPintado = 0;
     var dataJSON;
     var iteradorJ = 0;
     var opcion = 0;
     var newOpcion = 0;
+    var posicion = 0;
+    miarray = new Array(jsonDataViewModule.bean.message.length);
     for (var i = 0; i < jsonDataViewModule.bean.message.length; i++) {
         if (tituloPintado == 0) {
             dataJSON = jsonDataViewModule.bean.message[i].titulo;
-            cuestionario +='<h3>';
+            cuestionario += '<h3>';
             cuestionario += dataJSON;
-            cuestionario +="</h3>";
+            cuestionario += "</h3>";
             cuestionario += "</div>";
             tituloPintado++;
         }
@@ -60,14 +66,18 @@ cuestionarioView.prototype.getViewTemplate_func = function (strClass, jsonDataVi
             cuestionario += '<ul class="opciones">';
             while (opcion >= 0) {
 
-                cuestionario += "<li>";
+                cuestionario += '<li><input type="radio" name="group' + i + '" value="' + jsonDataViewModule.bean.message[newOpcion].id_opcion + '">';
                 dataJSON = jsonDataViewModule.bean.message[newOpcion].descripcionOpcion;
                 cuestionario += dataJSON;
-                cuestionario += "</li>";
+
+                cuestionario += "</input></li>";
+
                 newOpcion++;
                 opcion--;
             }
-            cuestionario +="</ul>";
+            cuestionario += "</ul>";
+            miarray[posicion] = "group" + i;
+            posicion++;
             opcion = 0;
         } else if (i === jsonDataViewModule.bean.message.length - 1) {
             cuestionario += '<div class="pregunta">';
@@ -77,19 +87,45 @@ cuestionarioView.prototype.getViewTemplate_func = function (strClass, jsonDataVi
             cuestionario += '<ul class="opciones">';
             while (opcion >= 0) {
 
-                cuestionario += "<li>";
+                cuestionario += '<li><input type="radio" name="group' + i + '" value="' + jsonDataViewModule.bean.message[newOpcion].id_opcion + '">';
                 dataJSON = jsonDataViewModule.bean.message[newOpcion].descripcionOpcion;
                 cuestionario += dataJSON;
-                cuestionario += "</li>";
+
+                cuestionario += "</input></li>";
+
                 newOpcion++;
                 opcion--;
             }
-
+            miarray[posicion] = "group" + i;
+            posicion++;
         } else {
             opcion++;
         }
+        cantidad++;
     }
 
-
+    cuestionario += '</form>';
+    cuestionario += '</br>';
+    cuestionario += '</br>';
+    cuestionario += '<input type="button" value="Enviar" onclick="capturar(miarray,cantidad)">';
     return cuestionario;
 };
+
+function capturar(miarray,cantidad)
+{
+    var resultado = "";
+    var clickeado = "";
+    var posicion =0;
+    validados = new Array();
+    for (var i = 0; i < miarray.length; i++) {
+        clickeado = document.getElementsByName(miarray[i]);
+        
+        for (var j = 0; j < clickeado.length; j++)
+        {
+            if (clickeado[j].checked){
+                validados[posicion] = clickeado[j].value;
+                posicion++;
+            }
+        }
+    }
+}
