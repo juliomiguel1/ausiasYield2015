@@ -28,15 +28,153 @@
 
 var cuestionarioList = function () {
 
+    var strOb;
+    var strOp;
+    var paramsObject;
+
+    var jsonData;
+
+    var orderParams;
+    var filterParams;
+    var systemFilterParams;
+    var strUrlFromParamsWithoutOrder;
+
 };
 
 cuestionarioList.prototype = new listModule();
-/*cuestionarioList.prototype.getViewTemplate_func = function (strClass, jsonDataViewModule) {
+cuestionarioList.prototype.getViewTemplate_func = function (strClass, jsonData) {
 
- var nuevo = "<table class=\"table table table-bordered table-condensed\">";
- 
- nuevo +='</table>';
- 
- return nuevo;
+};
+/*
+cuestionarioList.prototype.loadThButtons = function (meta, strClase, UrlFromParamsWithoutOrder) {
+    return button.getTableHeaderButtons(meta.Name, strClase, 'list', UrlFromParamsWithoutOrder);
+}
+cuestionarioList.prototype.loadButtons = function (rowValues, strOb) {
+    var botonera = "";
+    botonera += button.getTableToobarButton(strOb, 'view', rowValues[0].data, 'glyphicon-eye-open');
+    botonera += button.getTableToobarButton(strOb, 'edit', rowValues[0].data, 'glyphicon-pencil');
+    botonera += button.getTableToobarButton(strOb, 'remove', rowValues[0].data, 'glyphicon-remove');
+    return button.getToolbarBar(botonera);
+};
+cuestionarioList.prototype.loadPopups = function (meta, rowValues, strClase) {
+    //pendent!!!!!!!
+    var botonera = "";
+    botonera += "<p><b>(" + rowValues.id + ') ' + strClase + '</b></p>';
+    $.each(meta, function (name, metavalue) {
+        if (!metavalue.IsObjForeignKey) {
+            botonera += '<i>' + metavalue.ShortName + '</i>: ' + ns.strings.printPlainValue(metavalue, rowValues[metavalue.Name], true) + "<br/>"
+        }
+        if (metavalue.IsObjForeignKey) {
+        }
+//        if (typeof value === 'string') {
+//            botonera += '<i>' + name + '</i>: ' + ns.strings.escapeHtml(value) + "<br/>";
+//        } else {
+//            botonera += '<i>' + name + '</i>: ' + value + "<br/>";
+//        }
+    })
+    return botonera;
+};
+cuestionarioList.prototype.getHeaderPageTableFunc = function (jsonMeta, strOb, UrlFromParamsWithoutOrder, visibles, acciones) {
+    thisObject = this;
+    acciones = typeof (acciones) != 'undefined' ? acciones : true;
+    arr_meta_data_tableHeader = _.map(jsonMeta, function (oMeta, key) {
+        if (oMeta.IsId) {
+            return '<th class="col-md-1">'
+                    + oMeta.ShortName
+                    + '<br />'
+                    + thisObject.loadThButtons(oMeta, strOb, UrlFromParamsWithoutOrder)
+                    + '</th>';
+        } else {
+            return  '<th>'
+                    + oMeta.ShortName
+                    + '<br />'
+                    + thisObject.loadThButtons(oMeta, strOb, UrlFromParamsWithoutOrder)
+                    + '</th>';
+        }
+    });
+    //visibles
+    if (visibles) {
+        arr_meta_data_tableHeader_visibles = arr_meta_data_tableHeader.slice(0, parseInt(visibles));
+    } else {
+        arr_meta_data_tableHeader_visibles = arr_meta_data_tableHeader;
+    }
+    if (acciones) {
+        arr_meta_data_tableHeader_visibles_acciones = arr_meta_data_tableHeader_visibles.concat(['<th class="col-md-2">Acciones </th>']);
+    } else {
+        arr_meta_data_tableHeader_visibles_acciones = arr_meta_data_tableHeader_visibles;
+    }
+    return '<tr>' + arr_meta_data_tableHeader_visibles_acciones.join('') + '</tr>';
+}
+cuestionarioList.prototype.getBodyPageTableFunc = function (meta, page, printPrincipal, tdButtons_function, trPopup_function, visibles) {
+    //thisObject.jsonData.message.page.list: es un array de objetos. Cada objeto contiene una fila de la tabla de la petición
+    //thisObject.jsonData.message.meta; es un array de objetos. Every object contains metadata from every object to print in every row
+    var matrix_meta_data = _.map(page, function (oRow, keyRow) {
+        return _.map(meta, function (oMeta, keyMeta) {
+            return  {meta: oMeta, data: oRow[oMeta.Name]};
+        });
+    });
+    //is an array (rpp) of arrays (rows) of objects
+    //every object contains the data and its metadata
+    var arr_meta_data_table_buttons = _.map(matrix_meta_data, function (value, key) {
+        return (_.map(matrix_meta_data[key], function (value2, key2) {
+            return  '<td>' + printPrincipal(value2) + '</td>';
+        })
+                )
+                .slice(0, parseInt(visibles))
+                .concat(['<td>' + tdButtons_function(value, strOb) + '</td>']);
+    });
+    //is an array (rpp) of arrays (rows) of strings
+    //every string contains the data of the table cell
+    //there's an additional row to contain the buttons for the operations
+    var arr_meta_data_table_buttons_reduced = _.map(arr_meta_data_table_buttons, function (value, key) {
+        return _.reduce(value, function (memo, num) {
+            return memo + num;
+        });
+    });
+    //is an array (rpp) of strings 
+    //where every string is a ...
+    var str_meta_data_table_buttons_reduced_reduced = _.reduce(arr_meta_data_table_buttons_reduced, function (memo, num) {
+        return memo + '<tr>' + num + '</tr>';
+    });
+    //is a string that contains the table body
+    return str_meta_data_table_buttons_reduced_reduced;
+}
+cuestionarioList.prototype.prepareParams = function (oComponent) {
+    strOb = oComponent.strOb;
+    strOp = oComponent.strOp;
+    paramsObject = oComponent.strParams;
+    orderParams = parameter.printOrderParamsInUrl(paramsObject);
+    filterParams = parameter.printFilterParamsInUrl(paramsObject);
+    systemFilterParams = parameter.printSystemFilterParamsInUrl(paramsObject);
+    strUrlFromParamsWithoutOrder = parameter.getUrlStringFromParamsObject(parameter.getUrlObjectFromParamsWithoutParamArray(paramsObject, ["order", "ordervalue"]));
+}
+cuestionarioList.prototype.initialize = function (oComponent) {
+    this.prepareParams(oComponent);
+};
+cuestionarioList.prototype.getPromise = function () {
+    if (paramsObject) {
+        return promise.getAll(strOb, filterParams, orderParams, systemFilterParams);
+    }
+}
+cuestionarioList.prototype.getData = function (jsonDataReturned) {
+    if (jsonDataReturned) {
+        if (jsonDataReturned.status == "200") {
+            jsonData = jsonDataReturned;
+        } else {
+            //informar error
+        }
+    } else {
+        //informar error
+    }
 
+};
+cuestionarioList.prototype.render = function () {
+    if (jsonData.status == 200) {
+        var visibles = 6;
+        var strTable = table.getTable(
+                this.getHeaderPageTableFunc(jsonData.message.meta.message, strOb, strUrlFromParamsWithoutOrder, visibles),
+                this.getBodyPageTableFunc(jsonData.message.meta.message, jsonData.message.page.message, html.printPrincipal, this.loadButtons, this.loadPopups, visibles)
+                );
+        return '<div id="tablePlace">' + strTable + '</div>';
+    }
 };*/

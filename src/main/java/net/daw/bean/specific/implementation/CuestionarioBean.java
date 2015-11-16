@@ -40,7 +40,7 @@ import net.daw.helper.statics.MetaEnum;
  * @author juliomiguel
  */
 @SelectSourceMetaInformation( 
-        SqlSelect = "SELECT pregunta.id_documento, documento.titulo, pregunta.id, pregunta.descripcion, opcion.id, opcion.descripcion FROM pregunta, documento, opcion WHERE pregunta.id_documento = documento.id AND opcion.id_pregunta = pregunta.id",
+        SqlSelect = "SELECT pregunta.id_documento, documento.titulo, pregunta.id, pregunta.descripcion, opcion.id, opcion.descripcion FROM pregunta, documento, opcion WHERE pregunta.id_documento = documento.id AND opcion.id_pregunta = pregunta.id GROUP BY pregunta.id_documento",
         Description = "Documento"
 )
 public class CuestionarioBean extends BeanGenImpl implements BeanInterface {

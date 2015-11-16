@@ -38,7 +38,9 @@ import net.daw.bean.specific.implementation.DocumentoBean;
 import net.daw.connection.implementation.BoneConnectionPoolImpl;
 import net.daw.dao.specific.implementation.CuestionarioDao;
 import net.daw.dao.specific.implementation.DocumentoDao;
+import net.daw.helper.statics.ExceptionBooster;
 import net.daw.helper.statics.FilterBeanHelper;
+import net.daw.helper.statics.JsonMessage;
 import net.daw.helper.statics.ParameterCook;
 import net.daw.service.generic.implementation.TableServiceGenImpl;
 
@@ -77,16 +79,42 @@ public class CuestionarioService extends TableServiceGenImpl {
     
         Connection oConnection = new BoneConnectionPoolImpl().newConnection();
         CuestionarioDao oCuestionarioDao = new CuestionarioDao(oConnection);
-        ArrayList<DocumentoBean> alDocumentoBean = new ArrayList<DocumentoBean>();
+        ArrayList<CuestionarioBean> alCuestionarioBean = new ArrayList<CuestionarioBean>();
         ArrayList<FilterBeanHelper> alFilterBeanHelper = ParameterCook.prepareFilter(oRequest);
         HashMap<String, String> hmOrder = ParameterCook.prepareOrder(oRequest);
         
-        alDocumentoBean = oCuestionarioDao.getsolocuestionario(alFilterBeanHelper, hmOrder);
+        alCuestionarioBean = oCuestionarioDao.getsolocuestionario(alFilterBeanHelper, hmOrder);
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.setDateFormat("dd/MM/yyyy");
         Gson gson = gsonBuilder.create();
-        String data = "{\"status\":200,\"message\":" + gson.toJson(alDocumentoBean) + "}";
+        String data = "{\"status\":200,\"message\":" + gson.toJson(alCuestionarioBean) + "}";
         return data;
     }
     
+    @Override
+    public String getaggregateviewall() throws Exception {
+        if (this.checkpermission("getaggregateviewall")) {
+            String data = null;
+            try {
+                String meta = this.getmetainformation();
+                String all = this.getall();
+        
+                data = "{"
+                        + "\"meta\":" + meta
+                        + ",\"page\":" + all
+             
+                        + "}";
+                data = JsonMessage.getJson("200", data);
+            } catch (Exception ex) {
+                ExceptionBooster.boost(new Exception(this.getClass().getName() + ":getAggregateViewAll ERROR: " + ex.getMessage()));
+            }
+            return data;
+        } else {
+            return JsonMessage.getJsonMsg("401", "Unauthorized");
+        }
+    }
 }
+ //          + ",\"registers\":" + registers
+//        String registers = this.getcount();
+    
+
