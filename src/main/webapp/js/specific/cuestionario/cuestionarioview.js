@@ -146,7 +146,7 @@ cuestionarioView.prototype.bind = function () {
 
 cuestionarioView.prototype.getPromesa = function (jsonfile) {
 
-    return ajax.call(config.getAppUrl() + '?ob=respuesta&op=set', 'GET', jsonfile);
+    return ajax.call(config.getAppUrl() + '?ob=respuesta&op=procesacuestionario', 'GET', jsonfile);
 };
 
 
