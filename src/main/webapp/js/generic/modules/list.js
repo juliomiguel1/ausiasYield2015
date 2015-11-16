@@ -39,7 +39,7 @@ var listModule = function () {
 }
 listModule.prototype = new baseModule();
 listModule.prototype.loadThButtons = function (meta, strClase, UrlFromParamsWithoutOrder) {
-    return button.getTableHeaderButtons(meta.Name, strClase, 'list', UrlFromParamsWithoutOrder);
+    return button.getTableHeaderButtons(meta.Name, strClase, 'cuestionariolist', UrlFromParamsWithoutOrder);
 }
 listModule.prototype.loadButtons = function (rowValues, strOb) {
     var botonera = "";

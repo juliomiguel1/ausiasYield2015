@@ -28,27 +28,17 @@
 
 var cuestionarioList = function () {
 
-    var strOb;
-    var strOp;
-    var paramsObject;
-
-    var jsonData;
-
-    var orderParams;
-    var filterParams;
-    var systemFilterParams;
-    var strUrlFromParamsWithoutOrder;
 
 };
 
 cuestionarioList.prototype = new listModule();
-cuestionarioList.prototype.getViewTemplate_func = function (strClass, jsonData) {
 
-};
-/*
+// check
 cuestionarioList.prototype.loadThButtons = function (meta, strClase, UrlFromParamsWithoutOrder) {
     return button.getTableHeaderButtons(meta.Name, strClase, 'list', UrlFromParamsWithoutOrder);
 }
+
+//check
 cuestionarioList.prototype.loadButtons = function (rowValues, strOb) {
     var botonera = "";
     botonera += button.getTableToobarButton(strOb, 'view', rowValues[0].data, 'glyphicon-eye-open');
@@ -56,41 +46,38 @@ cuestionarioList.prototype.loadButtons = function (rowValues, strOb) {
     botonera += button.getTableToobarButton(strOb, 'remove', rowValues[0].data, 'glyphicon-remove');
     return button.getToolbarBar(botonera);
 };
-cuestionarioList.prototype.loadPopups = function (meta, rowValues, strClase) {
-    //pendent!!!!!!!
-    var botonera = "";
-    botonera += "<p><b>(" + rowValues.id + ') ' + strClase + '</b></p>';
-    $.each(meta, function (name, metavalue) {
-        if (!metavalue.IsObjForeignKey) {
-            botonera += '<i>' + metavalue.ShortName + '</i>: ' + ns.strings.printPlainValue(metavalue, rowValues[metavalue.Name], true) + "<br/>"
-        }
-        if (metavalue.IsObjForeignKey) {
-        }
-//        if (typeof value === 'string') {
-//            botonera += '<i>' + name + '</i>: ' + ns.strings.escapeHtml(value) + "<br/>";
-//        } else {
-//            botonera += '<i>' + name + '</i>: ' + value + "<br/>";
-//        }
-    })
-    return botonera;
-};
+
+
+
 cuestionarioList.prototype.getHeaderPageTableFunc = function (jsonMeta, strOb, UrlFromParamsWithoutOrder, visibles, acciones) {
     thisObject = this;
     acciones = typeof (acciones) != 'undefined' ? acciones : true;
-    arr_meta_data_tableHeader = _.map(jsonMeta, function (oMeta, key) {
-        if (oMeta.IsId) {
+    
+     arr_meta_data_tableHeader_filtered = _.filter(jsonMeta, function(oItem){
+        if (oItem.ShortName=="Título" ) {
+            return true;
+        } else {
+            return false;
+        }
+    } );
+
+
+    
+    arr_meta_data_tableHeader = _.map(arr_meta_data_tableHeader_filtered, function (oMeta, key) {
+        
+        if (oMeta.Name == "titulo") {
             return '<th class="col-md-1">'
                     + oMeta.ShortName
                     + '<br />'
                     + thisObject.loadThButtons(oMeta, strOb, UrlFromParamsWithoutOrder)
                     + '</th>';
-        } else {
-            return  '<th>'
+        } else if (oMeta.Name == "titulo") {
+            return '<th>'
                     + oMeta.ShortName
                     + '<br />'
                     + thisObject.loadThButtons(oMeta, strOb, UrlFromParamsWithoutOrder)
                     + '</th>';
-        }
+        } 
     });
     //visibles
     if (visibles) {
@@ -99,7 +86,7 @@ cuestionarioList.prototype.getHeaderPageTableFunc = function (jsonMeta, strOb, U
         arr_meta_data_tableHeader_visibles = arr_meta_data_tableHeader;
     }
     if (acciones) {
-        arr_meta_data_tableHeader_visibles_acciones = arr_meta_data_tableHeader_visibles.concat(['<th class="col-md-2">Acciones </th>']);
+        arr_meta_data_tableHeader_visibles_acciones = arr_meta_data_tableHeader_visibles.concat(['<th class="col-md-1">Acciones </th>']);
     } else {
         arr_meta_data_tableHeader_visibles_acciones = arr_meta_data_tableHeader_visibles;
     }
@@ -113,11 +100,27 @@ cuestionarioList.prototype.getBodyPageTableFunc = function (meta, page, printPri
             return  {meta: oMeta, data: oRow[oMeta.Name]};
         });
     });
+    //Filtra los campos del array de objetos recogiendo los que son necesarios en nuestro caso
+    matrix_meta_data_filtered = _.map(matrix_meta_data,function(oFilter){
+        return _.pick(oFilter,0);
+    });
     //is an array (rpp) of arrays (rows) of objects
     //every object contains the data and its metadata
-    var arr_meta_data_table_buttons = _.map(matrix_meta_data, function (value, key) {
-        return (_.map(matrix_meta_data[key], function (value2, key2) {
-            return  '<td>' + printPrincipal(value2) + '</td>';
+    var arr_meta_data_table_buttons = _.map(matrix_meta_data_filtered, function (value, key) {
+        return (_.map(matrix_meta_data_filtered[key], function (value2, key2) {
+//            return  
+            
+         if(value2.meta.ShortName == "Título"){   
+                return  '<td class="col-md-11">'
+                        + printPrincipal(value2)
+                        +'</td>'
+            }else{
+                
+                return '<td class="col-md-1">' 
+                       + printPrincipal(value2) 
+                       + '</td>';
+            }
+        
         })
                 )
                 .slice(0, parseInt(visibles))
@@ -134,47 +137,8 @@ cuestionarioList.prototype.getBodyPageTableFunc = function (meta, page, printPri
     //is an array (rpp) of strings 
     //where every string is a ...
     var str_meta_data_table_buttons_reduced_reduced = _.reduce(arr_meta_data_table_buttons_reduced, function (memo, num) {
-        return memo + '<tr>' + num + '</tr>';
+        return memo + '<td>' + num + '</td>';
     });
     //is a string that contains the table body
     return str_meta_data_table_buttons_reduced_reduced;
 }
-cuestionarioList.prototype.prepareParams = function (oComponent) {
-    strOb = oComponent.strOb;
-    strOp = oComponent.strOp;
-    paramsObject = oComponent.strParams;
-    orderParams = parameter.printOrderParamsInUrl(paramsObject);
-    filterParams = parameter.printFilterParamsInUrl(paramsObject);
-    systemFilterParams = parameter.printSystemFilterParamsInUrl(paramsObject);
-    strUrlFromParamsWithoutOrder = parameter.getUrlStringFromParamsObject(parameter.getUrlObjectFromParamsWithoutParamArray(paramsObject, ["order", "ordervalue"]));
-}
-cuestionarioList.prototype.initialize = function (oComponent) {
-    this.prepareParams(oComponent);
-};
-cuestionarioList.prototype.getPromise = function () {
-    if (paramsObject) {
-        return promise.getAll(strOb, filterParams, orderParams, systemFilterParams);
-    }
-}
-cuestionarioList.prototype.getData = function (jsonDataReturned) {
-    if (jsonDataReturned) {
-        if (jsonDataReturned.status == "200") {
-            jsonData = jsonDataReturned;
-        } else {
-            //informar error
-        }
-    } else {
-        //informar error
-    }
-
-};
-cuestionarioList.prototype.render = function () {
-    if (jsonData.status == 200) {
-        var visibles = 6;
-        var strTable = table.getTable(
-                this.getHeaderPageTableFunc(jsonData.message.meta.message, strOb, strUrlFromParamsWithoutOrder, visibles),
-                this.getBodyPageTableFunc(jsonData.message.meta.message, jsonData.message.page.message, html.printPrincipal, this.loadButtons, this.loadPopups, visibles)
-                );
-        return '<div id="tablePlace">' + strTable + '</div>';
-    }
-};*/
