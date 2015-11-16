@@ -34,7 +34,7 @@ var cuestionarioView = function () {
 
 cuestionarioView.prototype = new viewModule();
 cuestionarioView.prototype.getViewTemplate_func = function (strClass, jsonDataViewModule) {
-    cantidad=0;
+    cantidad = 0;
     var cuestionario = '<form name="myform">';
     cuestionario += '<div class="pregresp">';
     var tituloPintado = 0;
@@ -110,22 +110,38 @@ cuestionarioView.prototype.getViewTemplate_func = function (strClass, jsonDataVi
     cuestionario += '<input type="button" value="Enviar" onclick="capturar(miarray,cantidad)">';
     return cuestionario;
 };
+function getPromesa(jsonfile) {
 
-function capturar(miarray,cantidad)
+    return ajax.call(config.getAppUrl() + '?ob=respuesta&op=set', 'GET', jsonfile);
+}
+
+
+function capturar(miarray, cantidad)
 {
     var resultado = "";
     var clickeado = "";
-    var posicion =0;
+    var posicion = 0;
     validados = new Array();
     for (var i = 0; i < miarray.length; i++) {
         clickeado = document.getElementsByName(miarray[i]);
-        
+
         for (var j = 0; j < clickeado.length; j++)
         {
-            if (clickeado[j].checked){
+            if (clickeado[j].checked) {
                 validados[posicion] = clickeado[j].value;
                 posicion++;
             }
         }
     }
+    
+    strValues = validados;
+    getPromesa({json: JSON.stringify(strValues)}).done(function (result) {
+        if (result["status"] == "200") {
+            resultadoMessage = 'Se han guardado las respuestas';
+        } else {
+            resultadoMessage = "ERROR: No se ha creado el registro";
+        }
+    });
+
+
 }

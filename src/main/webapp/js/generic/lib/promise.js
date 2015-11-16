@@ -55,4 +55,4 @@ promise = {
     setOne: function (strClass, jsonfile) {
         return ajax.call(config.getAppUrl() + '?ob=' + strClass + '&op=set', 'GET', jsonfile);
     }
-}
+};
