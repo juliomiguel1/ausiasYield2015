@@ -38,8 +38,10 @@ import net.daw.bean.specific.implementation.PreguntaBean;
 import net.daw.bean.specific.implementation.RespuestaBean;
 import net.daw.connection.implementation.BoneConnectionPoolImpl;
 import net.daw.connection.publicinterface.ConnectionInterface;
+import net.daw.dao.specific.implementation.OpcionDao;
 import net.daw.dao.specific.implementation.PreguntaDao;
 import net.daw.dao.specific.implementation.RespuestaDao;
+import net.daw.dao.specific.implementation.UsuarioDao;
 import static net.daw.helper.statics.AppConfigurationHelper.getSourceConnection;
 import net.daw.helper.statics.ExceptionBooster;
 import net.daw.helper.statics.FilterBeanHelper;
@@ -287,6 +289,27 @@ public class RespuestaService extends TableServiceGenImpl {
         } else {
             return JsonMessage.getJsonMsg("401", "Unauthorized");
         }
+    }
+
+    public String procesacuestionario() throws Exception {
+
+        Connection oConnection = new BoneConnectionPoolImpl().newConnection();
+
+        int idUsuario = ParameterCook.prepareInt("id", oRequest);
+
+        Gson gson = new GsonBuilder().setDateFormat("yyyy/MM/dd").excludeFieldsWithoutExposeAnnotation().create();
+        String[] resultado = gson.fromJson(oRequest.getParameter("json"), String[].class);
+
+        for (int i = 0; i <= resultado.length; i++) {
+            RespuestaDao oRespuestaDao = new RespuestaDao(oConnection);
+            RespuestaBean oRespuestaBean = new RespuestaBean();
+            oRespuestaBean.setId_usuario(idUsuario);
+            oRespuestaBean.setId_opcion(Integer.parseInt(resultado[i]));
+            oRespuestaDao.set(oRespuestaBean);
+        }
+
+        return "{\"status\":200,\"message\": \"Todo correcto\" }";
+
     }
 
 }

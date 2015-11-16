@@ -240,7 +240,7 @@ public class RespuestaDao extends TableDaoGenImpl<RespuestaBean> {
     public RespuestaBean set(RespuestaBean oRespuestaBean) throws Exception {
 
         MysqlDataSpImpl oMysql = new MysqlDataSpImpl(oConnection);
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         try {
             if (oRespuestaBean.getId() == 0) {
                 oRespuestaBean.setId(oMysql.insertOne(strTableOrigin));
@@ -309,5 +309,6 @@ public class RespuestaDao extends TableDaoGenImpl<RespuestaBean> {
         }
         return alVector;
     }
+      
 
 }
