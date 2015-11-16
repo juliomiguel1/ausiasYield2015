@@ -107,41 +107,46 @@ cuestionarioView.prototype.getViewTemplate_func = function (strClass, jsonDataVi
     cuestionario += '</form>';
     cuestionario += '</br>';
     cuestionario += '</br>';
-    cuestionario += '<input type="button" value="Enviar" onclick="capturar(miarray,cantidad)">';
+    cuestionario += '<input type="button" value="Enviar" id="enviarClick">';
+
     return cuestionario;
 };
-function getPromesa(jsonfile) {
-
-    return ajax.call(config.getAppUrl() + '?ob=respuesta&op=set', 'GET', jsonfile);
-}
 
 
-function capturar(miarray, cantidad)
-{
-    var resultado = "";
-    var clickeado = "";
-    var posicion = 0;
-    validados = new Array();
-    for (var i = 0; i < miarray.length; i++) {
-        clickeado = document.getElementsByName(miarray[i]);
+cuestionarioView.prototype.bind = function () {
+    that=this;
+    $("#enviarClick").click(function () {
+        var resultado = "";
+        var clickeado = "";
+        var posicion = 0;
+        validados = new Array();
+        for (var i = 0; i < miarray.length; i++) {
+            clickeado = document.getElementsByName(miarray[i]);
 
-        for (var j = 0; j < clickeado.length; j++)
-        {
-            if (clickeado[j].checked) {
-                validados[posicion] = clickeado[j].value;
-                posicion++;
+            for (var j = 0; j < clickeado.length; j++)
+            {
+                if (clickeado[j].checked) {
+                    validados[posicion] = clickeado[j].value;
+                    posicion++;
+                }
             }
         }
-    }
-    
-    strValues = validados;
-    getPromesa({json: JSON.stringify(strValues)}).done(function (result) {
-        if (result["status"] == "200") {
-            resultadoMessage = 'Se han guardado las respuestas';
-        } else {
-            resultadoMessage = "ERROR: No se ha creado el registro";
-        }
+
+        strValues = validados;
+        that.getPromesa({json: JSON.stringify(strValues)}).done(function (result) {
+
+            if (result["status"] == "200") {
+                resultadoMessage = 'Se han guardado las respuestas';
+            } else {
+                resultadoMessage = "ERROR: No se ha creado el registro";
+            }
+        });
     });
+};
+
+cuestionarioView.prototype.getPromesa = function (jsonfile) {
+
+    return ajax.call(config.getAppUrl() + '?ob=respuesta&op=set', 'GET', jsonfile);
+};
 
 
-}
