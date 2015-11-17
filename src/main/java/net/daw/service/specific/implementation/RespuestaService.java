@@ -182,7 +182,7 @@ public class RespuestaService extends TableServiceGenImpl {
         RespuestaDao oRespuestaDao = new RespuestaDao(oConnection);
         RespuestaBean oRespuestaBean = new RespuestaBean();
         String json = ParameterCook.prepareJson(oRequest);
-        Gson gson = new GsonBuilder().setDateFormat("dd/MM/yyyy").excludeFieldsWithoutExposeAnnotation().create();
+        Gson gson = new GsonBuilder().setDateFormat("dd-MM-yyyy HH:mm:ss").excludeFieldsWithoutExposeAnnotation().create();
         oRespuestaBean = gson.fromJson(json, RespuestaBean.class);
         oRespuestaBean = oRespuestaDao.set(oRespuestaBean);
         Map<String, String> data = new HashMap<>();
@@ -297,7 +297,7 @@ public class RespuestaService extends TableServiceGenImpl {
 
 //        int idUsuario = ParameterCook.prepareInt("id", oRequest);
 
-        Gson gson = new GsonBuilder().setDateFormat("yyyy/MM/dd").excludeFieldsWithoutExposeAnnotation().create();
+        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").excludeFieldsWithoutExposeAnnotation().create();
         String[] resultado = gson.fromJson(oRequest.getParameter("json"), String[].class);
 
         for (int i = 0; i <= resultado.length; i++) {
